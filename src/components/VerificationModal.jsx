@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 export const VerificationModal = ({ isOpen, onClose, email }) => {
   const { t, i18n } = useTranslation();
@@ -12,6 +14,7 @@ export const VerificationModal = ({ isOpen, onClose, email }) => {
   const inputRefs = useRef([]);
 
   const isRTL = i18n.language === "ar";
+  var username = useSelector((state) => state.global.username);
 
   // Encrypt email function (simple masking for now)
   const encryptEmail = (email) => {
@@ -75,35 +78,33 @@ export const VerificationModal = ({ isOpen, onClose, email }) => {
     }
   };
 
-  const handleResend = () => {
+  const handleResend = async () => {
     setTimeLeft(60);
     setCanResend(false);
     setVerificationCode(["", "", "", ""]);
     inputRefs.current[0]?.focus();
-    // TODO: Add API call to resend verification code
-    console.log("Resending verification code to:", email);
-  };
 
-  const handleVerify = (number) => {
-    console.log("handleVerify function triggered");
-    const code = verificationCode.join("");
-    console.log("Verifying code:", code.length);
-    console.log(number);
-    if (number.length === 4) {
-      console.log("Code is 4 digits, proceeding with verification");
-      // TODO: Replace with actual API call to verify code
-      // For now, we'll simulate a successful verification
-      console.log("Verifying code:", code, "for email:", email);
+    try {
+      // ✅ Call the backend API using query param (username)
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/send-otp",
+        null, // no body
+        {
+          params: {
+            username: username, // from Redux state
+          },
+        }
+      );
 
-      // Show success alert
+      // ✅ Optional success alert
       Swal.fire({
-        title: t("accountCreatedTitle"),
-        text: t("accountCreatedText"),
+        title: t("otpResentTitle") || "OTP Sent!",
+        text:
+          t("otpResentMessage") ||
+          "A new verification code has been sent to your email.",
         icon: "success",
         confirmButtonText: t("ok"),
         confirmButtonColor: "#835f40",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
         customClass: {
           popup: isRTL ? "swal-rtl" : "swal-ltr",
           title: `font-['Cairo',Helvetica] ${
@@ -114,14 +115,90 @@ export const VerificationModal = ({ isOpen, onClose, email }) => {
           }`,
           confirmButton: `font-['Cairo',Helvetica]`,
         },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Close the modal
-          onClose();
-          // Navigate to sign in page
-          window.location.href = "/";
-        }
       });
+
+      console.log("✅ OTP resend response:", response.data);
+    } catch (error) {
+      console.error(
+        "❌ Failed to resend OTP:",
+        error.response?.data || error.message
+      );
+
+      // ❌ Show error alert
+      Swal.fire({
+        title: t("errorTitle") || "Error",
+        text:
+          error.response?.data?.message ||
+          t("otpResendError") ||
+          "Failed to resend the OTP. Please try again later.",
+        icon: "error",
+        confirmButtonText: t("ok"),
+        confirmButtonColor: "#835f40",
+        customClass: {
+          popup: isRTL ? "swal-rtl" : "swal-ltr",
+          title: `font-['Cairo',Helvetica] ${
+            isRTL ? "text-right" : "text-left"
+          }`,
+          htmlContainer: `font-['Cairo',Helvetica] ${
+            isRTL ? "text-right" : "text-left"
+          }`,
+          confirmButton: `font-['Cairo',Helvetica]`,
+        },
+      });
+    }
+  };
+
+  const handleVerify = async (number) => {
+    console.log("handleVerify function triggered");
+    const code = verificationCode.join("");
+    console.log("Verifying code:", code.length);
+    console.log(number);
+    if (number.length === 4) {
+      console.log("username" + username);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/auth/verify-buyer-registration",
+          null, // no body
+          {
+            params: {
+              username: username,
+              otp: number,
+            },
+          }
+        );
+
+        Swal.fire({
+          title: t("accountCreatedTitle"),
+          text: t("accountCreatedText"),
+          icon: "success",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#835f40",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            htmlContainer: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            confirmButton: `font-['Cairo',Helvetica]`,
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Close the modal
+            onClose();
+            // Navigate to sign in page
+            window.location.href = "/";
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
+      // Show success alert
     }
   };
 
