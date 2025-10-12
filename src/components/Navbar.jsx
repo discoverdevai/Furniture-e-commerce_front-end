@@ -14,15 +14,6 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LanguageIcon from "@mui/icons-material/Language";
-import { Search } from "lucide-react";
-import { ShoppingBag } from "lucide-react";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 
 const NAV_ITEMS = [
   "home",
@@ -33,6 +24,7 @@ const NAV_ITEMS = [
   "about_us",
   "contact_us",
 ];
+const DRAWER_EXTRA_ITEMS = ["profile"];
 
 export const AppNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -144,30 +136,34 @@ export const AppNavbar = () => {
             alignItems: "center",
             order: isArabic ? 3 : 1,
             flexDirection: "row-reverse",
-            "& > :nth-of-type(1) ,& > :nth-of-type(2), & > :nth-of-type(3)": {
+            "& > :nth-of-type(1) ,& > :nth-of-type(2)": {
               display: { xs: "none", md: "inline-flex" },
             },
 
             "& .MuiIconButton-root": {
-              p: 1, // smaller padding around icons
+              p: 0.5, // smaller padding around icons
             },
           }}
         >
           {/* Language toggle icon */}
           <IconButton onClick={toggleLanguage} color="inherit">
-            <LanguageIcon sx={{ color: "black", fontSize: 18 }} />
+            <img src="/global.svg" alt="language icon" width={24} height={24} />
           </IconButton>
           <IconButton color="inherit">
-            <PersonOutlineIcon sx={{ color: "black", fontSize: 18 }} />
+            <img src="/profile.svg" alt="profile" width={24} height={24} />
+          </IconButton>
+
+          <IconButton color="inherit">
+            <img src="/bag-2.svg" alt="cart" width={24} height={24} />
           </IconButton>
           <IconButton color="inherit">
-            <FavoriteBorderOutlinedIcon sx={{ color: "black", fontSize: 18 }} />
-          </IconButton>
-          <IconButton color="inherit">
-            <ShoppingBagOutlinedIcon sx={{ color: "black", fontSize: 18 }} />
-          </IconButton>
-          <IconButton color="inherit">
-            <Search size={18} color="black" />
+            {/*  <SearchIcon size={18} color="black" /> */}
+            <img
+              src="/search-normal.svg"
+              alt="search icon"
+              width={24}
+              height={24}
+            />
           </IconButton>
         </Box>
       </Toolbar>
@@ -181,12 +177,53 @@ export const AppNavbar = () => {
           sx: { width: 250, bgcolor: "white" },
         }}
       >
+        {/* Language toggle button at top */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            py: 1,
+            borderBottom: "1px solid #eee",
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={toggleLanguage}
+            sx={{
+              textTransform: "none",
+              fontFamily: "Cairo",
+              fontSize: "14px",
+              fontWeight: 600,
+              color: "black",
+              borderColor: "black",
+              "&:hover": {
+                borderColor: "black",
+                backgroundColor: "rgba(0,0,0,0.05)",
+              },
+            }}
+          >
+            {isArabic ? "English" : "العربية"}
+          </Button>
+        </Box>
         <List>
           {NAV_ITEMS.map((key) => (
             <ListItemButton key={key} onClick={toggleDrawer}>
               <ListItemText
                 primary={t(key)}
                 sx={{ textAlign: isArabic ? "right" : "left" }}
+              />
+            </ListItemButton>
+          ))}
+          {DRAWER_EXTRA_ITEMS.map((key) => (
+            <ListItemButton key={key} onClick={toggleDrawer}>
+              <ListItemText
+                primary={t(key)}
+                sx={{
+                  textAlign: isArabic ? "right" : "left",
+                  fontFamily: "Cairo",
+                  fontWeight: 500,
+                }}
               />
             </ListItemButton>
           ))}
