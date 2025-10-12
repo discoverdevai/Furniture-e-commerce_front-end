@@ -7,6 +7,8 @@ import {
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi2";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { setGlobalValue } from "../../Store/Store";
 import {
   Avatar,
   AvatarFallback,
@@ -18,6 +20,8 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { LanguageToggle } from "../../components/LanguageToggle";
 import { VerificationModal } from "../../components/VerificationModal";
+import axios from "axios";
+import { user } from "@heroui/react";
 
 export const Register = () => {
   const { t, i18n } = useTranslation();
@@ -136,10 +140,15 @@ export const Register = () => {
       acceptTerms
     );
   };
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    var username = firstName + " " + lastName;
+    console.log(username);
+
+    dispatch(setGlobalValue({ key: "username", value: username }));
 
     // Mark all fields as touched to show validation errors
     setTouchedFields({
@@ -154,23 +163,40 @@ export const Register = () => {
     });
 
     if (validateForm() && acceptTerms) {
-      // Simulate API call
-      console.log("Registration form submitted:", {
-        firstName,
-        lastName,
-        phoneNumber,
-        email,
-        password,
-        region,
-        city,
-        acceptTerms,
-      });
+      try {
+        const payload = {
+          username,
+          firstName,
+          lastName,
+          phoneNumber,
+          email,
+          password,
+        };
 
-      // Simulate loading time before showing verification modal
-      setTimeout(() => {
+        const response = await axios.post(
+          "http://localhost:8080/api/auth/register-buyer",
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("✅ Registration successful:", response.data);
+
+        // Show verification modal after successful registration
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setShowVerificationModal(true);
+        }, 500);
+      } catch (error) {
+        console.error(
+          "❌ Registration failed:",
+          error.response?.data || error.message
+        );
         setIsSubmitting(false);
-        setShowVerificationModal(true);
-      }, 2000);
+      }
     } else {
       setIsSubmitting(false);
       console.log("Validation errors:", errors);

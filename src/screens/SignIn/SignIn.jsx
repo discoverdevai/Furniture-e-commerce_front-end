@@ -17,7 +17,9 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { LanguageToggle } from "../../components/LanguageToggle";
-import { AppNavbar } from "../../components/Navbar";
+import axios from "axios";
+import Swal from "sweetalert2";
+
 
 export const SignIn = () => {
   const { t, i18n } = useTranslation();
@@ -55,11 +57,11 @@ export const SignIn = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!phoneNumber.trim()) {
+    /*  if (!phoneNumber.trim()) {
       newErrors.phoneNumber = t("phoneRequired");
     } else if (phoneNumber.length !== 10) {
       newErrors.phoneNumber = t("phoneInvalid");
-    }
+    } */
 
     if (!password.trim()) {
       newErrors.password = t("passwordRequired");
@@ -79,29 +81,85 @@ export const SignIn = () => {
       validatePassword(password)
     );
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Mark all fields as touched to show validation errors
+    // Mark all fields as touched
     setTouchedFields({
       phoneNumber: true,
       password: true,
     });
 
     if (validateForm()) {
-      // Simulate API call
-      console.log("Form submitted:", { phoneNumber, password });
+      try {
+        // ✅ Send phoneNumber as username for now
+        const response = await axios.post(
+          "http://localhost:8080/api/auth/login-buyer",
+          {
+            username: phoneNumber, // backend expects username
+            password: password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      // Simulate loading time
-      setTimeout(() => {
-        setIsSubmitting(false);
-        alert("Login successful!");
-        // Clear saved form data on successful login
+        // ✅ Success alert
+        Swal.fire({
+          title: t("successTitle") || "Success!",
+          text: response.data.message || "Logged in successfully!",
+          icon: "success",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#835f40",
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            htmlContainer: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            confirmButton: `font-['Cairo',Helvetica]`,
+          },
+        }).then(() => {
+          window.location.href = "/home";
+        });
+
+        // Clear saved form data
         localStorage.removeItem("signIn_phoneNumber");
-        // Navigate to dashboard or home page
-        // window.location.href = "/dashboard";
-      }, 2000);
+      } catch (error) {
+        console.error(
+          "❌ Login failed:",
+          error.response?.data || error.message
+        );
+
+        // ❌ Error alert
+        Swal.fire({
+          title: t("errorTitle") || "Login Failed",
+          text:
+            error.response?.data?.message ||
+            t("invalidCredentials") ||
+            "Wrong credentials. Please try again.",
+          icon: "error",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#835f40",
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            htmlContainer: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            confirmButton: `font-['Cairo',Helvetica]`,
+          },
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     } else {
       setIsSubmitting(false);
       console.log("Validation errors:", errors);
@@ -119,7 +177,6 @@ export const SignIn = () => {
 
   return (
     <div className="bg-[#fefefe] w-full min-h-screen relative overflow-hidden">
-      
       <LanguageToggle />
 
       <div
@@ -291,13 +348,14 @@ export const SignIn = () => {
                   <Input
                     type="text"
                     value={phoneNumber}
-                    inputMode="numeric"
-                    pattern="[0-9]*"
+                    /* inputMode="numeric"
+                    pattern="[0-9]*" */
                     onChange={(e) => {
-                      const onlyDigits = e.target.value
-                        .replace(/[^0-9]/g, "")
+                      const onlyDigits = e.target.value;
+                      /* .replace(/[^0-9]/g, "")
                         .slice(0, 10);
-                      setPhoneNumber(onlyDigits);
+                      setPhoneNumber(onlyDigits); */
+                      setPhoneNumber(e.target.value);
                     }}
                     onBlur={() => handleFieldBlur("phoneNumber")}
                     className={`flex-1 border-0 bg-transparent p-0 focus-visible:ring-0 text-[#292929] font-['Cairo',Helvetica] ${
