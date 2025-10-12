@@ -93,6 +93,45 @@ const resources = {
       blogs: "المدونات",
       about_us: "من نحن",
       contact_us: "تواصل معنا",
+      profile: "الملف الشخصي",
+      // Footer
+      footer_newsletter_title: "تابع أخبارنا عبر البريد الإلكتروني",
+      footer_newsletter_placeholder: "ادخل بريدك الإلكتروني",
+      footer_newsletter_button: "إرسال",
+      footer_important_links: "أهم الروابط",
+      footer_main: "الرئيسية",
+      footer_stores: "المتاجر",
+      footer_best_selling: "الأكثر مبيعاً",
+      footer_try_at_home: "جرّب في منزلك",
+      footer_blogs: "المدونات",
+      footer_about: "عنا",
+      footer_who_we_are: "من نحن",
+      footer_contact: "تواصل معنا",
+      footer_contact_us: "تواصل معنا",
+      footer_phone: "+966 55 123 4567",
+      footer_email: "furniture@gmail.com",
+      footer_follow: "تابعنا",
+      footer_follow_description:
+        "تابعنا على مواقع التواصل الاجتماعي للحصول على أحدث العروض وأخبار عالم الأثاث",
+      footer_logo_text: "اللوجو",
+      footer_description:
+        "تصفح الآن مع موقعنا لـي تعيش تجربة تسوق حقيقية والبقاء متواصل معنا لأفضل تجارب عملاء",
+      footer_copyright: "جميع الحقوق محفوظة",
+      //hero section
+      hero: {
+        title: "أكبر تجربة تسوّق أثاث في السعودية",
+        description:
+          "منصة متكاملة تجمع أبرز متاجر الأثاث والعلامات الموثوقة في المملكة، حيث تجد كل ما تحتاجه لتأثيث منزلك في مكان واحد. استمتع بآلاف الخيارات التي تناسب مختلف الأذواق والميزانيات، مع تجربة تسوّق سهلة، وخدمات توصيل مريحة تصل إلى باب منزلك في جميع أنحاء المملكة.",
+        searchPlaceholder: "ابحث عن ما تريد",
+        searchButton: "بحث",
+        happyClients: "عميل سعيد بخدمتنا",
+        mobileTitle: "اختر أثاثك... وجربه في منزلك قبل الشراء",
+        mobileDescription:
+          "اكتشف مجموعتنا الواسعة من الأثاث الفاخر، وجرّب كل قطعة في مساحتك الخاصة بتقنية الواقع المعزز AR. تجربة تسوّق ذكية وسهلة من أي مكان.",
+        ctaBrowse: "استعرض المنتجات",
+        ctaBestSellers: "الأكثر مبيعًا",
+        happyClientsShort: "عميل سعيد",
+      },
     },
   },
   en: {
@@ -186,6 +225,46 @@ const resources = {
       blogs: "Blogs",
       about_us: "About Us",
       contact_us: "Contact Us",
+      profile: "Profile",
+      // Footer
+      footer_newsletter_title: "Follow our news via email",
+      footer_newsletter_placeholder: "Enter your email",
+      footer_newsletter_button: "Send",
+      footer_important_links: "Important Links",
+      footer_main: "Home",
+      footer_stores: "Stores",
+      footer_best_selling: "Best Selling",
+      footer_try_at_home: "Try At Home",
+      footer_blogs: "Blogs",
+      footer_about: "About",
+      footer_who_we_are: "Who We Are",
+      footer_contact: "Contact Us",
+      footer_contact_us: "Contact Us",
+      footer_phone: "+966 55 123 4567",
+      footer_email: "furniture@gmail.com",
+      footer_follow: "Follow Us",
+      footer_follow_description:
+        "Follow us on social media to get the latest offers and news from the world of furniture",
+      footer_logo_text: "Logo",
+      footer_description:
+        "Browse now with our website to experience real shopping and stay connected with us for the best customer experiences",
+      footer_copyright: "All Rights Reserved",
+      //hero section
+      hero: {
+        title: "The Largest Furniture Shopping Experience in Saudi Arabia",
+        description:
+          "An all-in-one platform bringing together the top furniture stores and trusted brands in the Kingdom. Find everything you need to furnish your home in one place. Enjoy thousands of options to suit all tastes and budgets, with an easy shopping experience and convenient delivery to your doorstep across Saudi Arabia.",
+        searchPlaceholder: "Search for what you need",
+        searchButton: "Search",
+        happyClients: "Happy customers with our service",
+        mobileTitle:
+          "Choose your furniture... and try it in your home before buying",
+        mobileDescription:
+          "Discover our wide range of luxury furniture, and experience each piece in your space with AR technology. A smart and easy shopping experience from anywhere.",
+        ctaBrowse: "Browse Products",
+        ctaBestSellers: "Best Sellers",
+        happyClientsShort: "Happy Clients",
+      },
     },
   },
 };
