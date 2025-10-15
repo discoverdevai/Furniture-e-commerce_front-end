@@ -7,6 +7,8 @@ import {
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi2";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { setGlobalValue } from "../../Store/Store";
 import {
   Avatar,
   AvatarFallback,
@@ -17,18 +19,22 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { LanguageToggle } from "../../components/LanguageToggle";
-import axios from "axios";
+import { VerificationModal } from "../../components/VerificationModal";
+import api from "../../Api/Axios";
 import Swal from "sweetalert2";
-
+import { Select } from "@heroui/react";
 
 export const SignIn = () => {
   const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [touchedFields, setTouchedFields] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   const isRTL = i18n.language === "ar";
 
@@ -93,42 +99,15 @@ export const SignIn = () => {
 
     if (validateForm()) {
       try {
-        // ✅ Send phoneNumber as username for now
-        const response = await axios.post(
-          "http://localhost:8080/api/auth/login-buyer",
-          {
-            username: phoneNumber, // backend expects username
-            password: password,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // ✅ Success alert
-        Swal.fire({
-          title: t("successTitle") || "Success!",
-          text: response.data.message || "Logged in successfully!",
-          icon: "success",
-          confirmButtonText: t("ok"),
-          confirmButtonColor: "#835f40",
-          customClass: {
-            popup: isRTL ? "swal-rtl" : "swal-ltr",
-            title: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            htmlContainer: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            confirmButton: `font-['Cairo',Helvetica]`,
-          },
-        }).then(() => {
-          window.location.href = "/home";
+        const response = await api.post("api/auth/login-buyer", {
+          username: phoneNumber,
+          password: password,
         });
 
-        // Clear saved form data
+        const { email } = response.data;
+        setUserEmail(email);
+        setShowVerificationModal(true);
+
         localStorage.removeItem("signIn_phoneNumber");
       } catch (error) {
         console.error(
@@ -136,7 +115,6 @@ export const SignIn = () => {
           error.response?.data || error.message
         );
 
-        // ❌ Error alert
         Swal.fire({
           title: t("errorTitle") || "Login Failed",
           text:
@@ -157,6 +135,7 @@ export const SignIn = () => {
             confirmButton: `font-['Cairo',Helvetica]`,
           },
         });
+        setIsSubmitting(false);
       } finally {
         setIsSubmitting(false);
       }
@@ -357,7 +336,16 @@ export const SignIn = () => {
                       setPhoneNumber(onlyDigits); */
                       setPhoneNumber(e.target.value);
                     }}
-                    onBlur={() => handleFieldBlur("phoneNumber")}
+                    onBlur={() => {
+                      handleFieldBlur("phoneNumber");
+                      // ✅ Save to Redux only when user finishes typing
+                      dispatch(
+                        setGlobalValue({
+                          key: "usernamefromphonenumber",
+                          value: phoneNumber,
+                        })
+                      );
+                    }}
                     className={`flex-1 border-0 bg-transparent p-0 focus-visible:ring-0 text-[#292929] font-['Cairo',Helvetica] ${
                       isRTL ? "text-right" : "text-left"
                     }`}
@@ -429,7 +417,7 @@ export const SignIn = () => {
                   </p>
                 )}
 
-                {phoneNumber.trim() && phoneNumber.length === 10 ? (
+                {phoneNumber.trim() ? (
                   <button
                     type="button"
                     onClick={navigateToForgotPassword}
@@ -491,6 +479,13 @@ export const SignIn = () => {
           </form>
         </div>
       </div>
+
+      <VerificationModal
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+        email={userEmail}
+        verificationType="login"
+      />
     </div>
   );
 };

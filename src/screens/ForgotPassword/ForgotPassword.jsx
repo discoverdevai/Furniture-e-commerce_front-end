@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { setGlobalValue } from "../../Store/Store";
 import { ChevronRight as ChevronRightIcon, Mail } from "lucide-react";
 import { RiMailSendLine } from "react-icons/ri";
 import { LuMessageCircleMore } from "react-icons/lu";
@@ -11,15 +13,22 @@ import {
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { LanguageToggle } from "../../components/LanguageToggle";
+import { VerificationModal } from "../../components/VerificationModal";
+import api from "../../Api/Axios";
+import Swal from "sweetalert2";
 
 export const ForgotPassword = () => {
   const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
   const [selectedMethod, setSelectedMethod] = useState("sms");
   const [phoneNumber, setPhoneNumber] = useState(() => {
     const savedPhone = localStorage.getItem("forgotPassword_phoneNumber");
     return savedPhone;
   });
+
   const [email, setEmail] = useState("user@gmail.com");
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isRTL = i18n.language === "ar";
 
@@ -34,14 +43,42 @@ export const ForgotPassword = () => {
     return `${name.slice(0, 2)}*****@${domain}`;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Forgot password submitted:", {
-      method: selectedMethod,
-      phoneNumber,
-      email,
-    });
-    window.location.href = "/reset-password";
+    setIsSubmitting(true);
+
+    try {
+      const response = await api.post("api/auth/send-otp", null, {
+        params: {
+          username: phoneNumber,
+        },
+      });
+
+      setShowVerificationModal(true);
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire({
+        title: t("errorTitle") || "Error",
+        text:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+        icon: "error",
+        confirmButtonText: t("ok"),
+        confirmButtonColor: "#835f40",
+        customClass: {
+          popup: isRTL ? "swal-rtl" : "swal-ltr",
+          title: `font-['Cairo',Helvetica] ${
+            isRTL ? "text-right" : "text-left"
+          }`,
+          htmlContainer: `font-['Cairo',Helvetica] ${
+            isRTL ? "text-right" : "text-left"
+          }`,
+          confirmButton: `font-['Cairo',Helvetica]`,
+        },
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const navigateToSignIn = () => {
@@ -245,9 +282,21 @@ export const ForgotPassword = () => {
 
               <Button
                 type="submit"
-                className="w-full h-12 lg:h-14 bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] hover:bg-[linear-gradient(270deg,rgba(128,91,60,0.9)_0%,rgba(211,186,164,0.9)_100%)] text-white font-bold text-lg font-['Cairo',Helvetica] rounded-[10px] transition-all duration-200 border-0"
+                disabled={isSubmitting}
+                className={`w-full h-12 lg:h-14 text-white font-bold text-lg font-['Cairo',Helvetica] rounded-[10px] transition-all duration-200 border-0 ${
+                  isSubmitting
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] hover:bg-[linear-gradient(270deg,rgba(128,91,60,0.9)_0%,rgba(211,186,164,0.9)_100%)]"
+                }`}
               >
-                {t("sendButton")}
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>{t("sendButton")}...</span>
+                  </div>
+                ) : (
+                  t("sendButton")
+                )}
               </Button>
 
               <div
@@ -268,6 +317,24 @@ export const ForgotPassword = () => {
           </form>
         </div>
       </div>
+
+      <VerificationModal
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+        email={email}
+        verificationType="forgot-password"
+      />
+
+      <style jsx global>{`
+        .swal-rtl {
+          direction: rtl;
+          text-align: right;
+        }
+        .swal-ltr {
+          direction: ltr;
+          text-align: left;
+        }
+      `}</style>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Eye as EyeIcon, EyeOff as EyeOffIcon } from "lucide-react";
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi2";
 import {
@@ -13,9 +14,15 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { LanguageToggle } from "../../components/LanguageToggle";
 import Swal from "sweetalert2";
+import api from "../../Api/Axios";
 
 export const ResetPassword = () => {
   const { t, i18n } = useTranslation();
+  const username = useSelector((state) => state.global.phonenumber);
+  const [phoneNumber, setPhoneNumber] = useState(() => {
+    const savedPhone = localStorage.getItem("forgotPassword_phoneNumber");
+    return savedPhone;
+  });
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -75,7 +82,7 @@ export const ResetPassword = () => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -86,11 +93,15 @@ export const ResetPassword = () => {
     });
 
     if (validateForm()) {
-      // Simulate API call
-      console.log("Password reset submitted:", { newPassword });
+      try {
+        // Call reset password API
+        const response = await api.post("api/auth/reset-password", null, {
+          params: {
+            username: phoneNumber,
+            newPassword: newPassword,
+          },
+        });
 
-      // Simulate loading time
-      setTimeout(() => {
         setIsSubmitting(false);
 
         // Show success alert
@@ -118,7 +129,29 @@ export const ResetPassword = () => {
             window.location.href = "/";
           }
         });
-      }, 2000);
+      } catch (error) {
+        setIsSubmitting(false);
+        console.error("Password reset error:", error);
+
+        // Show error alert
+        Swal.fire({
+          title: t("error"),
+          text: error.response?.data?.message || t("passwordResetError"),
+          icon: "error",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#835f40",
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            htmlContainer: `font-['Cairo',Helvetica] ${
+              isRTL ? "text-right" : "text-left"
+            }`,
+            confirmButton: `font-['Cairo',Helvetica]`,
+          },
+        });
+      }
     } else {
       setIsSubmitting(false);
       console.log("Validation errors:", errors);

@@ -20,7 +20,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { LanguageToggle } from "../../components/LanguageToggle";
 import { VerificationModal } from "../../components/VerificationModal";
-import axios from "axios";
+import api from "../../Api/Axios";
 import { user } from "@heroui/react";
 
 export const Register = () => {
@@ -173,15 +173,7 @@ export const Register = () => {
           password,
         };
 
-        const response = await axios.post(
-          "http://localhost:8080/api/auth/register-buyer",
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await api.post("api/auth/register-buyer", payload);
 
         console.log("✅ Registration successful:", response.data);
 
@@ -749,6 +741,7 @@ export const Register = () => {
         isOpen={showVerificationModal}
         onClose={() => setShowVerificationModal(false)}
         email={email}
+        verificationType="registration"
       />
     </div>
   );

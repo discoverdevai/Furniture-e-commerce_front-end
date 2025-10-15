@@ -5,6 +5,8 @@ const globalSlice = createSlice({
   name: "global",
   initialState: {
     username: null,
+    usernamefromphonenumber: null,
+
     // add anything else you need here
   },
   reducers: {
