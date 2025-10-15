@@ -8,6 +8,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "../../components/ui/avatar";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
@@ -17,12 +18,11 @@ import Swal from "sweetalert2";
 import api from "../../Api/Axios";
 
 export const ResetPassword = () => {
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const username = useSelector((state) => state.global.phonenumber);
-  const [phoneNumber, setPhoneNumber] = useState(() => {
-    const savedPhone = localStorage.getItem("forgotPassword_phoneNumber");
-    return savedPhone;
-  });
+  const phoneNumber = useSelector(
+    (state) => state.global.usernamefromphonenumber
+  );
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -101,6 +101,8 @@ export const ResetPassword = () => {
             newPassword: newPassword,
           },
         });
+        console.log("Password reset response:", newPassword + "" + phoneNumber);
+        console.log("Password reset response:", response.data);
 
         setIsSubmitting(false);
 
@@ -126,7 +128,7 @@ export const ResetPassword = () => {
         }).then((result) => {
           if (result.isConfirmed) {
             // Navigate to sign in page
-            window.location.href = "/";
+            navigate("/");
           }
         });
       } catch (error) {
@@ -159,7 +161,7 @@ export const ResetPassword = () => {
   };
 
   const navigateToSignIn = () => {
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (

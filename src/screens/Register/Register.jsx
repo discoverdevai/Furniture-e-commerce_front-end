@@ -14,6 +14,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "../../components/ui/avatar";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
@@ -25,6 +27,7 @@ import { user } from "@heroui/react";
 
 export const Register = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -196,7 +199,7 @@ export const Register = () => {
   };
 
   const navigateToSignIn = () => {
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (
