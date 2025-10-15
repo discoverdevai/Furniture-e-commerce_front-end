@@ -4,6 +4,9 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import api from "../Api/Axios";
+import { useNavigate } from "react-router-dom";
+
+import { user } from "@heroui/react";
 
 export const VerificationModal = ({
   isOpen,
@@ -12,15 +15,16 @@ export const VerificationModal = ({
   verificationType = "registration",
   onSuccess,
 }) => {
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const username = useSelector((state) => state.global.username);
   const usernamefromphonenumber = useSelector(
     (state) => state.global.usernamefromphonenumber
   );
-  const [phoneNumber, setPhoneNumber] = useState(() => {
+  /* const [phoneNumber, setPhoneNumber] = useState(() => {
     const savedPhone = localStorage.getItem("forgotPassword_phoneNumber");
     return savedPhone;
-  });
+  }); */
   const [verificationCode, setVerificationCode] = useState(["", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(60);
   const [canResend, setCanResend] = useState(false);
@@ -90,6 +94,9 @@ export const VerificationModal = ({
     setCanResend(false);
     setVerificationCode(["", "", "", ""]);
     inputRefs.current[0]?.focus();
+    console.log("verification for registration:", username);
+    console.log("verification for login:", usernamefromphonenumber);
+    console.log("verification for forget password:", usernamefromphonenumber);
     let params = {
       username:
         verificationType === "registration"
@@ -146,6 +153,9 @@ export const VerificationModal = ({
     if (code.length !== 4 || isVerifying) return;
 
     setIsVerifying(true);
+    console.log("verification for registration:", username);
+    console.log("verification for login:", usernamefromphonenumber);
+    console.log("verification for forget password:", usernamefromphonenumber);
 
     try {
       let endpoint = "";
@@ -158,13 +168,13 @@ export const VerificationModal = ({
         endpoint = "api/auth/verify-buyer-registration";
       } else if (verificationType === "login") {
         params = {
-          username: phoneNumber,
+          username: usernamefromphonenumber,
           otp: code,
         };
         endpoint = "api/auth/login-buyer-verify";
       } else if (verificationType === "forgot-password") {
         params = {
-          username: phoneNumber,
+          username: usernamefromphonenumber,
           otp: code,
         };
         endpoint = "api/auth/verify-otp";
@@ -203,7 +213,7 @@ export const VerificationModal = ({
         }).then((result) => {
           if (result.isConfirmed) {
             onClose();
-            window.location.href = "/";
+            navigate("/"); // Redirect to sign-in page
           }
         });
       } else if (verificationType === "login") {
@@ -236,8 +246,8 @@ export const VerificationModal = ({
         }).then((result) => {
           if (result.isConfirmed) {
             onClose();
-            window.location.href = "/home";
-          }
+            navigate("/home");
+          } // Redirect to home page
         });
       } else if (verificationType === "forgot-password") {
         Swal.fire({
@@ -261,7 +271,7 @@ export const VerificationModal = ({
         }).then((result) => {
           if (result.isConfirmed) {
             onClose();
-            window.location.href = "/reset-password";
+            navigate("/reset-password"); // Redirect to reset password page
           }
         });
       }

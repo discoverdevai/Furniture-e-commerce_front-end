@@ -10,6 +10,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "../../components/ui/avatar";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { LanguageToggle } from "../../components/LanguageToggle";
@@ -20,11 +21,15 @@ import Swal from "sweetalert2";
 export const ForgotPassword = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState("sms");
-  const [phoneNumber, setPhoneNumber] = useState(() => {
+  /* const [phoneNumber, setPhoneNumber] = useState(() => {
     const savedPhone = localStorage.getItem("forgotPassword_phoneNumber");
     return savedPhone;
-  });
+  }); */
+  const usernamefromphonenumber = useSelector(
+    (state) => state.global.usernamefromphonenumber
+  );
 
   const [email, setEmail] = useState("user@gmail.com");
   const [showVerificationModal, setShowVerificationModal] = useState(false);
@@ -50,7 +55,7 @@ export const ForgotPassword = () => {
     try {
       const response = await api.post("api/auth/send-otp", null, {
         params: {
-          username: phoneNumber,
+          username: usernamefromphonenumber,
         },
       });
 
@@ -82,7 +87,7 @@ export const ForgotPassword = () => {
   };
 
   const navigateToSignIn = () => {
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (
@@ -240,7 +245,7 @@ export const ForgotPassword = () => {
                         }`}
                         dir="ltr"
                       >
-                        +966 {encryptPhoneNumber(phoneNumber)}
+                        +966 {encryptPhoneNumber(usernamefromphonenumber)}
                       </span>
                     </div>
                   </span>

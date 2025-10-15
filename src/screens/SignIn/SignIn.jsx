@@ -9,6 +9,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setGlobalValue } from "../../Store/Store";
+import { useNavigate } from "react-router-dom";
+
 import {
   Avatar,
   AvatarFallback,
@@ -27,6 +29,8 @@ import { Select } from "@heroui/react";
 export const SignIn = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -146,12 +150,16 @@ export const SignIn = () => {
   };
 
   const navigateToRegister = () => {
-    window.location.href = "/register";
+    navigate("/register");
   };
   const navigateToForgotPassword = () => {
+    dispatch(
+      setGlobalValue({ key: "usernamefromphonenumber", value: phoneNumber })
+    );
+    
     // Save phone number for forgot password page
-    localStorage.setItem("forgotPassword_phoneNumber", phoneNumber);
-    window.location.href = "/forgot-password";
+/*     localStorage.setItem("forgotPassword_phoneNumber", phoneNumber);
+ */    navigate("/forgot-password");
   };
 
   return (
