@@ -93,7 +93,6 @@ export const VerificationModal = ({
     setTimeLeft(60);
     setCanResend(false);
     setVerificationCode(["", "", "", ""]);
-    inputRefs.current[0]?.focus();
     console.log("verification for registration:", username);
     console.log("verification for login:", usernamefromphonenumber);
     console.log("verification for forget password:", usernamefromphonenumber);
@@ -107,45 +106,34 @@ export const VerificationModal = ({
       const response = await api.post("api/auth/send-otp", null, { params });
 
       Swal.fire({
-        title: t("otpResentTitle") || "OTP Sent!",
-        text:
-          t("otpResentMessage") ||
-          "A new verification code has been sent to your email.",
+        title: t("otpResentTitle"),
+        text: t("otpResentMessage"),
         icon: "success",
         confirmButtonText: t("ok"),
-        confirmButtonColor: "#835f40",
+        confirmButtonColor: "#28a745", // ✅ green for success
         customClass: {
           popup: isRTL ? "swal-rtl" : "swal-ltr",
-          title: `font-['Cairo',Helvetica] ${
-            isRTL ? "text-right" : "text-left"
-          }`,
-          htmlContainer: `font-['Cairo',Helvetica] ${
-            isRTL ? "text-right" : "text-left"
-          }`,
-          confirmButton: `font-['Cairo',Helvetica]`,
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
         },
       });
+      inputRefs.current[0]?.focus();
     } catch (error) {
       Swal.fire({
-        title: t("errorTitle") || "Error",
-        text:
-          error.response?.data?.message ||
-          t("otpResendError") ||
-          "Failed to resend the OTP. Please try again later.",
+        title: t("errorTitle"),
+        text: t("otpResendError"),
         icon: "error",
         confirmButtonText: t("ok"),
-        confirmButtonColor: "#835f40",
+        confirmButtonColor: "#dc3545", // ❌ red for error
         customClass: {
           popup: isRTL ? "swal-rtl" : "swal-ltr",
-          title: `font-['Cairo',Helvetica] ${
-            isRTL ? "text-right" : "text-left"
-          }`,
-          htmlContainer: `font-['Cairo',Helvetica] ${
-            isRTL ? "text-right" : "text-left"
-          }`,
-          confirmButton: `font-['Cairo',Helvetica]`,
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
         },
       });
+      inputRefs.current[0]?.focus();
     }
   };
 
@@ -189,26 +177,22 @@ export const VerificationModal = ({
 
       const response = await api.post(endpoint, null, { params });
 
+      console.log("Verification response:", response.data);
+
       if (verificationType === "registration") {
         Swal.fire({
-          title: t("accountCreatedTitle") || "Account Created!",
-          text:
-            t("accountCreatedText") ||
-            "Your account has been successfully created.",
+          title: t("accountCreatedTitle"),
+          text: t("accountCreatedText"),
           icon: "success",
           confirmButtonText: t("ok"),
-          confirmButtonColor: "#835f40",
+          confirmButtonColor: "#28a745",
           allowOutsideClick: false,
           allowEscapeKey: false,
           customClass: {
             popup: isRTL ? "swal-rtl" : "swal-ltr",
-            title: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            htmlContainer: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            confirmButton: `font-['Cairo',Helvetica]`,
+            title: `font-['Cairo',Helvetica] text-center`,
+            htmlContainer: `font-['Cairo',Helvetica] text-center`,
+            confirmButton: `font-['Cairo',Helvetica] text-lg py-3 px-8`,
           },
         }).then((result) => {
           if (result.isConfirmed) {
@@ -225,23 +209,18 @@ export const VerificationModal = ({
         localStorage.setItem("role", role);
 
         Swal.fire({
-          title: t("loginSuccessTitle") || "Login Successful!",
-          text:
-            t("loginSuccessText") || "You have been successfully logged in.",
+          title: t("loginSuccessTitle"),
+          text: t("loginSuccessText"),
           icon: "success",
           confirmButtonText: t("ok"),
-          confirmButtonColor: "#835f40",
+          confirmButtonColor: "#28a745",
           allowOutsideClick: false,
           allowEscapeKey: false,
           customClass: {
             popup: isRTL ? "swal-rtl" : "swal-ltr",
-            title: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            htmlContainer: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            confirmButton: `font-['Cairo',Helvetica]`,
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
           },
         }).then((result) => {
           if (result.isConfirmed) {
@@ -251,22 +230,18 @@ export const VerificationModal = ({
         });
       } else if (verificationType === "forgot-password") {
         Swal.fire({
-          title: t("verificationSuccessTitle") || "Verification Successful!",
-          text: t("verificationSuccessText") || "OTP verified successfully.",
+          title: t("verificationSuccessTitle"),
+          text: t("verificationSuccessText"),
           icon: "success",
           confirmButtonText: t("ok"),
-          confirmButtonColor: "#835f40",
+          confirmButtonColor: "#28a745",
           allowOutsideClick: false,
           allowEscapeKey: false,
           customClass: {
             popup: isRTL ? "swal-rtl" : "swal-ltr",
-            title: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            htmlContainer: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            confirmButton: `font-['Cairo',Helvetica]`,
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
           },
         }).then((result) => {
           if (result.isConfirmed) {
@@ -281,29 +256,40 @@ export const VerificationModal = ({
       }
     } catch (error) {
       console.error("Verification error:", error);
-
-      Swal.fire({
-        title: t("errorTitle") || "Error",
-        text:
-          error.response?.data?.message ||
-          t("wrongOtpError") ||
-          "Wrong OTP code. Please try again.",
-        icon: "error",
-        confirmButtonText: t("ok"),
-        confirmButtonColor: "#835f40",
-        customClass: {
-          popup: isRTL ? "swal-rtl" : "swal-ltr",
-          title: `font-['Cairo',Helvetica] ${
-            isRTL ? "text-right" : "text-left"
-          }`,
-          htmlContainer: `font-['Cairo',Helvetica] ${
-            isRTL ? "text-right" : "text-left"
-          }`,
-          confirmButton: `font-['Cairo',Helvetica]`,
-        },
-      });
-
+      console.log("Error response data:", error.response?.data);
+      console.log(error.response?.data?.message);
       setVerificationCode(["", "", "", ""]);
+
+      if (error.response?.data?.message == "Invalid OTP") {
+        Swal.fire({
+          title: t("errorTitle"),
+          text: t("invalidOtpError"),
+          icon: "error",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#dc3545",
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: `font-['Cairo',Helvetica] text-center`,
+            htmlContainer: `font-['Cairo',Helvetica] text-center`,
+            confirmButton: `font-['Cairo',Helvetica] text-lg py-3 px-8`,
+          },
+        });
+      } else if (error.response?.data?.message == "OTP expired") {
+        Swal.fire({
+          title: t("errorTitle"),
+          text: t("otpExpiredError"),
+          icon: "error",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#dc3545",
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: `font-['Cairo',Helvetica] text-center`,
+            htmlContainer: `font-['Cairo',Helvetica] text-center`,
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
+        });
+      }
+
       inputRefs.current[0]?.focus();
     } finally {
       setIsVerifying(false);
