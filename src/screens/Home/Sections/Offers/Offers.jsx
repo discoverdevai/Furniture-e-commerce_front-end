@@ -55,25 +55,60 @@ const Offers = () => {
 
   return (
     <section style={{ backgroundImage: "url('/image 37.png')" }}>
-      {/* Header */}
-      <header className="flex items-center justify-between relative py-12 px-12 bg-cover bg-center">
-        <Button
-          variant="ghost"
-          className="inline-flex items-center gap-3 h-auto p-0 hover:bg-transparent"
-        >
-          <img className="w-6 h-6" alt="Line arrow right" src="/line-arrow-right.svg" />
-          <span className="font-[number:var(--18-med-font-weight)] text-[#683800] text-[length:var(--18-med-font-size)] leading-[var(--18-med-line-height)] font-18-med tracking-[var(--18-med-letter-spacing)] whitespace-nowrap [direction:rtl] [font-style:var(--18-med-font-style)]">
-            عرض المزيد
-          </span>
-        </Button>
-
-        <h1 className="font-[number:var(--h2-semiboald-font-weight)] text-[#1a1713] text-[length:var(--h2-semiboald-font-size)] leading-[var(--h2-semiboald-line-height)] font-h2-semiboald tracking-[var(--h2-semiboald-letter-spacing)] whitespace-nowrap [direction:rtl] [font-style:var(--h2-semiboald-font-style)]">
-          العروض و التخفيضات
-        </h1>
-      </header>
-
-      {/* Cards */}
       <div className="flex flex-wrap justify-center gap-8 py-12 px-6 bg-cover bg-center">
+        
+        {/* ✅ Header inside card grid */}
+        <div className="w-full">
+          <div className="flex items-center justify-between px-4 sm:px-12 pb-8">
+            {/* Title */}
+           <h1
+  className="
+    font-[number:var(--h2-semiboald-font-weight)]
+    text-[#1a1713]
+    text-[20px]
+    sm:text-[length:var(--h2-semiboald-font-size)]
+    leading-[var(--h2-semiboald-line-height)]
+    font-h2-semiboald
+    tracking-[var(--h2-semiboald-letter-spacing)]
+    whitespace-nowrap
+    [font-style:var(--h2-semiboald-font-style)]
+    [direction:rtl]
+  "
+>
+  العروض و التخفيضات
+</h1>
+
+
+            {/* “عرض المزيد” button */}
+            <Button
+              variant="ghost"
+              className="inline-flex items-center gap-3 h-auto p-0 hover:bg-transparent"
+            >
+             <span
+  className="
+    font-[number:var(--18-med-font-weight)]
+    text-[#683800]
+    text-[length:var(--18-med-font-size)]
+    leading-[var(--18-med-line-height)]
+    font-18-med
+    tracking-[var(--18-med-letter-spacing)]
+    whitespace-nowrap
+    [font-style:var(--18-med-font-style)]
+    sm:text-[14px]
+  "
+>
+  عرض المزيد
+</span>
+              <img
+                className="w-6 h-6"
+                alt="Line arrow right"
+                src="/line-arrow-right.svg"
+              />
+            </Button>
+          </div>
+        </div>
+
+        {/* 🛍️ Offer Cards */}
         {offers.map((offer) => (
           <Card
             key={offer.id}
@@ -112,25 +147,25 @@ const Offers = () => {
             {/* 📝 Content */}
             <CardContent className="flex flex-col items-start gap-1 sm:gap-2 p-2 sm:p-4 flex-grow">
               <div className="w-full flex flex-col gap-1 sm:gap-3">
-                <div className="flex justify-end">
-                  <div className="font-medium text-[#292929] text-xs sm:text-sm [font-family:'Cairo',Helvetica] [direction:rtl]">
+                <div className="flex ">
+                  <div className="font-medium text-[#292929] text-xs sm:text-sm [font-family:'Cairo',Helvetica]">
                     {offer.shop}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between w-full">
+                  <div className="font-bold text-[#1a1713] text-xs sm:text-base [font-family:'Cairo',Helvetica]">
+                    {offer.title}
+                  </div>
                   <div className="flex items-center gap-1 sm:gap-2">
                     <StarIcon className="w-4 h-4 sm:w-6 sm:h-6 fill-yellow-400 text-yellow-400" />
                     <div className="font-bold text-[#1a1713] text-xs sm:text-base leading-4">
                       {offer.rating}
                     </div>
                   </div>
-                  <div className="font-bold text-[#1a1713] text-xs sm:text-base [font-family:'Cairo',Helvetica] [direction:rtl]">
-                    {offer.title}
-                  </div>
                 </div>
 
-                <div className="text-[#292929] text-xs sm:text-base leading-5 [font-family:'Cairo',Helvetica] [direction:rtl]">
+                <div className="text-[#292929] text-xs sm:text-base leading-5 [font-family:'Cairo',Helvetica]">
                   {offer.description}
                 </div>
               </div>
@@ -139,23 +174,22 @@ const Offers = () => {
             {/* 💰 Bottom Section */}
             <div className="mt-auto w-full bg-[#00000033]">
               <div className="w-full h-10 sm:h-14 bg-[#ffffff80] flex items-center justify-between px-2 sm:px-3 rounded-b-[16px] sm:rounded-b-[24px]">
+                <div className="flex flex-col items-end gap-0 sm:gap-1">
+                  <div className="font-bold text-[#835f40] text-sm sm:text-lg">
+                    {offer.price} <span className="font-medium">ر.س</span>
+                  </div>
+                  <div className="text-[#1a1713] text-[10px] sm:text-xs line-through">
+                    {offer.oldPrice} ر.س
+                  </div>
+                </div>
                 <Button className="h-auto p-1 sm:p-2 bg-[#ffffff80] rounded-[50px] hover:bg-[#ffffffa0]">
                   <div className="flex w-[80px] sm:w-[110px] items-center justify-center gap-1 sm:gap-2">
-                    <div className="font-bold text-[#835f40] text-xs sm:text-base whitespace-nowrap [direction:rtl] [font-family:'Cairo',Helvetica]">
+                    <div className="font-bold text-[#835f40] text-xs sm:text-base whitespace-nowrap [font-family:'Cairo',Helvetica]">
                       اشتري الآن
                     </div>
                     <ShoppingCartIcon className="w-4 h-4 sm:w-6 sm:h-6 text-[#835f40]" />
                   </div>
                 </Button>
-
-                <div className="flex flex-col items-end gap-0 sm:gap-1">
-                  <div className="font-bold text-[#835f40] text-sm sm:text-lg [direction:rtl]">
-                    {offer.price} <span className="font-medium">ر.س</span>
-                  </div>
-                  <div className="text-[#1a1713] text-[10px] sm:text-xs line-through [direction:rtl]">
-                    {offer.oldPrice} ر.س
-                  </div>
-                </div>
               </div>
             </div>
           </Card>
