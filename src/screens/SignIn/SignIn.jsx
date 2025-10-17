@@ -116,29 +116,61 @@ export const SignIn = () => {
       } catch (error) {
         console.error(
           "❌ Login failed:",
-          error.response?.data || error.message
+          error.response?.data?.message || error.message
         );
 
-        Swal.fire({
-          title: t("errorTitle") || "Login Failed",
-          text:
-            error.response?.data?.message ||
-            t("invalidCredentials") ||
-            "Wrong credentials. Please try again.",
-          icon: "error",
-          confirmButtonText: t("ok"),
-          confirmButtonColor: "#835f40",
-          customClass: {
-            popup: isRTL ? "swal-rtl" : "swal-ltr",
-            title: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            htmlContainer: `font-['Cairo',Helvetica] ${
-              isRTL ? "text-right" : "text-left"
-            }`,
-            confirmButton: `font-['Cairo',Helvetica]`,
-          },
-        });
+        if (error.response?.data?.message === "Invalid credentials") {
+          // 🔴 Case 1: Invalid credentials
+          Swal.fire({
+            title: t("errorTitle"),
+            text: t("invalidCredentials"),
+            icon: "error",
+            confirmButtonText: t("ok"),
+            confirmButtonColor: "#dc3545", // red for error
+            customClass: {
+              popup: isRTL ? "swal-rtl" : "swal-ltr",
+              title: "font-['Cairo',Helvetica] text-center",
+              htmlContainer: "font-['Cairo',Helvetica] text-center",
+              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+            },
+          });
+        } else if (
+          error.response?.data?.message?.startsWith("User not found:")
+        ) {
+          // 🔴 Case 2: User not found — message includes username
+          Swal.fire({
+            title: t("errorTitle"),
+            text: t("userNotFound"),
+            icon: "error",
+            confirmButtonText: t("ok"),
+            confirmButtonColor: "#dc3545",
+            customClass: {
+              popup: isRTL ? "swal-rtl" : "swal-ltr",
+              title: "font-['Cairo',Helvetica] text-center",
+              htmlContainer: "font-['Cairo',Helvetica] text-center",
+              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+            },
+          });
+        } else {
+          // 🔴 Default fallback
+          Swal.fire({
+            title: t("errorTitle"),
+            text:
+              error.response?.data?.message ||
+              t("unknownError") ||
+              "An unexpected error occurred.",
+            icon: "error",
+            confirmButtonText: t("ok"),
+            confirmButtonColor: "#dc3545",
+            customClass: {
+              popup: isRTL ? "swal-rtl" : "swal-ltr",
+              title: "font-['Cairo',Helvetica] text-center",
+              htmlContainer: "font-['Cairo',Helvetica] text-center",
+              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+            },
+          });
+        }
+
         setIsSubmitting(false);
       } finally {
         setIsSubmitting(false);
@@ -156,10 +188,10 @@ export const SignIn = () => {
     dispatch(
       setGlobalValue({ key: "usernamefromphonenumber", value: phoneNumber })
     );
-    
+
     // Save phone number for forgot password page
-/*     localStorage.setItem("forgotPassword_phoneNumber", phoneNumber);
- */    navigate("/forgot-password");
+    /*     localStorage.setItem("forgotPassword_phoneNumber", phoneNumber);
+     */ navigate("/forgot-password");
   };
 
   return (

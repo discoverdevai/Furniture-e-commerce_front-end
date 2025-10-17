@@ -62,7 +62,22 @@ const resources = {
       accountCreatedTitle: "تم إنشاء الحساب بنجاح!",
       accountCreatedText:
         "مرحباً بك! تم إنشاء حسابك بنجاح. يمكنك الآن تسجيل الدخول.",
-      ok: "موافق",
+      errorTitle: "خطأ",
+      ok: "حسناً",
+      invalidOtpError: "رمز التحقق غير صحيح. حاول مرة أخرى.",
+      otpResentTitle: "تم إرسال الرمز!",
+      otpResentMessage: "تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.",
+      otpResendError: "فشل في إعادة إرسال رمز التحقق. يرجى المحاولة لاحقًا.",
+      loginSuccessTitle: "تم تسجيل الدخول!",
+      loginSuccessText: "تم تسجيل دخولك بنجاح. مرحباً بك في منصتنا الإلكترونية",
+      verificationSuccessTitle: "تم التحقق بنجاح!",
+      verificationSuccessText:
+        "تم التحقق من رمز OTP بنجاح. يمكنك الآن إعادة تعيين كلمة المرور.",
+      invalidCredentials:
+        "اسم المستخدم أو كلمة المرور غير صحيحة. حاول مرة أخرى.",
+      userNotFound:
+        "المستخدم غير موجود. يرجى التحقق من اسم المستخدم والمحاولة مرة أخرى.",
+
       // Forgot Password
       forgotPasswordTitle: "نسيت كلمة المرور ؟",
       forgotPasswordDescription:
@@ -115,7 +130,7 @@ const resources = {
         "تابعنا على مواقع التواصل الاجتماعي للحصول على أحدث العروض وأخبار عالم الأثاث",
       footer_logo_text: "اللوجو",
       footer_description:
-        "تصفح الآن مع موقعنا لـي تعيش تجربة تسوق حقيقية والبقاء متواصل معنا لأفضل تجارب عملاء",
+        "نحول كل زاوية في منزلك إلى مساحة مليئة بالأناقة والراحة، مع أثاث مصمم بعناية لكل تفاصيل حياتك.",
       footer_copyright: "جميع الحقوق محفوظة",
       //hero section
       hero: {
@@ -195,6 +210,20 @@ const resources = {
       accountCreatedText:
         "Welcome! Your account has been created successfully. You can now sign in.",
       ok: "OK",
+      errorTitle: "Error",
+      invalidOtpError: "Invalid OTP. Please try again.",
+      otpExpiredError: "Your OTP code has expired. Please request a new one.",
+      otpResentTitle: "OTP Sent!",
+      otpResentMessage: "A new verification code has been sent to your email.",
+      otpResendError: "Failed to resend the OTP. Please try again later.",
+      loginSuccessTitle: "Login Successful!",
+      loginSuccessText:
+        "You have been successfully logged in. welcome at our e-commerce platform",
+      verificationSuccessTitle: "Verification Successful!",
+      verificationSuccessText:
+        "OTP verified successfully. You can now reset your password.",
+      invalidCredentials: "Invalid username or password. Please try again.",
+      userNotFound: "User not found. Please check your username and try again.",
       // Forgot Password
       forgotPasswordTitle: "Forgot Password?",
       forgotPasswordDescription:
@@ -247,7 +276,7 @@ const resources = {
         "Follow us on social media to get the latest offers and news from the world of furniture",
       footer_logo_text: "Logo",
       footer_description:
-        "Browse now with our website to experience real shopping and stay connected with us for the best customer experiences",
+        "We transform every corner of your home into a space filled with elegance and comfort, with furniture carefully designed for every detail of your life.",
       footer_copyright: "All Rights Reserved",
       //hero section
       hero: {
