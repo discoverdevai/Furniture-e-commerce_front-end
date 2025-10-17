@@ -29,7 +29,7 @@ export const Categories = () => {
   };
 
   return (
-    <section className="relative w-full bg-[#fefefe] flex items-center justify-center overflow-hidden min-h-[400px] sm:min-h-[685px] [direction:rtl]">
+    <section className="relative w-full bg-[#fefefe] flex items-center justify-center overflow-hidden min-h-[400px] sm:min-h-[685px] ">
       {/* Background */}
       <img
         className="absolute inset-0 w-full h-full object-cover"
