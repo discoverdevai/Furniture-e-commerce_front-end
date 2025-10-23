@@ -10,6 +10,7 @@ import { ForgotPassword } from "./screens/ForgotPassword/ForgotPassword";
 import { ResetPassword } from "./screens/ResetPassword/ResetPassword";
 import { HeroUIProvider } from "@heroui/react";
 import { Home } from "./screens/Home/Home";
+import { BlogDetails } from "./screens/BlogDetails/BlogDetails";
 import "./i18n";
 
 createRoot(document.getElementById("app")).render(
@@ -19,6 +20,7 @@ createRoot(document.getElementById("app")).render(
         <Router>
           <Routes>
             <Route path="/home" element={<Home />} />
+            <Route path="/blog" element={<BlogDetails />} />
             <Route path="/" element={<SignIn />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
