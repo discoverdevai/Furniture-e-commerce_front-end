@@ -31,7 +31,9 @@ export const HeroSection = () => {
       "
     >
       {/* -------- Navbar -------- */}
-      <AppNavbar />
+      <div className=" max-w-[1440px] mx-auto pt-3">
+        <AppNavbar />
+      </div>
 
       {/* ================= Desktop (lg+) ================= */}
 
