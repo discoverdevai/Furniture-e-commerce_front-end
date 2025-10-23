@@ -1,18 +1,10 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaWhatsapp,
-  FaPhone,
-  FaEnvelope,
-} from "react-icons/fa";
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
-import { CarIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const FooterSection = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const isArabic = i18n.language === "ar";
   const [email, setEmail] = useState("");
 
@@ -21,18 +13,21 @@ export const FooterSection = () => {
     console.log("Newsletter email:", email);
     setEmail("");
   };
+  const handleNavClick = (path) => {
+    navigate(path);
+  };
 
   const footerLinks = {
     importantLinks: [
-      { label: t("footer_main"), href: "#" },
-      { label: t("footer_stores"), href: "#" },
-      { label: t("footer_best_selling"), href: "#" },
-      { label: t("footer_try_at_home"), href: "#" },
-      { label: t("footer_blogs"), href: "#" },
+      { label: t("footer_main"), path: "/home" },
+      { label: t("footer_stores"), path: "/stores" },
+      { label: t("footer_best_selling"), path: "/best-selling" },
+      { label: t("footer_try_at_home"), path: "/try-at-home" },
+      { label: t("footer_blogs"), path: "/blogs" },
     ],
     about: [
-      { label: t("footer_who_we_are"), href: "#" },
-      { label: t("footer_contact"), href: "#" },
+      { label: t("footer_who_we_are"), path: "/about-us" },
+      { label: t("footer_contact"), path: "/contact-us" },
     ],
   };
 
@@ -177,13 +172,13 @@ export const FooterSection = () => {
             <ul className="space-y-3">
               {footerLinks.importantLinks.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
+                  <button
+                    onClick={() => handleNavClick(link.path)}
                     className="text-[#1A1713] font-medium text-[18px] hover:text-[#A67C52] transition-colors duration-200"
                     style={{ fontFamily: "Cairo" }}
                   >
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -204,13 +199,13 @@ export const FooterSection = () => {
             <ul className="space-y-3">
               {footerLinks.about.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
+                  <button
+                    onClick={() => handleNavClick(link.path)} 
                     className="text-[#1A1713] font-medium text-[18px] hover:text-[#A67C52] transition-colors duration-200"
                     style={{ fontFamily: "Cairo" }}
                   >
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -327,38 +322,6 @@ export const FooterSection = () => {
             >
               Furniture � 2025 {t("footer_copyright")}
             </h5>
-
-            {/* <div>
-              <h5 className="text-gray-900 font-bold text-lg mb-4 text-center md:text-right">
-                {t("footer_follow")}
-              </h5>
-              <div className="flex gap-3 justify-center md:justify-end">
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all hover:scale-110"
-                >
-                  <FaFacebookF className="text-[#1877F2] text-lg" />
-                </a>
-                <a
-                  href="https://wa.me/966551234567"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all hover:scale-110"
-                >
-                  <FaWhatsapp className="text-[#25D366] text-lg" />
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all hover:scale-110"
-                >
-                  <FaInstagram className="text-[#E4405F] text-lg" />
-                </a>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

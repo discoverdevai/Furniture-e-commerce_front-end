@@ -102,7 +102,7 @@ const resources = {
         "تم تحديث كلمة المرور الخاصة بك. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
       //Navbar
       home: "الرئيسية",
-      products: "المتاجر",
+      stores: "المتاجر",
       best_selling: "الأكثر مبيعاً",
       try_at_home: "جرّب في منزلك",
       blogs: "المدونات",
@@ -146,6 +146,8 @@ const resources = {
         ctaBrowse: "استعرض المنتجات",
         ctaBestSellers: "الأكثر مبيعًا",
         happyClientsShort: "عميل سعيد",
+        //blogs hero section
+        latestArticles: "أحدث المقالات",
       },
     },
   },
@@ -248,7 +250,7 @@ const resources = {
         "Your password has been updated. You can now sign in with your new password.",
       //Navbar
       home: "Home",
-      products: "Products",
+      stores: "stores",
       best_selling: "Best Selling",
       try_at_home: "Try At Home",
       blogs: "Blogs",
@@ -293,6 +295,8 @@ const resources = {
         ctaBrowse: "Browse Products",
         ctaBestSellers: "Best Sellers",
         happyClientsShort: "Happy Clients",
+        //blogs hero section
+        latestArticles: "Latest Articles",
       },
     },
   },

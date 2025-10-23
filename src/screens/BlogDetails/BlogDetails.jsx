@@ -17,7 +17,7 @@ export const BlogDetails = () => {
         className="bg-[#faf8f6] w-full h-[408px] rounded-b-[100px] mt-[-22px]"
       >
         {/* Navbar with white background and top gap */}
-        <div className="rounded-[16px] max-w-[1440px] pt-3">
+        <div className=" max-w-[1440px] mx-auto pt-3">
           <AppNavbar />
         </div>
 
@@ -31,11 +31,11 @@ export const BlogDetails = () => {
                   كيف تختار الألوان المناسبة لغرفة المعيشة؟
                 </h2>
 
-                <div className="inline-flex flex-row-reverse items-center justify-center gap-2 px-5 py-1 rounded-full shadow-sm">
+                <div className="inline-flex flex-row-reverse items-center justify-center gap-2 px-5 py-1 ">
                   <div className="text-[14px] md:text-[16px] text-[#292929] leading-6 whitespace-nowrap font-['Cairo',Helvetica]">
                     م : محمد احمد
                   </div>
-                  <Avatar className="w-10 h-10 md:w-12 md:h-12 border-2 border-white shadow-md">
+                  <Avatar className="w-10 h-10 md:w-12 md:h-12 ">
                     <AvatarImage src="/Ellipse 33.png" alt="محمد احمد" />
                     <AvatarFallback className="bg-[#a16a35] text-white">
                       م
@@ -70,8 +70,6 @@ export const BlogDetails = () => {
         <BlogDetailsSection />
         <FooterSection />
       </div>
-
-
     </>
   );
 };

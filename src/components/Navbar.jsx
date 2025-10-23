@@ -14,10 +14,11 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const NAV_ITEMS = [
   "home",
-  "products",
+  "stores",
   "best_selling",
   "try_at_home",
   "blogs",
@@ -25,14 +26,30 @@ const NAV_ITEMS = [
   "contact_us",
 ];
 const DRAWER_EXTRA_ITEMS = ["profile"];
+const PATHS = {
+  home: "/home",
+  stores: "/stores",
+  best_selling: "/best-selling",
+  try_at_home: "/try-at-home",
+  blogs: "/blogs",
+  about_us: "/about-us",
+  contact_us: "/contact-us",
+  profile: "/profile",
+};
 
 export const AppNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const isMobile = useMediaQuery("(max-width:900px)");
+  const navigate = useNavigate();
+  const location = useLocation(); // <— get current path
 
   const toggleDrawer = () => setIsOpen(!isOpen);
+  const handleNavClick = (key) => {
+    const to = PATHS[key] || "/";
+    navigate(to);
+  };
 
   const toggleLanguage = () => {
     const newLang = isArabic ? "en" : "ar";
@@ -81,6 +98,7 @@ export const AppNavbar = () => {
         >
           <Typography
             variant="h6"
+            onClick={() => navigate("/home")}
             sx={{
               color: "black",
               fontWeight: "bold",
@@ -114,19 +132,41 @@ export const AppNavbar = () => {
             zindex: 1,
           }}
         >
-          {NAV_ITEMS.map((key) => (
-            <Button
-              key={key}
-              sx={{
-                color: "black",
-                fontWeight: 600,
-                fontFamily: "Cairo",
-                fontSize: "13px",
-              }}
-            >
-              {t(key)}
-            </Button>
-          ))}
+          {NAV_ITEMS.map((key) => {
+            const to = PATHS[key];
+            const isActive = location.pathname === to;
+            return (
+              <Button
+                key={key}
+                onClick={() => handleNavClick(key)}
+                sx={{
+                  color: isActive ? "#835F40" : "black",
+                  fontWeight: 600,
+                  fontFamily: "Cairo",
+                  fontSize: "13px",
+                  position: "relative",
+                  pb: "8px",
+                  "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    bottom: "0px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: isActive ? "12px" : "0px",
+                    height: "4px",
+                    borderRadius: "50px",
+                    backgroundColor: "#835F40",
+                    transition: "width 0.3s ease",
+                  }, // give space for the underline
+                  "&:hover": {
+                    backgroundColor: "rgba(0,0,0,0.05)",
+                  },
+                }}
+              >
+                {t(key)}
+              </Button>
+            );
+          })}
         </Box>
         {/* Icons Section */}
         <Box
@@ -149,14 +189,14 @@ export const AppNavbar = () => {
           <IconButton onClick={toggleLanguage} color="inherit">
             <img src="/global.svg" alt="language icon" width={24} height={24} />
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton onClick={() => navigate("/profile")} color="inherit">
             <img src="/profile.svg" alt="profile" width={24} height={24} />
           </IconButton>
 
-          <IconButton color="inherit">
+          <IconButton onClick={() => navigate("/cart")} color="inherit">
             <img src="/bag-2.svg" alt="cart" width={24} height={24} />
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton onClick={() => navigate("/search")} color="inherit">
             {/*  <SearchIcon size={18} color="black" /> */}
             <img
               src="/search-normal.svg"
@@ -208,7 +248,13 @@ export const AppNavbar = () => {
         </Box>
         <List>
           {NAV_ITEMS.map((key) => (
-            <ListItemButton key={key} onClick={toggleDrawer}>
+            <ListItemButton
+              key={key}
+              onClick={() => {
+                toggleDrawer();
+                handleNavClick(key);
+              }}
+            >
               <ListItemText
                 primary={t(key)}
                 sx={{ textAlign: isArabic ? "right" : "left" }}
@@ -216,7 +262,13 @@ export const AppNavbar = () => {
             </ListItemButton>
           ))}
           {DRAWER_EXTRA_ITEMS.map((key) => (
-            <ListItemButton key={key} onClick={toggleDrawer}>
+            <ListItemButton
+              key={key}
+              onClick={() => {
+                handleNavClick(key);
+                toggleDrawer();
+              }}
+            >
               <ListItemText
                 primary={t(key)}
                 sx={{
