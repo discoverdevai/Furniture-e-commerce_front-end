@@ -25,6 +25,12 @@ createRoot(document.getElementById("app")).render(
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/stores" element={<Stores />} />
+            <Route path="/try-at-home" element={<TryAtHome />} />
+            <Route path="/best-selling" element={<BestSelling />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/contact-us" element={<ContactUs />} />
           </Routes>
         </Router>
       </HeroUIProvider>
