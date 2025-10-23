@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import {
   Avatar,
   AvatarFallback,
@@ -10,6 +12,10 @@ import { BlogDetailsSection } from "./Sections/BlogDetailsSection";
 import { FooterSection } from "../Home/Sections/FooterSection/FooterSection";
 
 export const BlogDetails = () => {
+    const [searchValue, setSearchValue] = useState("");
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+    
   return (
     <>
       <div className="bg-[#faf8f6] w-full h-[408px] rounded-b-[100px] mt-[-22px]">
@@ -43,17 +49,21 @@ export const BlogDetails = () => {
             </Card>
 
             {/* Right Images Section (RTL layout) */}
-            <div className="relative flex-shrink-0 mr-8 hidden md:block">
+            <div className="relative flex-shrink-0 mr-8 hidden lg:block">
               <img
                 className="w-[306px] h-[296px] rounded-[32px] object-cover shadow-lg"
                 alt="غرفة معيشة بلون أبيض"
                 src="/image 50.png"
               />
               <img
-                className="absolute w-[224px] h-[216px] rounded-[32px] object-cover shadow-xl top-[50px] left-[220px]"
+                className={`absolute w-[224px] h-[216px] rounded-[32px] object-cover shadow-xl top-[50px] ${
+                  isArabic ? "left-[220px]" : "end-[220px]"
+                }`}
                 alt="غرفة معيشة بلون بيج"
                 src="/image 53.png"
               />
+
+    
             </div>
           </div>
         </div>
