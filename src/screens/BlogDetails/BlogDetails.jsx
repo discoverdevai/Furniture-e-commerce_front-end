@@ -12,10 +12,7 @@ import { FooterSection } from "../Home/Sections/FooterSection/FooterSection";
 export const BlogDetails = () => {
   return (
     <>
-      <div
-        dir="rtl"
-        className="bg-[#faf8f6] w-full h-[408px] rounded-b-[100px] mt-[-22px]"
-      >
+      <div className="bg-[#faf8f6] w-full h-[408px] rounded-b-[100px] mt-[-22px]">
         {/* Navbar with white background and top gap */}
         <div className=" max-w-[1440px] mx-auto pt-3">
           <AppNavbar />

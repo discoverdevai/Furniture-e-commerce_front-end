@@ -146,9 +146,12 @@ const resources = {
         ctaBrowse: "استعرض المنتجات",
         ctaBestSellers: "الأكثر مبيعًا",
         happyClientsShort: "عميل سعيد",
-        //blogs hero section
-        latestArticles: "أحدث المقالات",
       },
+      //blogs hero section
+      latestArticles: "أحدث المقالات",
+      hero_title: "إلهام بيتك يبدأ من هنا",
+      hero_subtitle:
+        "غُص في عالم الأثاث والديكور، حيث تجد أفكارًا مبتكرة ونصائح عملية تساعدك على ابتكار مساحة تعكس ذوقك وتمنحك شعورًا بالراحة والدفء.",
     },
   },
   en: {
@@ -295,9 +298,12 @@ const resources = {
         ctaBrowse: "Browse Products",
         ctaBestSellers: "Best Sellers",
         happyClientsShort: "Happy Clients",
-        //blogs hero section
-        latestArticles: "Latest Articles",
       },
+      //blogs hero section
+      latestArticles: "Latest Articles",
+      hero_title: "Home Inspiration Starts Here",
+      hero_subtitle:
+        "Dive into the world of furniture and decor, where you'll find innovative ideas and practical tips to help you create a space that reflects your taste and gives you a feeling of comfort and warmth.",
     },
   },
 };
