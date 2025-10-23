@@ -31,10 +31,12 @@ export const HeroSection = () => {
       "
     >
       {/* -------- Navbar -------- */}
-      <div className=" max-w-[1440px] mx-auto pt-3">
-        <AppNavbar />
-      </div>
 
+      <div className="w-full pt-3">
+        <div className="max-w-[1440px] mx-auto">
+          <AppNavbar />
+        </div>
+      </div>
       {/* ================= Desktop (lg+) ================= */}
 
       <div
@@ -172,8 +174,8 @@ export const HeroSection = () => {
       {/* ================= Mobile / Tablet (<lg) ================= */}
       <div
         className="
-          md:hidden flex flex-col items-center justify-around 
-          w-[90%]  mx-auto my-auto gap-6
+          md:hidden flex flex-col items-center justify-evenly 
+          w-[90%]  mx-auto my-auto gap-4
         "
       >
         {/* البطاقة الزجاجية للموبايل */}
