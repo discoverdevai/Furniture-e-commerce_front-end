@@ -33,6 +33,7 @@
     "react-router-dom": "^6.8.1",
     "sweetalert2": "^11.23.0",
     "tailwind-merge": "2.5.4",
+    "tailwind-scrollbar-hide": "^4.0.0",
     "tailwindcss-animate": "1.0.7"
   },
   "devDependencies": {
