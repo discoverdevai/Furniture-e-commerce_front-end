@@ -87,6 +87,14 @@ export const BlogsMainSection = () => {
     if (isTablet) return desc.split(" ").slice(0, 13).join(" ") + "...";
     return desc;
   };
+  const getTitle = (title) => {
+    if (currentLang === "ar") return title; // Show full Arabic title
+
+    if (isMobile) return title.split(" ").slice(0, 4).join(" ") + "...";
+    if (isTablet) return title.split(" ").slice(0, 5).join(" ") + "...";
+
+    return title;
+  };
 
   return (
     <section
@@ -129,7 +137,7 @@ export const BlogsMainSection = () => {
               <PopularArticlesCard
                 key={article.id}
                 date={article.date}
-                title={article.title[currentLang]}
+                title={getTitle(article.title[currentLang])}
                 description={getDescription(article, currentLang)}
                 author={article.author[currentLang]}
                 authorImage={article.authorImage}
@@ -161,7 +169,7 @@ export const BlogsMainSection = () => {
               <PopularArticlesCard
                 key={article.id}
                 date={article.date}
-                title={article.title[currentLang]}
+                title={getTitle(article.title[currentLang])}
                 description={getDescription(article, currentLang)}
                 author={article.author[currentLang]}
                 authorImage={article.authorImage}
