@@ -17,6 +17,7 @@ import { BestSelling } from "./screens/BestSelling/BestSelling";
 import { AboutUs } from "./screens/AboutUs/AboutUs";
 import { ContactUs } from "./screens/ContactUs/ContactUs";
 import { BlogDetails } from "./screens/BlogDetails/BlogDetails";
+import {OffersScreen} from "./screens/Offers/AllOffers"
 import "./i18n";
 
 createRoot(document.getElementById("app")).render(
@@ -26,6 +27,7 @@ createRoot(document.getElementById("app")).render(
         <Router>
           <Routes>
             <Route path="/home" element={<Home />} />
+            <Route path="/offers" element={<OffersScreen />} />
             <Route path="/blog" element={<BlogDetails />} />
             <Route path="*" element={<Home />} />
             <Route path="/" element={<SignIn />} />
