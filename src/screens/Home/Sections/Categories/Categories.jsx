@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "../../../../components/ui/SliderButton";
 import { Card, CardContent } from "../../../../components/ui/CategoriesCard";
+import { useTranslation } from "react-i18next";
 
 const categories = [
   { id: 1, title: "غرف معيشة", image: "/image 16.png" },
@@ -17,6 +18,9 @@ const categories = [
 
 export const Categories = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+
   const cardsPerSlide = 3;
   const totalSlides = Math.ceil(categories.length / cardsPerSlide);
 
@@ -29,7 +33,7 @@ export const Categories = () => {
   };
 
   return (
-    <section className="relative w-full bg-[#fefefe] flex items-center justify-center overflow-hidden min-h-[400px] sm:min-h-[685px] ">
+    <section className="relative w-full bg-[#fefefe] flex items-center justify-center overflow-hidden min-h-[400px] sm:min-h-[685px]">
       {/* Background */}
       <img
         className="absolute inset-0 w-full h-full object-cover"
@@ -43,26 +47,31 @@ export const Categories = () => {
         </h2>
 
         <div className="flex items-center justify-center gap-4 sm:gap-12 w-full">
-          {/* Right Button (Previous) */}
+          {/* Previous Button */}
           <Button
-            onClick={handlePrev}
+            onClick={isArabic ? handleNext : handlePrev}
             variant="outline"
             size="icon"
-            className="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 rounded-full border-0 bg-transparent p-0 relative before:content-[''] before:absolute before:inset-0 before:p-px before:rounded-full before:[background:linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] before:[-webkit-mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] before:[-webkit-mask-composite:xor] before:[mask-composite:exclude] before:z-[1] hover:bg-transparent"
+            className="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 rounded-full border-0 bg-white text-[#1a1713] transition-all duration-300 hover:bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] hover:text-white"
           >
-            <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            {isArabic ? (
+              <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            ) : (
+              <ChevronLeftIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            )}
           </Button>
 
           {/* Cards Carousel */}
           <div className="relative flex-1 overflow-hidden">
             <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{
-                width: `${totalSlides * 100}%`,
-                transform: `translateX(${currentSlide * (100 / totalSlides)}%)`, // ← reversed for RTL
-                flexDirection: "row-reverse",
-              }}
-            >
+  className="flex transition-transform duration-500 ease-in-out"
+  style={{
+    width: `${totalSlides * 100}%`,
+    transform: `translateX(${isArabic ? currentSlide * (100 / totalSlides) : -currentSlide * (100 / totalSlides)}%)`,
+    flexDirection: isArabic ? "row-reverse" : "row",
+  }}
+>
+
               {Array.from({ length: totalSlides }).map((_, slideIndex) => {
                 const start = slideIndex * cardsPerSlide;
                 const slideCards = categories.slice(start, start + cardsPerSlide);
@@ -101,14 +110,18 @@ export const Categories = () => {
             </div>
           </div>
 
-          {/* Left Button (Next) */}
+          {/* Next Button */}
           <Button
-            onClick={handleNext}
+            onClick={isArabic ? handlePrev : handleNext}
             variant="outline"
             size="icon"
-            className="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 rounded-full border-0 bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] hover:opacity-90"
+            className="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 rounded-full border-0 bg-white text-[#1a1713] transition-all duration-300 hover:bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] hover:text-white"
           >
-            <ChevronLeftIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            {isArabic ? (
+              <ChevronLeftIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            ) : (
+              <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+            )}
           </Button>
         </div>
       </div>
