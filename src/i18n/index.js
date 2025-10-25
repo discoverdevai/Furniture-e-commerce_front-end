@@ -152,6 +152,8 @@ const resources = {
       hero_title: "إلهام بيتك يبدأ من هنا",
       hero_subtitle:
         "غُص في عالم الأثاث والديكور، حيث تجد أفكارًا مبتكرة ونصائح عملية تساعدك على ابتكار مساحة تعكس ذوقك وتمنحك شعورًا بالراحة والدفء.",
+      //blogs main section
+      popularArticles: "مقالات شائعة",
     },
   },
   en: {
@@ -304,6 +306,8 @@ const resources = {
       hero_title: "Home Inspiration Starts Here",
       hero_subtitle:
         "Dive into the world of furniture and decor, where you'll find innovative ideas and practical tips to help you create a space that reflects your taste and gives you a feeling of comfort and warmth.",
+      //blogs main section
+      popularArticles: "Popular Articles",
     },
   },
 };

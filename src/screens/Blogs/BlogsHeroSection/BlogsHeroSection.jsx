@@ -96,7 +96,7 @@ export const BlogsHeroSection = () => {
           </div>
         </div>
         {/* ===== Hero Section with Curved Image and Centered Text ===== */}
-        <section className="relative flex flex-col items-center justify-center text-center py-40 ">
+        <section className="relative flex flex-col items-center justify-center text-center py-40 lg:py-40 ">
           {/* Mobile Back Button and Title */}
           {isMobile && (
             <div className="absolute top-8 left-6 right-6 z-20 mb-2 flex items-center justify-between">
@@ -168,7 +168,7 @@ export const BlogsHeroSection = () => {
         </section>
 
         {/* ===== Cards Section (Below the Header) ===== */}
-        <section className=" py-12 px-6 md:px-12 lg:px-32">
+        <section className="py-6 md:py-12  lg:py-12 px-6 md:px-12 lg:px-32">
           <div className={`hidden md:flex justify-start mb-8`}>
             <h2
               className={`${
@@ -179,7 +179,7 @@ export const BlogsHeroSection = () => {
               {t("latestArticles")}
             </h2>
           </div>
-          <div className={`flex md:hidden justify-start mb-8`}>
+          <div className={`flex md:hidden justify-start mb-2`}>
             <h5
               className="text-[16px] font-medium text-[#1A1713]"
               style={{ fontFamily: "Cairo" }}
