@@ -61,7 +61,7 @@ const Offers = () => {
   {/* 🛍️ Offer Cards (scrollable section) */}
   <div
     className="
-      flex flex-nowrap justify-start gap-8 py-6 px-6 bg-cover bg-center
+      flex flex-nowrap justify-start gap-8 py-7 px-6 bg-cover bg-center
       overflow-x-auto scrollbar-hide snap-x snap-mandatory
       sm:flex-wrap sm:justify-center sm:overflow-visible
     "
