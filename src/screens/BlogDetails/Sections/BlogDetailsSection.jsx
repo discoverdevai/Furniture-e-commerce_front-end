@@ -124,7 +124,7 @@ export const BlogDetailsSection = () => {
         } text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] leading-[30px] sm:leading-[34px] md:leading-[38px] lg:leading-[40px]`}
       >
         {isArabic
-          ? "تعتبر غرفة المعيشة قلب المنزل، فهي المكان الذي يجتمع فيه أفراد العائلة لقضاء أجمل الأوقات، وأيضا المساحة التي تستقبل فيها ضيوفك. لذلك فإن اختيار الألوان المناسبة لها يعد خطوة أساسية لخلق أجواء مريحة وجذابة تعكس ذوقك وشخصيتك."
+          ? "تعتبر غرفة المعيشة قلب المنزل، فهي المكان الذي يجتمع فيه أفراد العائلة لقضاء أجمل الأوقات، وأيضا المساحة التي تستقبل فيها ضيوفك. لذلك فإن اختيار الألوان المناسبة لها يعد خطوة أساسية لخلق أجواء مريحة وجذابة تعكس ذوقك وشخصيتك ,."
           : "The living room is the heart of the home — a space where family gathers and guests are welcomed. Choosing the right colors is essential to create a cozy and inviting atmosphere that reflects your taste and personality."}
         <br />
         <br />
