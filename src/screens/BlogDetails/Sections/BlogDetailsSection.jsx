@@ -115,7 +115,7 @@ export const BlogDetailsSection = () => {
       dir={isArabic ? "rtl" : "ltr"}
       className={`flex flex-col w-full max-w-[1200px] items-${
         isArabic ? "end" : "start"
-      } gap-6 lg:gap-[24px] mt-10 lg:mt-[50px] mx-auto px-6 sm:px-10 md:px-16`}
+      } gap-6 lg:gap-[24px] mt-10 lg:mt-[50px] mx-auto px-6 sm:px-10 md:px-4`}
     >
       {/* Intro paragraph */}
       <p
@@ -142,10 +142,10 @@ export const BlogDetailsSection = () => {
               isArabic ? "text-right" : "text-left"
             }`}
           >
-            <h3 className="font-semibold text-[#a16a35] text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] leading-[32px] sm:leading-[36px] md:leading-[38px] lg:leading-[40px] mb-2">
+            <h3 className="font-semibold text-[#a16a35] text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] leading-[32px] sm:leading-[36px] md:leading-[38px] lg:leading-[150%] mb-2">
               {isArabic ? section.title.ar : section.title.en}
             </h3>
-            <div className="font-medium text-[#1a1713] text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] leading-[30px] sm:leading-[34px] md:leading-[38px] lg:leading-[40px] space-y-2">
+            <div className="font-medium text-[#1a1713] text-[12px] sm:text-[14px] md:text-[16px]  lg:text-[20px] leading-[30px] sm:leading-[34px] md:leading-[38px] lg:leading-[150%] space-y-2">
               {(isArabic ? section.content.ar : section.content.en).map(
                 (paragraph, index) => (
                   <p key={index}>{paragraph}</p>
