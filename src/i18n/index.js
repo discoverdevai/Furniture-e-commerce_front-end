@@ -154,6 +154,51 @@ const resources = {
         "غُص في عالم الأثاث والديكور، حيث تجد أفكارًا مبتكرة ونصائح عملية تساعدك على ابتكار مساحة تعكس ذوقك وتمنحك شعورًا بالراحة والدفء.",
       //blogs main section
       popularArticles: "مقالات شائعة",
+      aboutUs: {
+        title: "من نحن",
+        subtitle: "نغير مفهوم الأثاث، قطعة تلو الأخرى..",
+        description:
+          "نؤمن أن الأثاث ليس مجرد عناصر تملأ بها المساحات، بل هو تجربة تعكس ذوقك وتفاصيل حياتك.\nلذلك نعمل على تقديم مجموعة مختارة بعناية من القطع الحديثة التي تجمع بين التصميم الأنيق، والجودة العالية، والعملية التي يحتاجها كل منزل عصري.\nهدفنا هو أن نكون خيارك الأول في كل قطعة أثاث تضيفها، لنساعدك في بناء مساحة تعبر عنك بكل التفاصيل.",
+        button: "استعرض المنتجات",
+        image1Alt: "غرفة معيشة حديثة بأريكة بيج",
+        image2Alt: "منطقة جلوس خارجية مريحة",
+      },
+      aboutUsMain: {
+        title: "حكاية منزلك تبدأ هنا ...",
+        description:
+          '"نؤمن أن الأثاث ليس مجرد قطع تُوضع في المنزل، بل هو قصة تُروى في كل غرفة ولمسة دفء يعيشها كل فرد من العائلة. لذلك اخترنا أن نقدم لك أثاثًا مصممًا بعناية، يجمع بين الراحة والجمال ويلبي مختلف الأذواق. نهتم بالتفاصيل الصغيرة مثلما نهتم بالصورة الكبيرة،\n ونرافقك في رحلتك من اختيار القطعة إلى استلامها في بيتك، لتستمتع بتجربة تسوق سهلة وممتعة تليق بك."',
+
+        imageAlt: "تصميم داخلي حديث",
+      },
+      aboutUsMainSection2: {
+        title: "لماذا نحن الخيار الأول",
+        stats: [
+          {
+            number: "+5",
+            description: "سنوات من التميز",
+            icon: "/Frame-about1.png",
+            alt: "التميز",
+          },
+          {
+            number: "+3",
+            description: "طرق دفع آمنة",
+            icon: "/Frame-about2.png",
+            alt: "طرق الدفع",
+          },
+          {
+            number: "+150",
+            description: "منزل زين بأثاثنا",
+            icon: "/Frame-about3.png",
+            alt: "أثاث",
+          },
+          {
+            number: "+1000",
+            description: "عميل يثق بنا",
+            icon: "/Frame-about4.png",
+            alt: "عميل",
+          },
+        ],
+      },
     },
   },
   en: {
@@ -308,6 +353,50 @@ const resources = {
         "Dive into the world of furniture and decor, where you'll find innovative ideas and practical tips to help you create a space that reflects your taste and gives you a feeling of comfort and warmth.",
       //blogs main section
       popularArticles: "Popular Articles",
+      aboutUs: {
+        title: "About Us",
+        subtitle: "We redefine furniture, one piece at a time..",
+        description:
+          "We believe furniture is more than just objects that fill a space — it’s an experience that reflects your taste and lifestyle.\nThat’s why we offer a carefully selected collection of modern pieces that combine elegant design, high quality, and functionality for every contemporary home.\nOur goal is to be your first choice for every piece you add, helping you build a space that truly represents you.",
+        button: "Browse Products",
+        image1Alt: "Modern living room with beige sofa",
+        image2Alt: "Cozy outdoor seating area",
+      },
+      aboutUsMain: {
+        title: "Your home's story begins here..",
+        description:
+          "We believe that furniture is not just pieces placed in a home, but a story told in every room and a touch of warmth felt by every member of the family. That’s why we offer carefully designed furniture that combines comfort and beauty to suit every taste. We care about the smallest details as much as the bigger picture, and we accompany you on your journey from choosing the piece to receiving it in your home, ensuring a smooth and enjoyable shopping experience that truly suits you.",
+        imageAlt: "Modern interior design",
+      },
+      aboutUsMainSection2: {
+        title: "Why We Are the First Choice",
+        stats: [
+          {
+            number: "+5",
+            description: "Years of excellence",
+            icon: "/Frame-about1.png",
+            alt: "Loyalty program",
+          },
+          {
+            number: "+3",
+            description: "Secure payment methods",
+            icon: "/Frame-about2.png",
+            alt: "Payment methods",
+          },
+          {
+            number: "+150",
+            description: "Homes decorated with our furniture",
+            icon: "/Frame-about3.png",
+            alt: "Furniture",
+          },
+          {
+            number: "+1000",
+            description: "Happy clients trust us",
+            icon: "/Frame-about4.png",
+            alt: "Customer",
+          },
+        ],
+      },
     },
   },
 };
