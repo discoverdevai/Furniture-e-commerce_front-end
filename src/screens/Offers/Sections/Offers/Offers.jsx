@@ -7,7 +7,7 @@ const Offers = () => {
   const offers = [
     {
       id: 1,
-      shop: "هوم سنتر",
+      shop: "هوم22 سنتر",
       rating: 4.5,
       title: "سرير",
       description:
