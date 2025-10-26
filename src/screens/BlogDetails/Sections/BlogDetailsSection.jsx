@@ -121,7 +121,7 @@ export const BlogDetailsSection = () => {
       <p
         className={`font-['Cairo',Helvetica] font-medium text-[#1a1713] ${
           isArabic ? "text-right" : "text-left"
-        } text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] leading-[30px] sm:leading-[34px] md:leading-[38px] lg:leading-[40px]`}
+        } text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] leading-[30px] sm:leading-[34px] md:leading-[38px] lg:leading-[150%]`}
       >
         {isArabic
           ? "تعتبر غرفة المعيشة قلب المنزل، فهي المكان الذي يجتمع فيه أفراد العائلة لقضاء أجمل الأوقات، وأيضا المساحة التي تستقبل فيها ضيوفك. لذلك فإن اختيار الألوان المناسبة لها يعد خطوة أساسية لخلق أجواء مريحة وجذابة تعكس ذوقك وشخصيتك."
