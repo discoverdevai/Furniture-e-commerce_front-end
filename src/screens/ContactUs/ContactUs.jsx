@@ -1,5 +1,10 @@
-export const ContactUs = () => {
-  return (
-    <div className="text-center text-8xl text-[#c71717]">Contact Us Screen</div>
-  );
-};
+import React from "react";
+import { FooterSection } from "../../screens/Home/Sections/FooterSection/FooterSection";
+import { ContactUsMain } from "./ContactUsMain/ContactUsMain";
+
+export const ContactUs = () => (
+  <>
+    <ContactUsMain />
+    <FooterSection />
+  </>
+);

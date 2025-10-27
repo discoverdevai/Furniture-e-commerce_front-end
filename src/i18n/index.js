@@ -199,6 +199,38 @@ const resources = {
           },
         ],
       },
+      contactUs: {
+        keepInTouchTitle: "ابقى على تواصل معنا ..",
+        keepInTouchDesc:
+          "نسعد دائما بخدمتكم والإجابة على جميع استفساراتكم. سواء كنت بحاجة للمساعدة في اختيار الأثاث المناسب، أو لديك استفسار حول الطلبات والتوصيل — فريقنا جاهز لدعمك في أي وقت.",
+        followUs: "تابعنا ..",
+        sendUs: "إرسل إلينا",
+        send: "إرسال",
+        contactInfo: [
+          { icon: "/call.svg", text: "   4567 123 55 +966" },
+          { icon: "/sms.svg", text: "furniture@gmail.com" },
+        ],
+        formFields: [
+          {
+            id: "name",
+            label: "الاسم",
+            placeholder: "ادخل الاسم",
+            type: "input",
+          },
+          {
+            id: "email",
+            label: "البريد الإلكتروني",
+            placeholder: "ادخل البريد الإلكتروني",
+            type: "input",
+          },
+          {
+            id: "message",
+            label: "الرسالة",
+            placeholder: "اكتب رسالتك",
+            type: "textarea",
+          },
+        ],
+      },
     },
   },
   en: {
@@ -394,6 +426,38 @@ const resources = {
             description: "Happy clients trust us",
             icon: "/Frame-about4.png",
             alt: "Customer",
+          },
+        ],
+      },
+      contactUs: {
+        keepInTouchTitle: "Stay in touch with us ..",
+        keepInTouchDesc:
+          "We’re always happy to serve you and answer all your questions. Whether you need help choosing the right furniture or have inquiries about orders and delivery — our team is ready to assist you anytime.",
+        followUs: "Follow us ..",
+        sendUs: "Send us a message",
+        send: "Send",
+        contactInfo: [
+          { icon: "/call.svg", text: "+966 55 123 4567" },
+          { icon: "/sms.svg", text: "furniture@gmail.com" },
+        ],
+        formFields: [
+          {
+            id: "name",
+            label: "Name",
+            placeholder: "Enter your name",
+            type: "input",
+          },
+          {
+            id: "email",
+            label: "Email",
+            placeholder: "Enter your email",
+            type: "input",
+          },
+          {
+            id: "message",
+            label: "Message",
+            placeholder: "Write your message",
+            type: "textarea",
           },
         ],
       },
