@@ -18,6 +18,8 @@ import { AboutUs } from "./screens/AboutUs/AboutUs";
 import { ContactUs } from "./screens/ContactUs/ContactUs";
 import { BlogDetails } from "./screens/BlogDetails/BlogDetails";
 import {OffersScreen} from "./screens/Offers/AllOffers"
+import {SearchDropdown} from "./screens/Search/Search"
+import {MobileSearch} from "./screens/Search/MobileSearch"
 import "./i18n";
 
 createRoot(document.getElementById("app")).render(
@@ -40,6 +42,10 @@ createRoot(document.getElementById("app")).render(
             <Route path="/best-selling" element={<BestSelling />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/search" element={<SearchDropdown />} />
+            <Route path="/search2" element={<MobileSearch />} />
+
+
           </Routes>
         </Router>
       </HeroUIProvider>

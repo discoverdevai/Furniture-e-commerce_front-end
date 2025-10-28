@@ -55,7 +55,7 @@ const Offers = () => {
 
   return (
     <section style={{ backgroundImage: "url('/image 37.png')" }}>
-      <div className=" pt-12 px-32 ">
+      <div className="pt-12 px-12 lg:px-32">
         {/* ✅ Header Section */}
         <div className="w-full flex items-center justify-between pb-4">
           <h1
