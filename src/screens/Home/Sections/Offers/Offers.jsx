@@ -1,76 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "../../../../components/ui/ProductsCard";
 import { Button } from "../../../../components/ui/button";
-import { HeartIcon, StarIcon, ShoppingCartIcon } from "lucide-react";
+import { HeartIcon, StarIcon } from "lucide-react";
+import api from "../../../../Api/Axios"; // ✅ adjust path if your api.js is elsewhere
 
 const Offers = () => {
-  const offers = [
-    {
-      id: 1,
-      shop: "هوم سنتر",
-      rating: 4.5,
-      title: "سرير",
-      description:
-        "سرير بتصميم أنيق ومريح، مصنوع من خامات عالية الجودة لضمان نوم هادئ ومتانة تدوم.",
-      image: "/image 4.png",
-      saleImage: "004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
-      price: 30000,
-      oldPrice: 320000,
-    },
-    {
-      id: 2,
-      shop: "ايكيا",
-      rating: 4.7,
-      title: "كرسي",
-      description: "كرسي فاخر بتصميم عصري ومريح يناسب جميع الغرف.",
-      image: "/image 4.png",
-      saleImage: "004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
-      price: 15000,
-      oldPrice: 18000,
-    },
-    {
-      id: 3,
-      shop: "هوم سنتر",
-      rating: 4.9,
-      title: "طاولة",
-      description: "طاولة طعام خشبية فاخرة تضيف لمسة من الأناقة لمنزلك.",
-      image: "/image 4.png",
-      saleImage: "004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
-      price: 22000,
-      oldPrice: 25000,
-    },
-    {
-      id: 4,
-      shop: "هوم سنتر",
-      rating: 4.5,
-      title: "سرير",
-      description:
-        "سرير بتصميم أنيق ومريح، مصنوع من خامات عالية الجودة لضمان نوم هادئ ومتانة تدوم.",
-      image: "/image 4.png",
-      saleImage: "004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
-      price: 30000,
-      oldPrice: 320000,
-    },
-  ];
+  const [offers, setOffers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const response = await api.get("/api/products"); // ✅ use your actual endpoint
+        if (response.data.success) {
+          const mappedOffers = response.data.data.products.map((item) => ({
+            id: item.id,
+            title: item.name,
+            description: item.description,
+            price: item.salePrice || item.price,
+            oldPrice: item.originalPrice,
+            shop: item.vendorName,
+            image: item.imageUrl || "/image 4.png",
+            saleImage: "/004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
+            rating: 4.5, // static for now
+          }));
+          setOffers(mappedOffers);
+        }
+      } catch (error) {
+        console.error("❌ Failed to fetch offers:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOffers();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <p className="text-[#683800] font-semibold text-lg">جاري تحميل العروض...</p>
+      </div>
+    );
+  }
 
   return (
     <section style={{ backgroundImage: "url('/image 37.png')" }}>
       <div className="pt-12 px-12 lg:px-32">
-        {/* ✅ Header Section */}
+        {/* Header Section */}
         <div className="w-full flex items-center justify-between pb-4">
           <h1
             className="
-        font-[number:var(--h2-semiboald-font-weight)]
-        text-[#1a1713]
-        text-[20px]
-        sm:text-[length:var(--h2-semiboald-font-size)]
-        leading-[var(--h2-semiboald-line-height)]
-        font-h2-semiboald
-        tracking-[var(--h2-semiboald-letter-spacing)]
-        whitespace-nowrap
-        [font-style:var(--h2-semiboald-font-style)]
-        [direction:rtl]
-      "
+              font-[number:var(--h2-semiboald-font-weight)]
+              text-[#1a1713]
+              text-[20px]
+              sm:text-[length:var(--h2-semiboald-font-size)]
+              leading-[var(--h2-semiboald-line-height)]
+              font-h2-semiboald
+              tracking-[var(--h2-semiboald-letter-spacing)]
+              whitespace-nowrap
+              [font-style:var(--h2-semiboald-font-style)]
+              [direction:rtl]
+            "
           >
             العروض و التخفيضات
           </h1>
@@ -81,49 +72,45 @@ const Offers = () => {
           >
             <span
               className="
-          font-[number:var(--18-med-font-weight)]
-          text-[#683800]
-          text-[length:var(--18-med-font-size)]
-          leading-[var(--18-med-line-height)]
-          font-18-med
-          tracking-[var(--18-med-letter-spacing)]
-          whitespace-nowrap
-          [font-style:var(--18-med-font-style)]
-          sm:text-[14px]
-        "
+                font-[number:var(--18-med-font-weight)]
+                text-[#683800]
+                text-[length:var(--18-med-font-size)]
+                leading-[var(--18-med-line-height)]
+                font-18-med
+                tracking-[var(--18-med-letter-spacing)]
+                whitespace-nowrap
+                [font-style:var(--18-med-font-style)]
+                sm:text-[14px]
+              "
             >
               عرض المزيد
             </span>
-            <img
-              className="w-6 h-6"
-              alt="Line arrow right"
-              src="/line-arrow-right.svg"
-            />
+            <img className="w-6 h-6" alt="Line arrow right" src="/line-arrow-right.svg" />
           </Button>
         </div>
 
-        {/* 🛍️ Offer Cards (scrollable section) */}
+        {/* Offer Cards */}
         <div
           className="
-      flex flex-nowrap justify-start gap-8 py-6 bg-cover bg-center
-      overflow-x-auto scrollbar-hide snap-x snap-mandatory
-      sm:flex-wrap sm:justify-center sm:overflow-visible
-    "
+            flex flex-nowrap justify-start gap-8 py-6 bg-cover bg-center
+            overflow-x-auto scrollbar-hide snap-x snap-mandatory
+            sm:flex-wrap sm:justify-center sm:overflow-visible
+          "
           style={{ scrollBehavior: "smooth" }}
         >
           {offers.map((offer) => (
             <Card
               key={offer.id}
               className="
-          flex flex-col justify-between
-          w-[240px] sm:w-[282px] flex-shrink-0
-          rounded-[16px] border border-solid border-[#c3c3c3]
-          sm:rounded-3xl sm:border sm:border-[#c3c3c3]
-          overflow-hidden bg-white
-          snap-center
-        "
+                flex flex-col justify-between
+                w-[240px] sm:w-[282px] flex-shrink-0
+                rounded-[16px] border border-solid border-[#c3c3c3]
+                sm:rounded-3xl sm:border sm:border-[#c3c3c3]
+                overflow-hidden bg-white
+                snap-center
+              "
             >
-              {/* 🖼️ Image Section */}
+              {/* Image */}
               <div className="relative w-full h-[160px] sm:h-[271px] rounded-t-[16px] overflow-hidden">
                 <img
                   className="absolute inset-0 w-full h-full object-cover"
@@ -148,10 +135,10 @@ const Offers = () => {
                 />
               </div>
 
-              {/* 📝 Content */}
+              {/* Content */}
               <CardContent className="flex flex-col items-start gap-1 sm:gap-2 p-2 sm:p-4 flex-grow">
                 <div className="w-full flex flex-col gap-1 sm:gap-3">
-                  <div className="flex ">
+                  <div className="flex">
                     <div className="font-medium text-[#292929] text-xs sm:text-sm [font-family:'Cairo',Helvetica]">
                       {offer.shop}
                     </div>
@@ -175,17 +162,20 @@ const Offers = () => {
                 </div>
               </CardContent>
 
-              {/* 💰 Bottom Section */}
+              {/* Price Section */}
               <div className="mt-auto w-full bg-[#00000033]">
                 <div className="w-full h-10 sm:h-14 bg-[#ffffff80] flex items-center justify-between px-2 sm:px-3 rounded-b-[16px] sm:rounded-b-[24px]">
                   <div className="flex flex-col items-end gap-0 sm:gap-1">
                     <div className="font-bold text-[#835f40] text-sm sm:text-lg">
                       {offer.price} <span className="font-medium">ر.س</span>
                     </div>
-                    <div className="text-[#1a1713] text-[10px] sm:text-xs line-through">
-                      {offer.oldPrice} ر.س
-                    </div>
+                    {offer.oldPrice && (
+                      <div className="text-[#1a1713] text-[10px] sm:text-xs line-through">
+                        {offer.oldPrice} ر.س
+                      </div>
+                    )}
                   </div>
+
                   <Button
                     className="group relative flex items-center justify-center bg-[#ffffff80] rounded-[50px] overflow-hidden transition-all duration-500 ease-in-out p-2 hover:bg-[#ffffffa0]"
                     style={{ width: "fit-content" }}
