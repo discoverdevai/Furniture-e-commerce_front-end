@@ -1,25 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "../../../../components/ui/SliderButton";
 import { Card, CardContent } from "../../../../components/ui/CategoriesCard";
 import { useTranslation } from "react-i18next";
-
-const categories = [
-  { id: 1, title: "غرف معيشة", image: "/image 16.png" },
-  { id: 2, title: "غرف نوم", image: "/image 16.png" },
-  { id: 3, title: "غرف سفرة", image: "/image 16.png" },
-  { id: 4, title: "مكاتب", image: "/image 16.png" },
-  { id: 5, title: "مطابخ", image: "/image 16.png" },
-  { id: 6, title: "حمامات", image: "/image 16.png" },
-  { id: 7, title: "سسس", image: "/image 16.png" },
-  { id: 8, title: "مطاششبخ", image: "/image 16.png" },
-  { id: 9, title: "حماماييت", image: "/image 16.png" },
-];
+import api from "../../../../Api/Axios"; // ✅ Make sure this path is correct
 
 export const Categories = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get("/api/categories");
+        if (response.data) {
+          const mapped = response.data.data.map((cat) => ({
+            id: cat.id,
+            title: cat.name,
+            description: cat.description,
+            image: cat.imageUrl || "/image 16.png", // fallback image
+          }));
+          setCategories(mapped);
+        }
+      } catch (error) {
+        console.error("❌ Failed to fetch categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const cardsPerSlide = 3;
   const totalSlides = Math.ceil(categories.length / cardsPerSlide);
@@ -31,6 +45,26 @@ export const Categories = () => {
   const handleNext = () => {
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
   };
+
+  if (loading) {
+    return (
+      <section className="flex justify-center items-center py-20 bg-[#fefefe]">
+        <p className="text-[#683800] font-semibold text-lg">
+          جاري تحميل الأقسام...
+        </p>
+      </section>
+    );
+  }
+
+  if (categories.length === 0) {
+    return (
+      <section className="flex justify-center items-center py-20 bg-[#fefefe]">
+        <p className="text-[#683800] font-semibold text-lg">
+          لا توجد أقسام متاحة حالياً
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="relative w-full bg-[#fefefe] flex items-center justify-center overflow-hidden min-h-[400px] sm:min-h-[685px]">
@@ -64,14 +98,17 @@ export const Categories = () => {
           {/* Cards Carousel */}
           <div className="relative flex-1 overflow-hidden">
             <div
-  className="flex transition-transform duration-500 ease-in-out"
-  style={{
-    width: `${totalSlides * 100}%`,
-    transform: `translateX(${isArabic ? currentSlide * (100 / totalSlides) : -currentSlide * (100 / totalSlides)}%)`,
-    flexDirection: isArabic ? "row-reverse" : "row",
-  }}
->
-
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{
+                width: `${totalSlides * 100}%`,
+                transform: `translateX(${
+                  isArabic
+                    ? currentSlide * (100 / totalSlides)
+                    : -currentSlide * (100 / totalSlides)
+                }%)`,
+                flexDirection: isArabic ? "row-reverse" : "row",
+              }}
+            >
               {Array.from({ length: totalSlides }).map((_, slideIndex) => {
                 const start = slideIndex * cardsPerSlide;
                 const slideCards = categories.slice(start, start + cardsPerSlide);
