@@ -33,6 +33,7 @@ export const SignIn = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [touchedFields, setTouchedFields] = useState({});
@@ -62,17 +63,34 @@ export const SignIn = () => {
   };
   const handleFieldBlur = (fieldName) => {
     setTouchedFields((prev) => ({ ...prev, [fieldName]: true }));
+    if (fieldName === "identifier") {
+      // Trim whitespace
+      const trimmed = identifier.trim();
+      setIdentifier(trimmed);
+      // Detect phone vs email
+      const isPhone = /^\d+$/.test(trimmed);
+      if (!isPhone) {
+        setUserEmail(trimmed);
+      } else {
+        setPhoneNumber(trimmed);
+      }
+      dispatch(
+        setGlobalValue({
+          key: isPhone ? "Phone" : "Email",
+          value: trimmed,
+        })
+      );
+      dispatch(
+        setGlobalValue({
+          key: "identifierType",
+          value: isPhone ? "PHONE" : "EMAIL",
+        })
+      );
+    }
     validateForm();
   };
   const validateForm = () => {
     const newErrors = {};
-
-    /*  if (!phoneNumber.trim()) {
-      newErrors.phoneNumber = t("phoneRequired");
-    } else if (phoneNumber.length !== 10) {
-      newErrors.phoneNumber = t("phoneInvalid");
-    } */
-
     if (!password.trim()) {
       newErrors.password = t("passwordRequired");
     } else if (!validatePassword(password)) {
@@ -83,115 +101,148 @@ export const SignIn = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const isFormValid = () => {
+  /* const isFormValid = () => {
     return (
       phoneNumber.trim() &&
       phoneNumber.length === 10 &&
       password.trim() &&
       validatePassword(password)
     );
-  };
+  }; */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     // Mark all fields as touched
     setTouchedFields({
-      phoneNumber: true,
+      identifier: true,
       password: true,
     });
+    const trimmed = identifier.trim();
+    setIdentifier(trimmed);
+    const isPhone = /^\d+$/.test(trimmed);
+    dispatch(
+      setGlobalValue({
+        key: isPhone ? "Phone" : "Email",
+        value: trimmed,
+      })
+    );
 
-    if (validateForm()) {
-      try {
-        const response = await api.post("api/auth/login-buyer", {
-          username: phoneNumber,
-          password: password,
-        });
-
-        const { email } = response.data;
-        setUserEmail(email);
-        setShowVerificationModal(true);
-
-        localStorage.removeItem("signIn_phoneNumber");
-      } catch (error) {
-        console.error(
-          "❌ Login failed:",
-          error.response?.data?.message || error.message
-        );
-
-        if (error.response?.data?.message === "Invalid credentials") {
-          // 🔴 Case 1: Invalid credentials
-          Swal.fire({
-            title: t("errorTitle"),
-            text: t("invalidCredentials"),
-            icon: "error",
-            confirmButtonText: t("ok"),
-            confirmButtonColor: "#dc3545", // red for error
-            customClass: {
-              popup: isRTL ? "swal-rtl" : "swal-ltr",
-              title: "font-['Cairo',Helvetica] text-center",
-              htmlContainer: "font-['Cairo',Helvetica] text-center",
-              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
-            },
-          });
-        } else if (
-          error.response?.data?.message?.startsWith("User not found:")
-        ) {
-          // 🔴 Case 2: User not found — message includes username
-          Swal.fire({
-            title: t("errorTitle"),
-            text: t("userNotFound"),
-            icon: "error",
-            confirmButtonText: t("ok"),
-            confirmButtonColor: "#dc3545",
-            customClass: {
-              popup: isRTL ? "swal-rtl" : "swal-ltr",
-              title: "font-['Cairo',Helvetica] text-center",
-              htmlContainer: "font-['Cairo',Helvetica] text-center",
-              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
-            },
-          });
-        } else {
-          // 🔴 Default fallback
-          Swal.fire({
-            title: t("errorTitle"),
-            text:
-              error.response?.data?.message ||
-              t("unknownError") ||
-              "An unexpected error occurred.",
-            icon: "error",
-            confirmButtonText: t("ok"),
-            confirmButtonColor: "#dc3545",
-            customClass: {
-              popup: isRTL ? "swal-rtl" : "swal-ltr",
-              title: "font-['Cairo',Helvetica] text-center",
-              htmlContainer: "font-['Cairo',Helvetica] text-center",
-              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
-            },
-          });
-        }
-
-        setIsSubmitting(false);
-      } finally {
-        setIsSubmitting(false);
-      }
-    } else {
+    if (!validateForm()) {
       setIsSubmitting(false);
       console.log("Validation errors:", errors);
+      return;
+    }
+    const payload = {
+      identifierType: isPhone ? "PHONE" : "EMAIL",
+      identifier: trimmed,
+      password: password,
+    };
+
+    try {
+      const response = await api.post("api/auth/login-buyer", payload);
+      console.log("Response:", response.data);
+
+      // ✅ Only if success = true
+      if (response.data?.success === true) {
+        const { email, phoneNumber } = response.data.data || {};
+
+        // Save email/phone to local state
+        if (email) setUserEmail(email);
+        if (phoneNumber) setPhoneNumber(phoneNumber);
+
+        setShowVerificationModal(true);
+      }
+    } catch (error) {
+      console.error(
+        "❌ Login failed:",
+        error.response?.data?.message || error.message
+      );
+
+      if (error.response?.data?.message === "Invalid credentials") {
+        // 🔴 Case 1: Invalid credentials
+        Swal.fire({
+          title: t("errorTitle"),
+          text: t("invalidCredentials"),
+          icon: "error",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#dc3545", // red for error
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
+        });
+      } else if (error.response?.data?.message?.startsWith("User not found:")) {
+        // 🔴 Case 2: User not found — message includes username
+        Swal.fire({
+          title: t("errorTitle"),
+          text: t("userNotFound"),
+          icon: "error",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#dc3545",
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
+        });
+      } else {
+        // 🔴 Default fallback
+        Swal.fire({
+          title: t("errorTitle"),
+          text:
+            error.response?.data?.message ||
+            t("unknownError") ||
+            "An unexpected error occurred.",
+          icon: "error",
+          confirmButtonText: t("ok"),
+          confirmButtonColor: "#dc3545",
+          customClass: {
+            popup: isRTL ? "swal-rtl" : "swal-ltr",
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
+        });
+      }
+
+      setIsSubmitting(false);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const navigateToRegister = () => {
     navigate("/register");
   };
-  const navigateToForgotPassword = () => {
-    dispatch(
-      setGlobalValue({ key: "usernamefromphonenumber", value: phoneNumber })
-    );
+  const navigateToForgotPassword = async () => {
+    const trimmed = identifier.trim();
+    const isPhone = /^\d+$/.test(trimmed); // check if only digits
 
-    // Save phone number for forgot password page
-    /*     localStorage.setItem("forgotPassword_phoneNumber", phoneNumber);
-     */ navigate("/forgot-password");
+    try {
+      // 1️⃣ Call your backend API (using Axios instance)
+      const response = await api.post("/api/auth/forgot-password", null, {
+        params: { identifier: trimmed },
+      });
+
+      const apiData = response.data; // the full ApiResponse from backend
+      console.log("API Data:", apiData);
+      const identifiers = apiData?.data || {}; // expected { email, phone }
+      console.log("Identifiers:", identifiers);
+
+      // 3️⃣ Navigate to the forgot-password page, also passing state
+      navigate("/forgot-password", {
+        state: {
+          identifiers, // contains both email and phone
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching identifiers:", error);
+      alert("Could not retrieve identifiers. Please try again.");
+    }
   };
 
   return (
@@ -333,7 +384,7 @@ export const SignIn = () => {
             className="flex flex-col items-start gap-6 w-full max-w-[503px]"
           >
             <div className="flex flex-col items-start gap-6 w-full">
-              {/* Phone Number Field */}
+              {/* Phone Number or Email Field */}
               <div
                 className={`flex flex-col gap-3 w-full ${
                   isRTL ? "items-end" : "items-start"
@@ -344,17 +395,17 @@ export const SignIn = () => {
                     isRTL ? "text-right w-full" : "text-left w-full"
                   }`}
                 >
-                  {t("phoneNumber")}
+                  {t("phoneNumberOrEmail")}
                 </Label>
 
                 <div
                   className={`flex h-12 lg:h-14 items-center gap-2 px-4 py-2 w-full rounded-[10px] border border-solid border-[#c3c3c3] ${
-                    errors.phoneNumber && touchedFields.phoneNumber
+                    errors.identifier && touchedFields.identifier
                       ? "border-red-500"
                       : "border-[#c3c3c3]"
                   } ${isRTL ? "flex-row-reverse" : "flex-row"}`}
                 >
-                  <div
+                  {/* <div
                     className={`flex items-center gap-2 ${
                       isRTL ? "flex-row" : "flex-row-reverse"
                     }`}
@@ -363,28 +414,16 @@ export const SignIn = () => {
                     <span className="text-[#292929] text-sm font-['Cairo',Helvetica]">
                       +966
                     </span>
-                  </div>
+                  </div> */}
                   <Input
                     type="text"
-                    value={phoneNumber}
-                    /* inputMode="numeric"
-                    pattern="[0-9]*" */
+                    placeholder={t("phoneNumberOrEmailPlaceholder")}
+                    value={identifier}
                     onChange={(e) => {
-                      const onlyDigits = e.target.value;
-                      /* .replace(/[^0-9]/g, "")
-                        .slice(0, 10);
-                      setPhoneNumber(onlyDigits); */
-                      setPhoneNumber(e.target.value);
+                      setIdentifier(e.target.value);
                     }}
                     onBlur={() => {
-                      handleFieldBlur("phoneNumber");
-                      // ✅ Save to Redux only when user finishes typing
-                      dispatch(
-                        setGlobalValue({
-                          key: "usernamefromphonenumber",
-                          value: phoneNumber,
-                        })
-                      );
+                      handleFieldBlur("identifier");
                     }}
                     className={`flex-1 border-0 bg-transparent p-0 focus-visible:ring-0 text-[#292929] font-['Cairo',Helvetica] ${
                       isRTL ? "text-right" : "text-left"
@@ -392,13 +431,13 @@ export const SignIn = () => {
                     dir={isRTL ? "rtl" : "ltr"}
                   />
                 </div>
-                {errors.phoneNumber && touchedFields.phoneNumber && (
+                {errors.identifier && touchedFields.identifier && (
                   <p
                     className={`text-red-500 text-sm mt-1 ${
                       isRTL ? "text-right" : "text-left"
                     }`}
                   >
-                    {errors.phoneNumber}
+                    {errors.identifier}
                   </p>
                 )}
               </div>
@@ -457,7 +496,7 @@ export const SignIn = () => {
                   </p>
                 )}
 
-                {phoneNumber.trim() ? (
+                {identifier.trim() ? (
                   <button
                     type="button"
                     onClick={navigateToForgotPassword}

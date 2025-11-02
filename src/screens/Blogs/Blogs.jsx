@@ -1,8 +1,7 @@
 import React from "react";
-import { FooterSection } from "../../screens/Home/Sections/FooterSection/FooterSection";
+import { FooterSection } from "../../components/Layout/FooterSection";
 import { BlogsHeroSection } from "./BlogsHeroSection/BlogsHeroSection";
 import { BlogsMainSection } from "./BlogsMainSection/BlogsMainSection";
-
 
 export const Blogs = () => (
   <>

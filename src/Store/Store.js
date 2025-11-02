@@ -4,8 +4,9 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 const globalSlice = createSlice({
   name: "global",
   initialState: {
-    username: null,
-    usernamefromphonenumber: null,
+    Phone: null,
+    Email: null,
+    identifierType: null,
 
     // add anything else you need here
   },

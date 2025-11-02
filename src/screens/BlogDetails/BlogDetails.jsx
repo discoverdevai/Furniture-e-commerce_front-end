@@ -9,9 +9,9 @@ import {
   AvatarImage,
 } from "../../components/ui/BlogDetailsAvatar";
 import { Card, CardContent } from "../../components/ui/BlogDetailsCard";
-import { AppNavbar } from "../../components/Navbar";
+import { AppNavbar } from "../../components/Layout/Navbar";
 import { BlogDetailsSection } from "./Sections/BlogDetailsSection";
-import { FooterSection } from "../Home/Sections/FooterSection/FooterSection";
+import { FooterSection } from "../../components/Layout/FooterSection";
 
 export const BlogDetails = () => {
   const [blog, setBlog] = useState(null);

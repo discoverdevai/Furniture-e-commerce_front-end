@@ -20,9 +20,9 @@ import api from "../../Api/Axios";
 export const ResetPassword = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const phoneNumber = useSelector(
-    (state) => state.global.usernamefromphonenumber
-  );
+  const Phone = useSelector((state) => state.global.Phone);
+  const Email = useSelector((state) => state.global.Email);
+  const identifierType = useSelector((state) => state.global.identifierType);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -32,6 +32,12 @@ export const ResetPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isRTL = i18n.language === "ar";
+  let identifier = null;
+  if (identifierType === "PHONE") {
+    identifier = Phone?.trim();
+  } else if (identifierType === "EMAIL") {
+    identifier = Email?.trim();
+  }
 
   // Re-validate when language changes to update error messages
   useEffect(() => {
@@ -95,13 +101,18 @@ export const ResetPassword = () => {
     if (validateForm()) {
       try {
         // Call reset password API
-        const response = await api.post("api/auth/reset-password", null, {
-          params: {
-            username: phoneNumber,
-            newPassword: newPassword,
-          },
-        });
-        console.log("Password reset response:", newPassword + "" + phoneNumber);
+        const response = await api.post(
+          "api/auth/forgot-password/reset",
+          null,
+          {
+            params: {
+              type: identifierType, // "PHONE" or "EMAIL"
+              identifier: identifier,
+              newPassword: newPassword,
+            },
+          }
+        );
+        console.log("Password reset response:", newPassword + "" + Phone);
         console.log("Password reset response:", response.data);
 
         setIsSubmitting(false);

@@ -6,6 +6,9 @@ const resources = {
     translation: {
       welcome: "مرحبا بك في (اسم الويب سايت)",
       signIn: "تسجيل الدخول",
+      phoneNumberOrEmail: "رقم الجوال/البريد الإلكتروني",
+      phoneNumberOrEmailPlaceholder: "ادخل رقم الجوال أو البريد الإلكتروني",
+
       phoneNumber: "رقم الجوال",
       password: "كلمة المرور",
       passwordPlaceholder: "ادخل كلمة المرور",
@@ -54,6 +57,8 @@ const resources = {
       verificationCode: "رمز التحقق",
       verificationDescription:
         "يرجى إدخال رمز التحقق المكون من 4 أرقام، الذي تم إرساله إلى بريدك الإلكتروني",
+      otpExpiredError: "انتهت صلاحية رمز التحقق الخاص بك. يرجى طلب رمز جديد.",
+
       resendTimer: "يمكنك إعادة إرسال الرمز خلال",
       seconds: "ثانية",
       resendCode: "إعادة إرسال الرمز",
@@ -231,12 +236,30 @@ const resources = {
           },
         ],
       },
+      profile: {
+        title: "الملف الشخصي",
+        firstName: "الاسم الأول",
+        lastName: "الاسم الأخير",
+        email: "البريد الإلكتروني",
+        phone: "رقم الجوال",
+        save: "حفظ",
+      },
+      sidebar: {
+        profile: "الملف الشخصي",
+        changePassword: "تغيير كلمة المرور",
+        orders: "الطلبات",
+        favorites: "المفضلة",
+        savedAddresses: "العناوين المحفوظة",
+        logout: "تسجيل الخروج",
+      },
     },
   },
   en: {
     translation: {
       welcome: "Welcome to (Website Name)",
       signIn: "Sign In",
+      phoneNumberOrEmail: "Phone Number/Email",
+      phoneNumberOrEmailPlaceholder: "Enter phone number or email",
       phoneNumber: "Phone Number",
       password: "Password",
       passwordPlaceholder: "Enter password",
@@ -460,6 +483,22 @@ const resources = {
             type: "textarea",
           },
         ],
+      },
+      profile: {
+        title: "Profile",
+        firstName: "First Name",
+        lastName: "Last Name",
+        email: "Email",
+        phone: "Phone Number",
+        save: "Save",
+      },
+      sidebar: {
+        profile: "Profile",
+        changePassword: "Change Password",
+        orders: "Orders",
+        favorites: "Favorites",
+        savedAddresses: "Saved Addresses",
+        logout: "Logout",
       },
     },
   },

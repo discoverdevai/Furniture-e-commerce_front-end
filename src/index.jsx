@@ -22,8 +22,9 @@ import {SearchDropdown} from "./screens/Search/Search"
 import {MobileSearch} from "./screens/Search/MobileSearch"
 import { RecentlyArrived } from "./screens/RecentlyArrived/RecentlyArrived";
 import "./i18n";
+import { ProductDetails } from "./screens/ProductDetails/ProductDetails";
+import { BuyerProfile } from "./screens/BuyerProfile/BuyerProfile/BuyerProfile";
 
-  
 createRoot(document.getElementById("app")).render(
   <StrictMode>
     <Provider store={store}>
@@ -49,6 +50,8 @@ createRoot(document.getElementById("app")).render(
             <Route path="/recently-arrived" element={<RecentlyArrived />} />
 
 
+            <Route path="/product-details" element={<ProductDetails />} />
+            <Route path="/profile" element={<BuyerProfile />} />
           </Routes>
         </Router>
       </HeroUIProvider>

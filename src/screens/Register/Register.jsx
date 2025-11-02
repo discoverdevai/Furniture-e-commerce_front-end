@@ -149,9 +149,8 @@ export const Register = () => {
     e.preventDefault();
     setIsSubmitting(true);
     var username = firstName + " " + lastName;
-    console.log(username);
-
-    dispatch(setGlobalValue({ key: "username", value: username }));
+    dispatch(setGlobalValue({ key: "identifierType", value: "EMAIL" }));
+    dispatch(setGlobalValue({ key: "Email", value: email.trim() }));
 
     // Mark all fields as touched to show validation errors
     setTouchedFields({

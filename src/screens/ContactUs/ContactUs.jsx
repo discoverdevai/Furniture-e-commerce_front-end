@@ -1,5 +1,5 @@
 import React from "react";
-import { FooterSection } from "../../screens/Home/Sections/FooterSection/FooterSection";
+import { FooterSection } from "../../components/Layout/FooterSection";
 import { ContactUsMain } from "./ContactUsMain/ContactUsMain";
 
 export const ContactUs = () => (

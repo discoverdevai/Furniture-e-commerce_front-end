@@ -56,6 +56,24 @@ export const AppNavbar = () => {
     const to = PATHS[key] || "/";
     navigate(to);
   };
+  const NavIconButton = ({ to, icon, activeIcon, alt }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Check if current path belongs to this section
+    const isActive = location.pathname.startsWith(to);
+
+    return (
+      <IconButton onClick={() => navigate(to)} color="inherit">
+        <img
+          src={isActive ? activeIcon : icon}
+          alt={alt}
+          width={24}
+          height={24}
+        />
+      </IconButton>
+    );
+  };
 
   const toggleLanguage = () => {
     const newLang = isArabic ? "en" : "ar";
@@ -120,17 +138,19 @@ export const AppNavbar = () => {
               Logo
             </Typography>
 
-            {/* Hamburger (mobile) */}
+            {/* Hamburger (mobile only) */}
             <IconButton
               edge="end"
               onClick={toggleDrawer}
-              sx={{ display: { xs: "block", md: "none" }, color: "black" }}
+              sx={{
+                display: { xs: "block", md: "none" },
+                color: "black",
+              }}
             >
               <MenuIcon />
             </IconButton>
           </Box>
-
-          {/* ===== Center Nav Items ===== */}
+          {/* Center section (Nav items) */}
           <Box
             component="nav"
             sx={{
@@ -139,6 +159,8 @@ export const AppNavbar = () => {
               justifyContent: "center",
               flexGrow: 1,
               order: 2,
+              blur: 16,
+              zindex: 1,
             }}
           >
             {NAV_ITEMS.map((key) => {
@@ -166,8 +188,10 @@ export const AppNavbar = () => {
                       borderRadius: "50px",
                       backgroundColor: "#835F40",
                       transition: "width 0.3s ease",
+                    }, // give space for the underline
+                    "&:hover": {
+                      backgroundColor: "rgba(0,0,0,0.05)",
                     },
-                    "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
                   }}
                 >
                   {t(key)}
@@ -175,8 +199,7 @@ export const AppNavbar = () => {
               );
             })}
           </Box>
-
-          {/* ===== Icons ===== */}
+          {/* Icons Section */}
           <Box
             sx={{
               display: "flex",
@@ -184,18 +207,31 @@ export const AppNavbar = () => {
               alignItems: "center",
               order: isArabic ? 3 : 1,
               flexDirection: "row-reverse",
-              "& > :nth-of-type(1), & > :nth-of-type(2)": {
+              "& > :nth-of-type(1) ,& > :nth-of-type(2)": {
                 display: { xs: "none", md: "inline-flex" },
+              },
+
+              "& .MuiIconButton-root": {
+                p: 0.5, // smaller padding around icons
               },
             }}
           >
-            <IconButton onClick={toggleLanguage}>
-              <img src="/global.svg" alt="language" width={24} height={24} />
+            {/* Language toggle icon */}
+            <IconButton onClick={toggleLanguage} color="inherit">
+              <img
+                src="/global.svg"
+                alt="language icon"
+                width={24}
+                height={24}
+              />
             </IconButton>
-
-            <IconButton onClick={() => navigate("/profile")}>
-              <img src="/profile.svg" alt="profile" width={24} height={24} />
-            </IconButton>
+            
+            <NavIconButton
+              to="/profile"
+              icon="/profile.svg"
+              activeIcon="/active-profile.svg"
+              alt="Profile"
+            />
 
             <IconButton onClick={() => navigate("/cart")}>
               <img src="/bag-2.svg" alt="cart" width={24} height={24} />

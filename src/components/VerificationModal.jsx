@@ -17,14 +17,10 @@ export const VerificationModal = ({
 }) => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const username = useSelector((state) => state.global.username);
-  const usernamefromphonenumber = useSelector(
-    (state) => state.global.usernamefromphonenumber
-  );
-  /* const [phoneNumber, setPhoneNumber] = useState(() => {
-    const savedPhone = localStorage.getItem("forgotPassword_phoneNumber");
-    return savedPhone;
-  }); */
+  const Phone = useSelector((state) => state.global.Phone);
+  const Email = useSelector((state) => state.global.Email);
+  const identifierType = useSelector((state) => state.global.identifierType);
+
   const [verificationCode, setVerificationCode] = useState(["", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(60);
   const [canResend, setCanResend] = useState(false);
@@ -32,6 +28,14 @@ export const VerificationModal = ({
   const inputRefs = useRef([]);
 
   const isRTL = i18n.language === "ar";
+  let identifier = null;
+  if (identifierType === "PHONE") {
+    identifier = Phone?.trim();
+  } else if (identifierType === "EMAIL") {
+    identifier = Email?.trim();
+  }
+  /* console.log("identifierType:", identifierType);
+  console.log("identifier:", identifier); */
 
   const encryptEmail = (email) => {
     if (!email) return "";
@@ -93,24 +97,35 @@ export const VerificationModal = ({
     setTimeLeft(60);
     setCanResend(false);
     setVerificationCode(["", "", "", ""]);
-    console.log("verification for registration:", username);
-    console.log("verification for login:", usernamefromphonenumber);
-    console.log("verification for forget password:", usernamefromphonenumber);
-    let params = {
-      username:
-        verificationType === "registration"
-          ? username
-          : usernamefromphonenumber,
-    };
+
     try {
-      const response = await api.post("api/auth/send-otp", null, { params });
+      // Determine endpoint and params dynamically
+      let endpoint = "";
+      let params = {
+        type: identifierType, // "PHONE" or "EMAIL"
+        identifier: identifier, // from your redux state (cleaned above)
+      };
+
+      if (verificationType === "registration" || verificationType === "login") {
+        endpoint = "api/auth/send-otp";
+      } else if (verificationType === "forgot-password") {
+        endpoint = "api/auth/forgot-password/send-otp";
+      }
+
+      if (!endpoint) {
+        console.error("No endpoint defined for:", verificationType);
+        return;
+      }
+
+      // ✅ Make POST request (your backend expects @RequestParam)
+      const response = await api.post(endpoint, null, { params });
 
       Swal.fire({
         title: t("otpResentTitle"),
         text: t("otpResentMessage"),
         icon: "success",
         confirmButtonText: t("ok"),
-        confirmButtonColor: "#28a745", // ✅ green for success
+        confirmButtonColor: "#28a745",
         customClass: {
           popup: isRTL ? "swal-rtl" : "swal-ltr",
           title: "font-['Cairo',Helvetica] text-center",
@@ -118,14 +133,18 @@ export const VerificationModal = ({
           confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
         },
       });
+
+      // Refocus on first input
       inputRefs.current[0]?.focus();
     } catch (error) {
+      console.error("Resend OTP error:", error);
+
       Swal.fire({
         title: t("errorTitle"),
         text: t("otpResendError"),
         icon: "error",
         confirmButtonText: t("ok"),
-        confirmButtonColor: "#dc3545", // ❌ red for error
+        confirmButtonColor: "#dc3545",
         customClass: {
           popup: isRTL ? "swal-rtl" : "swal-ltr",
           title: "font-['Cairo',Helvetica] text-center",
@@ -133,6 +152,7 @@ export const VerificationModal = ({
           confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
         },
       });
+
       inputRefs.current[0]?.focus();
     }
   };
@@ -141,31 +161,31 @@ export const VerificationModal = ({
     if (code.length !== 4 || isVerifying) return;
 
     setIsVerifying(true);
-    console.log("verification for registration:", username);
-    console.log("verification for login:", usernamefromphonenumber);
-    console.log("verification for forget password:", usernamefromphonenumber);
 
     try {
       let endpoint = "";
       let params = {};
       if (verificationType === "registration") {
         params = {
-          username: username,
+          type: identifierType,
+          identifier: Email,
           otp: code,
         };
         endpoint = "api/auth/verify-buyer-registration";
       } else if (verificationType === "login") {
         params = {
-          username: usernamefromphonenumber,
+          type: identifierType, // "PHONE" or "EMAIL"
+          identifier: identifier,
           otp: code,
         };
         endpoint = "api/auth/login-buyer-verify";
       } else if (verificationType === "forgot-password") {
         params = {
-          username: usernamefromphonenumber,
+          type: identifierType, // "PHONE" or "EMAIL"
+          identifier: identifier,
           otp: code,
         };
-        endpoint = "api/auth/verify-otp";
+        endpoint = "api/auth/forgot-password/verify-otp";
       }
 
       if (!endpoint) {

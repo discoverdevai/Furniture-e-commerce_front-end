@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { AppNavbar } from "../../../components/Navbar";
+import { AppNavbar } from "../../../components/Layout/Navbar";
 
 export const ContactUsMain = () => {
   const { t, i18n } = useTranslation();
