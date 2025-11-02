@@ -15,7 +15,7 @@ import {
 import { useTranslation } from "react-i18next";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router-dom";
-import { SearchModal } from "./ui/SearchModal"; // adjust path if needed
+import { SearchModal } from "../ui/SearchModal"; // adjust path if needed
 
 // ===== Constants =====
 const NAV_ITEMS = [

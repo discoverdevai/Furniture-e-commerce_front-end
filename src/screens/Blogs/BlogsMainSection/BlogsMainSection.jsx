@@ -84,7 +84,7 @@ export const BlogsMainSection = () => {
           >
             {displayedBlogs.slice(0, 2).map((article) => (
               <button onClick={() => navigate(`/blog/${article.id}`)}>
- <PopularArticlesCard
+                <PopularArticlesCard
                 key={article.id}
                 date={new Date(article.createdAt).toLocaleDateString()}
                 title={getTitle(article.subject)}

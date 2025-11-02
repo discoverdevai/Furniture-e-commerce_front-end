@@ -1,7 +1,7 @@
 import { OffersCategories } from "./Sections/RecentlyArrivedCategories";
-import { AppNavbar } from "../../components/Navbar";
-import BestSelling from "./Sections/RecentlyArrived/RecentlyArrived"
-import { FooterSection } from "../Home/Sections/FooterSection/FooterSection";
+import { AppNavbar } from "../../components/Layout/Navbar";
+import BestSelling from "./Sections/RecentlyArrived/RecentlyArrived";
+import { FooterSection } from "../../components/Layout/FooterSection";
 
 export const RecentlyArrived = () => {
   return (
@@ -13,8 +13,8 @@ export const RecentlyArrived = () => {
       <section className="w-full pt-7 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-20">
         <OffersCategories />
       </section>
-      <BestSelling/>
-      <FooterSection/>
+      <BestSelling />
+      <FooterSection />
     </div>
   );
 };

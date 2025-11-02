@@ -5,7 +5,7 @@ import { useMediaQuery } from "@mui/material";
 import { AppNavbar } from "../../../components/Layout/Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import api from "../../../Api/Axios"
+import api from "../../../Api/Axios";
 
 export const BlogsHeroSection = () => {
   const { t, i18n } = useTranslation();
@@ -20,8 +20,8 @@ export const BlogsHeroSection = () => {
     const fetchBlogs = async () => {
       try {
         const res = await api.get("/api/blogs", {
-  params: { lang:currentLang },
-}); // 🔹 Adjust backend URL if needed
+          params: { lang: currentLang },
+        }); // 🔹 Adjust backend URL if needed
         if (res.data.success) {
           setBlogs(res.data.data);
         }
@@ -142,7 +142,7 @@ export const BlogsHeroSection = () => {
             className={`${
               isMobile
                 ? "flex flex-nowrap overflow-x-auto gap-4 pb-4 scrollbar-hide"
-                : "flex flex-wrap justify-between gap-6"
+                : "flex flex-wrap justify-start gap-6"
             }`}
           >
             {blogs.length > 0 ? (
@@ -155,19 +155,16 @@ export const BlogsHeroSection = () => {
                       : "flex-1 min-w-[280px] max-w-[300px]"
                   }`}
                 >
-                  <button onClick={() => navigate(`/blog/${blog.id}`)}
->
-                     <LatestArticlesCard
-                    image={`/Article-${(index % 4) + 1}.png`} // Static placeholder images
-                    date={new Date(blog.createdAt).toLocaleDateString()}
-                    title={blog.subject}
-                    description={blog.intro}
-                    author={blog.authorName || "Mohamed Ahmed"}
-                    authorImage="/ellipse-13.png"
-                  />
-
+                  <button onClick={() => navigate(`/blog/${blog.id}`)}>
+                    <LatestArticlesCard
+                      image={`/Article-${(index % 4) + 1}.png`} // Static placeholder images
+                      date={new Date(blog.createdAt).toLocaleDateString()}
+                      title={blog.subject}
+                      description={blog.intro}
+                      author={blog.authorName || "Mohamed Ahmed"}
+                      authorImage="/ellipse-13.png"
+                    />
                   </button>
-                 
                 </div>
               ))
             ) : (
