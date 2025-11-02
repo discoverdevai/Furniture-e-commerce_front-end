@@ -1,5 +1,5 @@
 // HeroSection.tsx
-import { AppNavbar } from "../../../../components/Navbar";
+import { AppNavbar } from "../../../../components/Layout/Navbar";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "@mui/material";

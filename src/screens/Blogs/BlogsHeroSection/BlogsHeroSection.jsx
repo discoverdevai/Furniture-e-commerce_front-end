@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { LatestArticlesCard } from "../../../components/ui/LatestArticlesCard";
 import { useMediaQuery } from "@mui/material";
-import { AppNavbar } from "../../../components/Navbar";
+import { AppNavbar } from "../../../components/Layout/Navbar";
 import { useNavigate } from "react-router-dom";
 export const blogsData = [
   {

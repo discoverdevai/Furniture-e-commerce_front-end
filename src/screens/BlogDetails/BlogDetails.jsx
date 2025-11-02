@@ -7,15 +7,15 @@ import {
   AvatarImage,
 } from "../../components/ui/BlogDetailsAvatar";
 import { Card, CardContent } from "../../components/ui/BlogDetailsCard";
-import { AppNavbar } from "../../components/Navbar";
+import { AppNavbar } from "../../components/Layout/Navbar";
 import { BlogDetailsSection } from "./Sections/BlogDetailsSection";
-import { FooterSection } from "../Home/Sections/FooterSection/FooterSection";
+import { FooterSection } from "../../components/Layout/FooterSection";
 
 export const BlogDetails = () => {
-    const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
-    
+
   return (
     <>
       <div className="bg-[#faf8f6] w-full h-[408px] rounded-b-[100px] mt-[-22px]">
@@ -62,8 +62,6 @@ export const BlogDetails = () => {
                 alt="غرفة معيشة بلون بيج"
                 src="/image 53.png"
               />
-
-    
             </div>
           </div>
         </div>

@@ -17,8 +17,10 @@ import { BestSelling } from "./screens/BestSelling/BestSelling";
 import { AboutUs } from "./screens/AboutUs/AboutUs";
 import { ContactUs } from "./screens/ContactUs/ContactUs";
 import { BlogDetails } from "./screens/BlogDetails/BlogDetails";
-import {OffersScreen} from "./screens/Offers/AllOffers"
+import { OffersScreen } from "./screens/Offers/AllOffers";
 import "./i18n";
+import { ProductDetails } from "./screens/ProductDetails/ProductDetails";
+import { BuyerProfile } from "./screens/BuyerProfile/BuyerProfile/BuyerProfile";
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
@@ -40,6 +42,8 @@ createRoot(document.getElementById("app")).render(
             <Route path="/best-selling" element={<BestSelling />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/product-details" element={<ProductDetails />} />
+            <Route path="/profile" element={<BuyerProfile />} />
           </Routes>
         </Router>
       </HeroUIProvider>

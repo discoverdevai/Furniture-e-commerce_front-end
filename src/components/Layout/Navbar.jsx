@@ -50,6 +50,24 @@ export const AppNavbar = () => {
     const to = PATHS[key] || "/";
     navigate(to);
   };
+  const NavIconButton = ({ to, icon, activeIcon, alt }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Check if current path belongs to this section
+    const isActive = location.pathname.startsWith(to);
+
+    return (
+      <IconButton onClick={() => navigate(to)} color="inherit">
+        <img
+          src={isActive ? activeIcon : icon}
+          alt={alt}
+          width={24}
+          height={24}
+        />
+      </IconButton>
+    );
+  };
 
   const toggleLanguage = () => {
     const newLang = isArabic ? "en" : "ar";
@@ -189,9 +207,12 @@ export const AppNavbar = () => {
           <IconButton onClick={toggleLanguage} color="inherit">
             <img src="/global.svg" alt="language icon" width={24} height={24} />
           </IconButton>
-          <IconButton onClick={() => navigate("/profile")} color="inherit">
-            <img src="/profile.svg" alt="profile" width={24} height={24} />
-          </IconButton>
+          <NavIconButton
+            to="/profile"
+            icon="/profile.svg"
+            activeIcon="/active-profile.svg"
+            alt="Profile"
+          />
 
           <IconButton onClick={() => navigate("/cart")} color="inherit">
             <img src="/bag-2.svg" alt="cart" width={24} height={24} />

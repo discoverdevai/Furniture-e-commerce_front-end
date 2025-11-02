@@ -1,6 +1,6 @@
 import React from "react";
 import { AboutUsHeroSection } from "./AboutUsHeroSection/AboutUsHeroSection";
-import { FooterSection } from "../../screens/Home/Sections/FooterSection/FooterSection";
+import { FooterSection } from "../../components/Layout/FooterSection";
 import { AboutUsMainSection } from "./AboutUsMainSection/AboutUsMainSection";
 import { AboutUsMainSection2 } from "./AboutUsMainSection2/AboutUsMainSection2";
 export const AboutUs = () => {

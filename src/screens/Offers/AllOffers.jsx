@@ -1,7 +1,7 @@
 import { OffersCategories } from "./Sections/OffersCategories";
-import { AppNavbar } from "../../components/Navbar";
-import Offers from "./Sections/Offers/Offers"
-import { FooterSection } from "../../screens/Home/Sections/FooterSection/FooterSection";
+import { AppNavbar } from "../../components/Layout/Navbar";
+import Offers from "./Sections/Offers/Offers";
+import { FooterSection } from "../../components/Layout/FooterSection";
 
 export const OffersScreen = () => {
   return (
@@ -13,8 +13,8 @@ export const OffersScreen = () => {
       <section className="w-full pt-7 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-20">
         <OffersCategories />
       </section>
-      <Offers/>
-      <FooterSection/>
+      <Offers />
+      <FooterSection />
     </div>
   );
 };

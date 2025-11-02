@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setGlobalValue } from "../../Store/Store";
+import { useLocation } from "react-router-dom";
+
 import { ChevronRight as ChevronRightIcon, Mail } from "lucide-react";
 import { RiMailSendLine } from "react-icons/ri";
 import { LuMessageCircleMore } from "react-icons/lu";
@@ -22,18 +24,20 @@ export const ForgotPassword = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [selectedMethod, setSelectedMethod] = useState("sms");
-  /* const [phoneNumber, setPhoneNumber] = useState(() => {
-    const savedPhone = localStorage.getItem("forgotPassword_phoneNumber");
-    return savedPhone;
-  }); */
-  const usernamefromphonenumber = useSelector(
-    (state) => state.global.usernamefromphonenumber
-  );
+  const location = useLocation();
+  const { identifiers } = location.state || {};
 
-  const [email, setEmail] = useState("user@gmail.com");
+  const [selectedMethod, setSelectedMethod] = useState("sms");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    if (identifiers) {
+      if (identifiers.email) setEmail(identifiers.email);
+      if (identifiers.phoneNumber) setPhoneNumber(identifiers.phoneNumber);
+    }
+  }, [identifiers]);
 
   const isRTL = i18n.language === "ar";
 
@@ -51,17 +55,30 @@ export const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const identifierType = selectedMethod === "sms" ? "PHONE" : "EMAIL";
+    const identifier =
+      selectedMethod === "sms"
+        ? phoneNumber?.replace(/\s+/g, "")
+        : email?.trim();
 
     try {
-      const response = await api.post("api/auth/send-otp", null, {
-        params: {
-          username: usernamefromphonenumber,
-        },
-      });
+      const response = await api.post(
+        "api/auth/forgot-password/send-otp",
+        null, // no body, params are enough
+        {
+          params: {
+            type: identifierType,
+            identifier,
+          },
+        }
+      );
+
+      console.log("Response:", response.data);
 
       setShowVerificationModal(true);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error sending OTP:", error);
+
       Swal.fire({
         title: t("errorTitle") || "Error",
         text:
@@ -245,7 +262,7 @@ export const ForgotPassword = () => {
                         }`}
                         dir="ltr"
                       >
-                        +966 {encryptPhoneNumber(usernamefromphonenumber)}
+                        +966 {encryptPhoneNumber(phoneNumber)}
                       </span>
                     </div>
                   </span>
