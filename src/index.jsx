@@ -22,8 +22,14 @@ import { SearchDropdown } from "./screens/Search/Search";
 import { MobileSearch } from "./screens/Search/MobileSearch";
 import { RecentlyArrived } from "./screens/RecentlyArrived/RecentlyArrived";
 import "./i18n";
-import { ProductDetails } from "./screens/ProductDetails/ProductDetails";
+import { ProductDetails } from "./screens/mainFlowScreens/ProductDetails/ProductDetails";
 import { BuyerProfile } from "./screens/BuyerProfile/BuyerProfile/BuyerProfile";
+import {BrandProdutsScreen} from "./screens/mainFlowScreens/BrandProductsScreen/BrandProdutsScreen"
+import {CartScreen} from "./screens/mainFlowScreens/CartScreen/CartScreen"
+import {OrderScreen} from  "./screens/mainFlowScreens/OrderScreen/OrderScreen"
+import {OrderTrackingScreen} from  "./screens/mainFlowScreens/OrderTrackingScreen/OrderTrackingScreen"
+import {PreviousOrdersScreen} from "./screens/mainFlowScreens/PreviousOrdersScreen/PreviousOrdersScreen"
+
 import { BuyerOrders } from "./screens/BuyerProfile/BuyerOrders/BuyerOrders";
 import { BuyerChangePassword } from "./screens/BuyerProfile/BuyerChangePassword/BuyerChangePassword";
 import { BuyerWishList } from "./screens/BuyerProfile/BuyerWishList/BuyerWishList";
@@ -56,6 +62,13 @@ createRoot(document.getElementById("app")).render(
             <Route path="/recently-arrived" element={<RecentlyArrived />} />
             <Route path="/product-details" element={<ProductDetails />} />
             <Route path="/profile" element={<BuyerProfile />} />
+            <Route path="/brand-product" element={<BrandProdutsScreen />} />
+            <Route path="/cart-screen" element={<CartScreen />} />
+            <Route path="/order-screen" element={<OrderScreen />} />
+            <Route path="/order-tracking" element={<OrderTrackingScreen />} />
+            <Route path="/previous-orders" element={<PreviousOrdersScreen />} />    
+
+
             <Route
               path="/profile/change-password"
               element={<BuyerChangePassword />}
