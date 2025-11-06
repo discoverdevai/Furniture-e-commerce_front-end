@@ -221,12 +221,12 @@ export const VerificationModal = ({
           }
         });
       } else if (verificationType === "login") {
-        const { token, username: user, email: userEmail, role } = response.data;
+        const userData = response.data;
+        localStorage.setItem("userData", JSON.stringify(userData));
 
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("username", user);
-        localStorage.setItem("email", userEmail);
-        localStorage.setItem("role", role);
+        //for use later
+        /*  const user = JSON.parse(sessionStorage.getItem("userData"));
+        console.log(user.username); // shehabgamal */
 
         Swal.fire({
           title: t("loginSuccessTitle"),
