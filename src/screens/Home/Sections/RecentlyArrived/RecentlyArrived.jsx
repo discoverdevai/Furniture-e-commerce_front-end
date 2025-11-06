@@ -8,7 +8,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const RecentlyArrived = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate  =useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOffers = async () => {
@@ -24,8 +24,8 @@ const RecentlyArrived = () => {
             shop: item.vendorName,
             image: item.imageUrl || "/image 4.png",
             saleImage: "/004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
-             rating: item.averageRating,// static for now
-            isOnSale :item.isOnSale
+            rating: item.averageRating, // static for now
+            isOnSale: item.isOnSale,
           }));
           setOffers(mappedOffers);
         }
@@ -42,7 +42,9 @@ const RecentlyArrived = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <p className="text-[#683800] font-semibold text-lg">جاري تحميل العروض...</p>
+        <p className="text-[#683800] font-semibold text-lg">
+          جاري تحميل العروض...
+        </p>
       </div>
     );
   }
@@ -72,8 +74,11 @@ const RecentlyArrived = () => {
           <Button
             variant="ghost"
             className="inline-flex items-center gap-3 h-auto p-0 hover:bg-transparent"
-         onClick={() => {navigate("/recently-arrived");window.scrollTo(0, 0);}}
-         >
+            onClick={() => {
+              navigate("/recently-arrived");
+              window.scrollTo(0, 0);
+            }}
+          >
             <span
               className="
                 font-[number:var(--18-med-font-weight)]
@@ -89,7 +94,11 @@ const RecentlyArrived = () => {
             >
               عرض المزيد
             </span>
-            <img className="w-6 h-6" alt="Line arrow right" src="/line-arrow-right.svg" />
+            <img
+              className="w-6 h-6"
+              alt="Line arrow right"
+              src="/line-arrow-right.svg"
+            />
           </Button>
         </div>
 
@@ -132,13 +141,13 @@ const RecentlyArrived = () => {
                   </Button>
                 </div>
 
-                  {offer.isOnSale && (
-  <img
-    className="absolute top-[90px] sm:top-[127px] left-1/2 -translate-x-1/2 w-[120px] sm:w-[194px] h-24 sm:h-36 object-cover"
-    alt="Sale animation"
-    src={offer.saleImage}
-  />
-)}
+                {offer.isOnSale && (
+                  <img
+                    className="absolute top-[90px] sm:top-[127px] left-1/2 -translate-x-1/2 w-[120px] sm:w-[194px] h-24 sm:h-36 object-cover"
+                    alt="Sale animation"
+                    src={offer.saleImage}
+                  />
+                )}
               </div>
 
               {/* Content */}

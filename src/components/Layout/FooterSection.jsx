@@ -118,7 +118,7 @@ export const FooterSection = () => {
                   href="https://instagram.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all hover:scale-110"
+                  className="w-10 h-10 flex items-center justify-center transition-all hover:scale-110"
                 >
                   <img
                     src="/skill-icons_instagram.svg"
@@ -131,7 +131,7 @@ export const FooterSection = () => {
                   href="https://wa.me/966551234567"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all hover:scale-110"
+                  className="w-10 h-10  flex items-center justify-center transition-all hover:scale-110"
                 >
                   <img
                     src="/logos_whatsapp-icon.svg"
@@ -145,7 +145,7 @@ export const FooterSection = () => {
                   href="https://facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all hover:scale-110"
+                  className="w-10 h-10  flex items-center justify-center   transition-all hover:scale-110"
                 >
                   <img
                     src="/logos_facebook.svg"
@@ -200,7 +200,7 @@ export const FooterSection = () => {
               {footerLinks.about.map((link, index) => (
                 <li key={index}>
                   <button
-                    onClick={() => handleNavClick(link.path)} 
+                    onClick={() => handleNavClick(link.path)}
                     className="text-[#1A1713] font-medium text-[18px] hover:text-[#A67C52] transition-colors duration-200"
                     style={{ fontFamily: "Cairo" }}
                   >
@@ -286,7 +286,7 @@ export const FooterSection = () => {
                   href="https://wa.me/966551234567"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:shadow-md transition-all hover:scale-110"
+                  className=" transition-all hover:scale-110"
                 >
                   <img
                     src="/logos_whatsapp-icon.svg"
@@ -299,7 +299,7 @@ export const FooterSection = () => {
                   href="https://instagram.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:shadow-md transition-all hover:scale-110"
+                  className="transition-all hover:scale-110"
                 >
                   <img
                     src="/skill-icons_instagram.svg"

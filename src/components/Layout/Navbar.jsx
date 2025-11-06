@@ -27,7 +27,7 @@ const NAV_ITEMS = [
   "about_us",
   "contact_us",
 ];
-const DRAWER_EXTRA_ITEMS = ["profile"];
+const DRAWER_EXTRA_ITEMS = [{ key: "Drawer_profile", path: "/profile" }];
 const PATHS = {
   home: "/home",
   stores: "/stores",
@@ -225,7 +225,7 @@ export const AppNavbar = () => {
                 height={24}
               />
             </IconButton>
-            
+
             <NavIconButton
               to="/profile"
               icon="/profile.svg"
@@ -233,9 +233,12 @@ export const AppNavbar = () => {
               alt="Profile"
             />
 
-            <IconButton onClick={() => navigate("/cart")}>
-              <img src="/bag-2.svg" alt="cart" width={24} height={24} />
-            </IconButton>
+            <NavIconButton
+              to="/cart"
+              icon="/bag-2.svg"
+              activeIcon="/cart-active.svg"
+              alt="cart"
+            />
 
             {/* 👇 Search opens modal or full screen depending on size */}
             <IconButton onClick={handleSearchClick}>
@@ -304,11 +307,11 @@ export const AppNavbar = () => {
                 />
               </ListItemButton>
             ))}
-            {DRAWER_EXTRA_ITEMS.map((key) => (
+            {DRAWER_EXTRA_ITEMS.map(({ key, path }) => (
               <ListItemButton
                 key={key}
                 onClick={() => {
-                  handleNavClick(key);
+                  navigate(path);
                   toggleDrawer();
                 }}
               >
