@@ -24,6 +24,7 @@ import { LanguageToggle } from "../../components/LanguageToggle";
 import { VerificationModal } from "../../components/VerificationModal";
 import api from "../../Api/Axios";
 import { user } from "@heroui/react";
+import Swal from "sweetalert2";
 
 export const Register = () => {
   const { t, i18n } = useTranslation();
@@ -189,6 +190,51 @@ export const Register = () => {
           "❌ Registration failed:",
           error.response?.data || error.message
         );
+        if (error.response?.data?.message == "Username already exists") {
+          Swal.fire({
+            title: t("errorTitle"),
+            text: t("username_exists"),
+            icon: "error",
+            confirmButtonText: t("ok"),
+            confirmButtonColor: "#dc3545",
+            customClass: {
+              popup: isRTL ? "swal-rtl" : "swal-ltr",
+              title: `font-['Cairo',Helvetica] text-center`,
+              htmlContainer: `font-['Cairo',Helvetica] text-center`,
+              confirmButton: `font-['Cairo',Helvetica] text-lg py-3 px-8`,
+            },
+          });
+        } else if (error.response?.data?.message == "Email already exists") {
+          Swal.fire({
+            title: t("errorTitle"),
+            text: t("email_exists"),
+            icon: "error",
+            confirmButtonText: t("ok"),
+            confirmButtonColor: "#dc3545",
+            customClass: {
+              popup: isRTL ? "swal-rtl" : "swal-ltr",
+              title: `font-['Cairo',Helvetica] text-center`,
+              htmlContainer: `font-['Cairo',Helvetica] text-center`,
+              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+            },
+          });
+        } else if (
+          error.response?.data?.message == "Failed to send OTP email:"
+        ) {
+          Swal.fire({
+            title: t("errorTitle"),
+            text: t("otp_failed"),
+            icon: "error",
+            confirmButtonText: t("ok"),
+            confirmButtonColor: "#dc3545",
+            customClass: {
+              popup: isRTL ? "swal-rtl" : "swal-ltr",
+              title: `font-['Cairo',Helvetica] text-center`,
+              htmlContainer: `font-['Cairo',Helvetica] text-center`,
+              confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+            },
+          });
+        }
         setIsSubmitting(false);
       }
     } else {
@@ -452,6 +498,7 @@ export const Register = () => {
                   <Input
                     type="text"
                     value={phoneNumber}
+                    placeholder={t("phoneNumberPlaceholder")}
                     inputMode="numeric"
                     pattern="[0-9]*"
                     onChange={(e) => {
@@ -535,7 +582,7 @@ export const Register = () => {
                     errors.password && touchedFields.password
                       ? "border-red-500"
                       : "border-[#c3c3c3]"
-                  } ${isRTL ? "flex-row" : "flex-row-reverse"}`}
+                  } ${isRTL ? "flex-row" : "flex-row"}`}
                 >
                   <Input
                     type={showPassword ? "text" : "password"}
