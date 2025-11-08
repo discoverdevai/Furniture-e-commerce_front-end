@@ -34,6 +34,7 @@ import { BuyerOrders } from "./screens/BuyerProfile/BuyerOrders/BuyerOrders";
 import { BuyerChangePassword } from "./screens/BuyerProfile/BuyerChangePassword/BuyerChangePassword";
 import { BuyerWishList } from "./screens/BuyerProfile/BuyerWishList/BuyerWishList";
 import { BuyerAddress } from "./screens/BuyerProfile/BuyerAddress/BuyerAddress";
+import { SearchResult } from "./screens/Search/SearchResult";
 import { Cart } from "./screens/Cart/Cart";
 
 createRoot(document.getElementById("app")).render(
@@ -59,16 +60,15 @@ createRoot(document.getElementById("app")).render(
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/search" element={<SearchDropdown />} />
             <Route path="/search2" element={<MobileSearch />} />
+            <Route path="/search-result" element={<SearchResult />} />
             <Route path="/recently-arrived" element={<RecentlyArrived />} />
-            <Route path="/product-details" element={<ProductDetails />} />
+            <Route path="/product-details/:id/:storeName" element={<ProductDetails />} />
             <Route path="/profile" element={<BuyerProfile />} />
-            <Route path="/brand-product" element={<BrandProdutsScreen />} />
+            <Route path="/store/:storeName" element={<BrandProdutsScreen />} />
             <Route path="/cart-screen" element={<CartScreen />} />
             <Route path="/order-screen" element={<OrderScreen />} />
             <Route path="/order-tracking" element={<OrderTrackingScreen />} />
             <Route path="/previous-orders" element={<PreviousOrdersScreen />} />    
-
-
             <Route
               path="/profile/change-password"
               element={<BuyerChangePassword />}
