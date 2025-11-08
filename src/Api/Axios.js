@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import i18n from "../i18n/index";
 // Create Axios instance
 const api = axios.create({
   baseURL: "http://localhost:8080", // change this to your backend base URL
@@ -8,11 +8,16 @@ const api = axios.create({
 // Request Interceptor
 api.interceptors.request.use(
   (config) => {
+    const lang = i18n.language || "ar";
     const userData = JSON.parse(localStorage.getItem("userData"));
     const token = userData?.token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // attach token
     }
+    config.params = {
+      ...(config.params || {}),
+      lang: lang, // e.g., "en" or "ar"
+    };
     return config;
   },
   (error) => Promise.reject(error)

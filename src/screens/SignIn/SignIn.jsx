@@ -5,7 +5,7 @@ import {
   EyeOff as EyeOffIcon,
 } from "lucide-react";
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi2";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setGlobalValue } from "../../Store/Store";
@@ -40,8 +40,28 @@ export const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const isRTL = i18n.language === "ar";
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await api.get("/api/blogs");
+        if (response.data.success) {
+          console.log(response.data.data);
+          setBlogs(response.data.data); // store array of blogs
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, [i18n.language]);
 
   // Re-validate when language changes to update error messages
   React.useEffect(() => {
@@ -49,6 +69,25 @@ export const SignIn = () => {
       validateForm();
     }
   }, [i18n.language]);
+
+  // Navigation handlers
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === blogs.length - 1 ? 0 : prev + 1));
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? blogs.length - 1 : prev - 1));
+  };
+
+  const blog = blogs[currentIndex];
+
+  if (!blog) return null;
+
+  if (loading) {
+    return (
+      <div className="text-center py-10 text-gray-600">Loading cards...</div>
+    );
+  }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -141,6 +180,7 @@ export const SignIn = () => {
 
     try {
       const response = await api.post("api/auth/login-buyer", payload);
+
       console.log("Response:", response.data);
 
       // ✅ Only if success = true
@@ -271,7 +311,10 @@ export const SignIn = () => {
 
             {/* Testimonial Card - Positioned relative to image */}
 
-            <Card className="absolute  bottom-4 left-4 right-4 lg:bottom-8 lg:left-8 lg:right-8 border-0 ">
+            <Card
+              key={blog.id}
+              className="absolute  bottom-4 left-4 right-4 lg:bottom-8 lg:left-8 lg:right-8 border-0 "
+            >
               <CardContent className="flex flex-col items-center justify-center gap-4 lg:gap-6 p-8 lg:p-10 bg-white/75 backdrop-blur-sm rounded-[15px] lg:rounded-[20px] shadow-sm border-0 h-[145px] sm:min-h-[160px]  md:min-h-[180px] lg:min-h-[200px] ">
                 <div
                   className={`flex flex-col w-full items-center justify-center gap-3 lg:gap-4 ${
@@ -283,7 +326,7 @@ export const SignIn = () => {
                       isRTL ? "text-right" : "text-left"
                     }`}
                   >
-                    {t("testimonial")}
+                    {blog.intro}
                   </p>
 
                   <div
@@ -296,25 +339,27 @@ export const SignIn = () => {
                         isRTL ? "flex-row" : "flex-row-reverse"
                       }`}
                     >
-                      <div className="p-[1px] rounded-full bg-gradient-to-l from-[#805b3c] to-[#d3baa4]">
+                      <div className=" group p-[1px] rounded-full bg-gradient-to-l from-[#805b3c] to-[#d3baa4]">
                         <Button
+                          onClick={handleNext}
                           variant="outline"
                           size="icon"
                           className="flex w-8 h-8 lg:w-12 lg:h-12 items-center justify-center 
-               rounded-full bg-white/75 hover:bg-white/90 transition"
+               rounded-full bg-white/75 hover:bg-[#805b3c] transition"
                         >
-                          <HiOutlineArrowRight className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803]" />
+                          <HiOutlineArrowRight className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803] group-hover:text-[#ffffff]  transition-colors " />
                         </Button>
                       </div>
 
-                      <div className="p-[1px] rounded-full bg-gradient-to-r from-[#805b3c] to-[#d3baa4]">
+                      <div className=" group p-[1px] rounded-full bg-gradient-to-r from-[#805b3c] to-[#d3baa4]">
                         <Button
+                          onClick={handlePrev}
                           variant="outline"
                           size="icon"
                           className="flex w-8 h-8 lg:w-12 lg:h-12 items-center justify-center 
-               rounded-full bg-white/75 hover:bg-white/90 transition"
+               rounded-full bg-white/75 hover:bg-[#805b3c]  transition"
                         >
-                          <HiOutlineArrowLeft className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803]" />
+                          <HiOutlineArrowLeft className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803] group-hover:text-white transition-colors" />
                         </Button>
                       </div>
                     </div>
@@ -334,7 +379,7 @@ export const SignIn = () => {
                             isRTL ? "text-right" : "text-left"
                           }`}
                         >
-                          {t("userName")}
+                          {blog.authorName || "Mohamed Ahmed"}
                         </p>
 
                         <p
@@ -342,7 +387,7 @@ export const SignIn = () => {
                             isRTL ? "text-right" : "text-left"
                           }`}
                         >
-                          {t("date")}
+                          {new Date(blog.createdAt).toLocaleDateString()}
                         </p>
                       </div>
 

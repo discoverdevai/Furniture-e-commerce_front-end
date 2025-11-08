@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { GlobalProductCard } from "../../../../components/ui/GlobalProductCard";
 import { Button } from "../../../../components/ui/button";
+import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
+import { Loader2 } from "lucide-react";
 import api from "../../../../Api/Axios";
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +11,31 @@ const MostPurchased = () => {
   const [offers, setOffers] = useState([]);
   const [cartItems, setCartItems] = useState([]); // ✅ Added cart state
   const [loading, setLoading] = useState(true);
+  const [displayOffers, setDisplayOffers] = useState([]);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+  //  Fetch the cart once (token = backend, guest = localStorage)
+  const fetchCart = useCallback(async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const token = userData?.token;
+
+    if (token) {
+      try {
+        const res = await api.get("/api/cart/items");
+        /* The backend returns an array of  
+         { productId, quantity, variant, ... } */
+        setCartItems(res.data?.data?.items || []);
+      } catch (err) {
+        console.error("❌  Could not fetch cart items:", err);
+      }
+    } else {
+      const lsCart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartItems(lsCart);
+    }
+  }, []);
+
+  //   fetch products AND wishlist but call fetchCart() afterwards
 
   useEffect(() => {
     const fetchProductsAndWishlist = async () => {
@@ -29,6 +56,7 @@ const MostPurchased = () => {
             saleImage: "/004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
             rating: item.averageRating,
             isOnSale: item.isOnSale,
+            stock: item.stockQuantity,
             isInWishlist: false,
           }));
           // 2️⃣ Check login state
@@ -63,10 +91,29 @@ const MostPurchased = () => {
         console.error("❌ Failed to fetch offers:", error);
       } finally {
         setLoading(false);
+        fetchCart();
       }
     };
     fetchProductsAndWishlist();
   }, []);
+
+  //  Calculate remaining stock for every product and store it in displayOffers */
+
+  useEffect(() => {
+    if (!offers.length) return;
+
+    const withStockLeft = offers.map((p) => {
+      const alreadyInCart =
+        cartItems.find((c) => c.productId === p.id)?.quantity || 0;
+
+      return {
+        ...p,
+        stockLeft: Math.max(p.stock - alreadyInCart, 0),
+      };
+    });
+
+    setDisplayOffers(withStockLeft);
+  }, [offers, cartItems]);
 
   // ---------------------------------------------------------------------------------
   // 💖 Toggle Wishlist Logic (Both Modes)
@@ -116,6 +163,23 @@ const MostPurchased = () => {
   };
 
   const handleAddToCart = async (productId, quantity = 1, variant = null) => {
+    const prod = offers.find((p) => p.id === productId);
+    const qtyInCart =
+      cartItems.find((c) => c.productId === productId)?.quantity || 0;
+
+    if (qtyInCart >= prod.stock) {
+      // User tries to add more than available
+      Swal.fire({
+        icon: "warning",
+        title: isRTL ? "نفدت الكمية" : "Out of stock",
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
     const userData = JSON.parse(localStorage.getItem("userData"));
     const token = userData?.token;
     // Prepare the cart item object in the same structure used by the backend
@@ -128,9 +192,47 @@ const MostPurchased = () => {
     if (token) {
       try {
         await api.post("/api/cart/add", cartItem);
-        setCartItems((prev) => [...prev, cartItem]);
+        /* setCartItems((prev) => [...prev, cartItem]); */
+        await fetchCart(); // Fetch the updated cart
+        //alert
+        Swal.fire({
+          icon: "success",
+          title: t("cartAlerts.success_title"),
+          text: t("cartAlerts.added_successfully"),
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          background: "#ffffff",
+          color: "#000000",
+          iconColor: "#28a745",
+          customClass: {
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
+        });
       } catch (error) {
         console.error("Error adding to cart:", error);
+        Swal.fire({
+          icon: "error",
+          title: t("cartAlerts.error"),
+          text: t("cartAlerts.something_went_wrong"),
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          background: "#ffffff",
+          color: "#000000",
+          iconColor: "#dc3545",
+          customClass: {
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
+        });
       }
     } else {
       // No token — handle cart locally
@@ -160,14 +262,33 @@ const MostPurchased = () => {
 
       localStorage.setItem("cart", JSON.stringify(existingCart));
       setCartItems(existingCart);
+      Swal.fire({
+        icon: "success",
+        title: t("cartAlerts.success_title"),
+        text: t("cartAlerts.added_successfully"),
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        background: "#ffffff",
+        color: "#000000",
+        iconColor: "#28a745",
+        customClass: {
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+        },
+      });
     }
   };
 
   if (loading)
     return (
-      <div className="flex justify-center items-center py-20">
-        <p className="text-[#683800] font-semibold text-lg">
-          جاري تحميل العروض...
+      <div className="flex flex-col justify-center items-center py-20">
+        <Loader2 className="w-12 h-12 text-[#683800] animate-spin mb-3 loader-glow" />
+        <p className="text-[#683800] font-semibold text-xl font-[cairo] animate-pulse">
+          {isRTL ? "جاري تحميل العروض..." : "Loading offers..."}
         </p>
       </div>
     );
@@ -197,10 +318,13 @@ const MostPurchased = () => {
 
         {/* Product Cards */}
         <div className="flex flex-nowrap justify-start gap-8 py-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-center sm:overflow-visible">
-          {offers.map((offer) => (
+          {displayOffers.map((offer) => (
             <GlobalProductCard
               key={offer.id}
               {...offer}
+              stock={offer.stockLeft} // pass the remaining stock
+              disabled={offer.stockLeft === 0}
+              isRTL={isRTL}
               onToggleWishlist={handleToggleWishlist}
               onAddToCart={handleAddToCart}
             />

@@ -222,32 +222,65 @@ export const VerificationModal = ({
         });
       } else if (verificationType === "login") {
         const userData = response.data;
+        const token = userData.token;
         localStorage.setItem("userData", JSON.stringify(userData));
 
-        //for use later
-        /*  const user = JSON.parse(sessionStorage.getItem("userData"));
-        console.log(user.username); // shehabgamal */
+        // ======================== 🛒 Sync Local Cart ==================================
+
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        if (localCart.length > 0) {
+          try {
+            for (const item of localCart) {
+              const body = {
+                productId: item.product?.id || item.productId,
+                quantity: item.quantity,
+                variant: item.variant || null,
+              };
+              await api.post(`/api/cart/add`, body);
+            }
+            localStorage.removeItem("cart");
+          } catch (err) {
+            console.error("Error syncing cart:", err);
+          }
+        }
+
+        // ========================== 💖 Sync Local Wishlist =================================
+        const localWishlist =
+          JSON.parse(localStorage.getItem("wishlist")) || [];
+        if (localWishlist.length > 0) {
+          try {
+            for (const productId of localWishlist) {
+              await api.post(`/api/wishlist/${productId}`);
+            }
+            localStorage.removeItem("wishlist");
+          } catch (err) {
+            console.error("Error syncing wishlist:", err);
+          }
+        }
 
         Swal.fire({
+          toast: true,
+          position: "top",
           title: t("loginSuccessTitle"),
           text: t("loginSuccessText"),
           icon: "success",
-          confirmButtonText: t("ok"),
-          confirmButtonColor: "#28a745",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          background: "#ffffff",
+          color: "#000000",
+          iconColor: "#28a745",
           customClass: {
-            popup: isRTL ? "swal-rtl" : "swal-ltr",
             title: "font-['Cairo',Helvetica] text-center",
             htmlContainer: "font-['Cairo',Helvetica] text-center",
             confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
           },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            onClose();
-            navigate("/home");
-          } // Redirect to home page
         });
+        setTimeout(() => {
+          onClose();
+          navigate("/home");
+        }, 1500);
       } else if (verificationType === "forgot-password") {
         Swal.fire({
           title: t("verificationSuccessTitle"),

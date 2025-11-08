@@ -37,6 +37,11 @@ export const ProfileSideBar = () => {
         text: "لقد تم تسجيل خروجك من الحساب.",
         confirmButtonColor: "#805B3C",
         confirmButtonText: "حسناً",
+        customClass: {
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+        },
       }).then(() => {
         // 5️⃣ Navigate to login page after alert
         navigate("/");
@@ -48,6 +53,11 @@ export const ProfileSideBar = () => {
         title: "لم يتم العثور على جلسة مستخدم",
         text: "يرجى تسجيل الدخول أولاً.",
         confirmButtonText: "حسناً",
+        customClass: {
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+        },
       }).then(() => {
         navigate("/");
       });
