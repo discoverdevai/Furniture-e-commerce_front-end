@@ -101,6 +101,11 @@ export const BuyerChangePasswordMainSection = () => {
           title: t("changePassword.successTitle"),
           text: t("changePassword.successMessage"),
           confirmButtonText: t("ok"),
+          customClass: {
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
         });
 
         // Reset form
@@ -127,6 +132,11 @@ export const BuyerChangePasswordMainSection = () => {
           title: t("changePassword.errorTitle"),
           text: alertMessage,
           confirmButtonText: t("ok"),
+          customClass: {
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
         });
       } else {
         // Fallback for network/server errors
@@ -135,6 +145,11 @@ export const BuyerChangePasswordMainSection = () => {
           title: t("changePassword.errorTitle"),
           text: t("changePassword.genericError"),
           confirmButtonText: t("ok"),
+          customClass: {
+            title: "font-['Cairo',Helvetica] text-center",
+            htmlContainer: "font-['Cairo',Helvetica] text-center",
+            confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          },
         });
       }
     } finally {

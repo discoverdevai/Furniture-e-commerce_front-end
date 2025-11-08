@@ -125,7 +125,6 @@ export const DetailsSection = ({ productId , storeName }) => {
             />
           </div>
         </div>
-
         {/* Product Details */}
         <section className="flex flex-col w-full max-w-[588px] items-start gap-6">
           <div className="flex flex-col items-start gap-6 w-full">
