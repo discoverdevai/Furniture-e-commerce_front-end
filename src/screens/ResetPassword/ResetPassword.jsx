@@ -30,6 +30,9 @@ export const ResetPassword = () => {
   const [errors, setErrors] = useState({});
   const [touchedFields, setTouchedFields] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const isRTL = i18n.language === "ar";
   let identifier = null;
@@ -38,13 +41,47 @@ export const ResetPassword = () => {
   } else if (identifierType === "EMAIL") {
     identifier = Email?.trim();
   }
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await api.get("/api/blogs");
+        if (response.data.success) {
+          console.log(response.data.data);
+          setBlogs(response.data.data); // store array of blogs
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchBlogs();
+  }, [i18n.language]);
   // Re-validate when language changes to update error messages
   useEffect(() => {
     if (Object.keys(touchedFields).length > 0) {
       validateForm();
     }
   }, [i18n.language]);
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === blogs.length - 1 ? 0 : prev + 1));
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? blogs.length - 1 : prev - 1));
+  };
+
+  const blog = blogs[currentIndex];
+
+  if (!blog) return null;
+
+  if (loading) {
+    return (
+      <div className="text-center py-10 text-gray-600">Loading cards...</div>
+    );
+  }
 
   const validatePassword = (password) => {
     const hasLowerCase = /[a-z]/.test(password);
@@ -200,8 +237,11 @@ export const ResetPassword = () => {
             />
 
             {/* Testimonial Card - Positioned relative to image */}
-            <Card className="absolute bottom-4 left-4 right-4 lg:bottom-8 lg:left-8 lg:right-8 border-0">
-              <CardContent className="flex flex-col items-center justify-center gap-4 lg:gap-6 p-8 lg:p-10 bg-white/75 backdrop-blur-sm rounded-[15px] lg:rounded-[20px] shadow-sm border-0 h-[145px] sm:min-h-[160px] md:min-h-[180px] lg:min-h-[200px]">
+            <Card
+              key={blog.id}
+              className="absolute  bottom-4 left-4 right-4 lg:bottom-8 lg:left-8 lg:right-8 border-0 "
+            >
+              <CardContent className="flex flex-col items-center justify-center gap-4 lg:gap-6 p-8 lg:p-10 bg-white/75 backdrop-blur-sm rounded-[15px] lg:rounded-[20px] shadow-sm border-0 h-[145px] sm:min-h-[160px]  md:min-h-[180px] lg:min-h-[200px] ">
                 <div
                   className={`flex flex-col w-full items-center justify-center gap-3 lg:gap-4 ${
                     isRTL ? "text-right" : "text-left"
@@ -212,39 +252,49 @@ export const ResetPassword = () => {
                       isRTL ? "text-right" : "text-left"
                     }`}
                   >
-                    {t("testimonial")}
+                    {blog.intro}
                   </p>
 
-                  <div className="flex flex-row-reverse w-full items-center justify-between">
+                  <div
+                    className={`flex flex-row-reverse w-full items-center justify-between `}
+                  >
                     {/* Navigation Buttons */}
+
                     <div
                       className={`flex items-center gap-2.5 md:gap-4 lg:gap-6 ${
                         isRTL ? "flex-row" : "flex-row-reverse"
                       }`}
                     >
-                      <div className="p-[1px] rounded-full bg-gradient-to-l from-[#805b3c] to-[#d3baa4]">
+                      <div className=" group p-[1px] rounded-full bg-gradient-to-l from-[#805b3c] to-[#d3baa4]">
                         <Button
+                          onClick={handleNext}
                           variant="outline"
                           size="icon"
-                          className="flex w-8 h-8 lg:w-12 lg:h-12 items-center justify-center rounded-full bg-white/75 hover:bg-white/90 transition"
+                          className="flex w-8 h-8 lg:w-12 lg:h-12 items-center justify-center 
+               rounded-full bg-white/75 hover:bg-[#805b3c] transition"
                         >
-                          <HiOutlineArrowRight className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803]" />
+                          <HiOutlineArrowRight className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803] group-hover:text-[#ffffff]  transition-colors " />
                         </Button>
                       </div>
 
-                      <div className="p-[1px] rounded-full bg-gradient-to-r from-[#805b3c] to-[#d3baa4]">
+                      <div className=" group p-[1px] rounded-full bg-gradient-to-r from-[#805b3c] to-[#d3baa4]">
                         <Button
+                          onClick={handlePrev}
                           variant="outline"
                           size="icon"
-                          className="flex w-8 h-8 lg:w-12 lg:h-12 items-center justify-center rounded-full bg-white/75 hover:bg-white/90 transition"
+                          className="flex w-8 h-8 lg:w-12 lg:h-12 items-center justify-center 
+               rounded-full bg-white/75 hover:bg-[#805b3c]  transition"
                         >
-                          <HiOutlineArrowLeft className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803]" />
+                          <HiOutlineArrowLeft className="w-6 h-6 lg:w-6 lg:h-6 text-[#904803] group-hover:text-white transition-colors" />
                         </Button>
                       </div>
                     </div>
 
                     {/* User Info */}
-                    <div className="inline-flex flex-row-reverse items-center gap-2">
+
+                    <div
+                      className={`inline-flex flex-row-reverse items-center gap-2`}
+                    >
                       <div
                         className={`flex flex-col gap-1 ${
                           isRTL ? "items-start" : "items-start"
@@ -255,7 +305,7 @@ export const ResetPassword = () => {
                             isRTL ? "text-right" : "text-left"
                           }`}
                         >
-                          {t("userName")}
+                          {blog.authorName || "Mohamed Ahmed"}
                         </p>
 
                         <p
@@ -263,12 +313,13 @@ export const ResetPassword = () => {
                             isRTL ? "text-right" : "text-left"
                           }`}
                         >
-                          {t("date")}
+                          {new Date(blog.createdAt).toLocaleDateString()}
                         </p>
                       </div>
 
                       <Avatar className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8">
                         <AvatarImage src="/ellipse-13.png" alt="User avatar" />
+
                         <AvatarFallback>تق</AvatarFallback>
                       </Avatar>
                     </div>

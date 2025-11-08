@@ -127,6 +127,11 @@ export const BuyerProfileMainSection = () => {
         icon: "success",
         title: t("profile.updated"),
         text: t("profile.successMessage"),
+        customClass: {
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+        },
         timer: 2000,
         showConfirmButton: false,
       });
@@ -137,6 +142,11 @@ export const BuyerProfileMainSection = () => {
         icon: "error",
         title: t("profile.error"),
         text: t("profile.errorMessage"),
+        customClass: {
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+        },
       });
     }
   };

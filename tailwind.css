@@ -38,7 +38,9 @@
 :root {
   --animate-spin: spin 1s linear infinite;
 }
-
+.loader-glow {
+  filter: drop-shadow(0 0 8px rgba(104, 56, 0, 0.4));
+}
 .animate-fade-in {
   animation: fade-in 1s var(--animation-delay, 0s) ease forwards;
 }
