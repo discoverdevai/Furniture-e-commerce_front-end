@@ -16,7 +16,7 @@ const MostPurchased = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
   //  Fetch the cart once (token = backend, guest = localStorage)
-  git const fetchCart = useCallback(async () => {
+    const fetchCart = useCallback(async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const token = userData?.token;
 
