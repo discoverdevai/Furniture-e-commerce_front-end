@@ -1,7 +1,6 @@
 import React from "react";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 import { Button } from "../../../../components/ui/button";
-import { Card, CardContent } from "../../../../components/ui/RatingsCard";
 
 const reviewsData = [
   {
@@ -17,247 +16,130 @@ const reviewsData = [
     id: 2,
     name: "عهود بن ناصر",
     date: "15 يوليو 2025",
-    avatar: "Ellipse 32.png",
+    avatar: "/Ellipse 32.png",
     rating: "/frame-1984081579.svg",
-    text: "بصراحة تجربة الشراء كانت جدا مميزة. أول ما شفت القطعة عجبني شكلها، ولما وصلتني طلعت أحلى من الصور. الخامة فخمة والتفاصيل مرتبة وواضح إن الشغل متقن. مرة مريحة وغيرت شكل الغرفة بالكامل، صارت أحلى وأرتب بكثير.",
+    text: "تجربة رائعة مع القطعة، والتوصيل كان سريع.",
     showActions: false,
   },
   {
     id: 3,
-    name: "عهود بن ناصر",
+    name: "محمد أحمد",
     date: "15 يوليو 2025",
-    avatar: "Ellipse 32.png",
-    rating: "/frame 1984081579.svg",
-    text: "بصراحة تجربة الشراء كانت جدا مميزة. أول ما شفت القطعة عجبني شكلها، ولما وصلتني طلعت أحلى من الصور. الخامة فخمة والتفاصيل مرتبة وواضح إن الشغل متقن. مرة مريحة وغيرت شكل الغرفة بالكامل، صارت أحلى وأرتب بكثير.",
+    avatar: "/Ellipse 32.png",
+    rating: "/frame-1984081579.svg",
+    text: "الخدمة ممتازة والجودة عالية.",
     showActions: false,
   },
 ];
 
 const ratingsData = [
-  { stars: 5, percentage: 90, width: 245 },
-  { stars: 4, percentage: 70, width: 191 },
-  { stars: 3, percentage: 50, width: 133 },
-  { stars: 2, percentage: 5, width: 24 },
-  { stars: 1, percentage: 0, width: 0 },
+  { stars: 5, percentage: 90 },
+  { stars: 4, percentage: 70 },
+  { stars: 3, percentage: 50 },
+  { stars: 2, percentage: 5 },
+  { stars: 1, percentage: 0 },
 ];
 
 export const RatingsCardSection = () => {
   return (
-    <div className="mx-auto"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        maxWidth: "1200px",
-        alignItems: "flex-start",
-        gap: "24px",
-        fontFamily: "Cairo, sans-serif",
-
-
-      }}
-    >
-      <h2
-        style={{
-          color: "#1a1713",
-          fontWeight: 600,
-          fontSize: "32px",
-          lineHeight: "100%",
-          textAlign: "right",
-        }}
-      >
+    <div className="mx-auto max-w-[1200px] px-4 py-6 flex flex-col gap-6 font-cairo">
+      <h2 className="text-2xl md:text-3xl font-semibold text-right text-[#1a1713]">
         أراء العملاء
       </h2>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "24px",
-          width: "100%",
-        }}
-      >
-        {/* Reviews Section */}
-      
-
+      <div className="flex flex-col md:flex-row gap-6 md:items-start">
         {/* Ratings Summary */}
-        <div
-          style={{
-            width: "384px",
-            border: "1px solid #c3c3c3",
-            borderRadius: "10px",
-            padding: "24px 16px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "16px",
-
-            }}
-          >
-            {/* Overall Rating */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <div style={{ fontSize: "32px", fontWeight: 600, color: "#1a1713" }}>
-                4.5
-              </div>
-              <div style={{ width: "152px", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                <img
-                  src="/frame-1984081579.svg"
-                  alt="Rating stars"
-                  style={{ width: "100%" }}
-                />
-                <div style={{ fontSize: "14px", color: "#4f4f4f" }}>+5 الف تقيم</div>
-              </div>
-            </div>
-
-            {/* Bars */}
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "12px" }}>
-              {ratingsData.map((rating) => (
-                <div
-                  key={rating.stars}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    gap: "8px",
-                  }}
-                >
-                  <div style={{ fontSize: "14px", color: "#1a1713" }}>
-                    {rating.percentage}%
-                  </div>
-
-                  <div
-                    style={{
-                      width: "266px",
-                      height: "5px",
-                      position: "relative",
-                      backgroundColor: "#c3c3c3",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    {rating.percentage > 0 && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          right: 0,
-                          height: "5px",
-                          width: `${rating.width}px`,
-                          backgroundColor: "#835f40",
-                          borderRadius: "10px",
-                        }}
-                      ></div>
-                    )}
-                  </div>
-
-                  <div style={{ fontSize: "14px", color: "#1a1713" }}>
-                    {rating.stars}
-                  </div>
-                </div>
-              ))}
+        <div className="md:w-[384px] w-full md:h-auto bg-white border border-gray-300 rounded-lg p-6 flex flex-col gap-4 items-start md:mx-0 mx-auto">
+          <div className="flex items-center gap-2">
+            <div className="text-3xl font-semibold text-[#1a1713]">4.5</div>
+            <div className="flex flex-col gap-2 w-[152px]">
+              <img src="/frame-1984081579.svg" alt="Rating stars" className="w-full" />
+              <span className="text-sm text-gray-500">+5 الف تقيم</span>
             </div>
           </div>
+
+          <div className="flex flex-col gap-3 w-full">
+            {ratingsData.map((rating) => (
+              <div key={rating.stars} className="flex items-center gap-2">
+                <span className="text-sm text-[#1a1713]">{rating.percentage}%</span>
+                <div className="w-full h-1 bg-gray-300 rounded-full relative">
+                  {rating.percentage > 0 && (
+                    <div
+                      className="h-1 bg-[#835f40] rounded-full absolute right-0"
+                      style={{ width: `${(rating.percentage / 100) * 100}%` }}
+                    />
+                  )}
+                </div>
+                <span className="text-sm text-[#1a1713]">{rating.stars}</span>
+              </div>
+            ))}
+          </div>
         </div>
-          <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            gap: "24px",
-          }}
-        >
-          {reviewsData.map((review) => (
-            <div
-              key={review.id}
-              style={{
-                border: "1px solid #c3c3c3",
-                borderRadius: "10px",
-                padding: "16px",
-                position: "relative",
-              }}
-            >
+
+        {/* Reviews Section */}
+        <div className="flex-1 flex flex-col gap-6">
+          {/* For small screens: horizontal scroll */}
+          <div className="md:hidden flex overflow-x-auto gap-4 pb-2">
+            {reviewsData.map((review) => (
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "16px",
-                  textAlign: "right",
-                }}
+                key={review.id}
+                className="flex-shrink-0 w-[223px] h-[155px] border border-gray-300 rounded-md p-2 flex flex-col justify-between text-right"
               >
-                {/* Header */}
-                <div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "4px" }}>
-                      <img src={review.avatar}
-                      style={{
-                        width: "56px",
-                        height: "56px",
-                        borderRadius: "50%",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    ></img>
-                    <div style={{display: "flex", flexDirection: "column"}}>
-                      <div style={{ fontWeight: 600, fontSize: "18px", color: "#1a1713" }}>
-                        {review.name}
-                      </div>
-                       
-                      <div style={{ fontSize: "14px", color: "#4f4f4f" }}>
-                        {review.date}
-                      </div>
-
-                    </div>
-                      
-                    </div>
-
-                   
-                  </div>
-
+                <div className="flex items-center gap-2">
                   <img
-                    src={review.rating}
-                    alt="Rating stars"
-                    style={{ width: "152px", marginTop: "8px" }}
+                    src={review.avatar}
+                    alt={review.name}
+                    className="w-10 h-10 rounded-full"
                   />
+                  <div className="flex flex-col text-sm">
+                    <span className="font-semibold text-[#1a1713]">{review.name}</span>
+                    <span className="text-[10px] text-gray-500">{review.date}</span>
+                  </div>
+                </div>
+                <p className="text-[10px] font-normal leading-[150%] text-gray-700">
+                  {review.text}
+                </p>
+              </div>
+            ))}
+          </div>
 
-                  <p
-                    style={{
-                      fontSize: "16px",
-                      color: "#3b3b3b",
-                      lineHeight: "150%",
-                    }}
-                  >
-                    {review.text}
-                  </p>
+          {/* For medium and large screens: vertical list */}
+          <div className="hidden md:flex flex-col gap-6">
+            {reviewsData.map((review) => (
+              <div
+                key={review.id}
+                className="border border-gray-300 rounded-lg p-4 relative text-right"
+              >
+                {review.showActions && (
+                  <div className="absolute top-4 left-4 flex gap-4">
+                    <Button variant="ghost" size="icon">
+                      <Trash2Icon size={20} />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <Edit2Icon size={20} />
+                    </Button>
+                  </div>
+                )}
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-2">
+                      <img
+                        src={review.avatar}
+                        alt={review.name}
+                        className="w-14 h-14 rounded-full"
+                      />
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-lg text-[#1a1713]">{review.name}</span>
+                        <span className="text-sm text-gray-500">{review.date}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <img src={review.rating} alt="Rating stars" className="w-[152px]" />
+                  <p className="text-sm text-gray-800 leading-6 font-cairo">{review.text}</p>
                 </div>
               </div>
-
-              {review.showActions && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "16px",
-                    left: "16px",
-                    display: "flex",
-                    gap: "24px",
-                  }}
-                >
-                  <Button variant="ghost" size="icon">
-                    <Trash2Icon size={24} />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Edit2Icon size={24} />
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

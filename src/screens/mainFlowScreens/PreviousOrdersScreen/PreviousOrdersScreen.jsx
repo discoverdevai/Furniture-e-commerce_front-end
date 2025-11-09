@@ -8,7 +8,7 @@ import {AppNavbar}from "../../../components/Layout/Navbar"
 export const PreviousOrdersScreen = () => {
   return (
     <div
-      className="min-h-screen w-full bg-cover bg-center bg-no-repeat"
+      className="font-cairo min-h-screen w-full bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/image 36.png')",fontFamily : "'Cairo',Helvetica" }} // change to your image path
     >
         <AppNavbar/>
