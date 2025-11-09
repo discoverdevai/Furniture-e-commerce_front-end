@@ -8,6 +8,7 @@ import { Separator } from "../../../../components/ui/CartSeparator";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../../../../Api/Axios";
+import { useMediaQuery } from "@mui/material";
 
 export const CartSection = () => {
   const navigate = useNavigate();
