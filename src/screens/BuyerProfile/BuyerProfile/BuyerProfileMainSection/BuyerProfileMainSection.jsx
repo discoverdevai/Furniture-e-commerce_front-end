@@ -162,7 +162,7 @@ export const BuyerProfileMainSection = () => {
         </div>
       </div>
       <div
-        className={`flex flex-col w-full max-w-[1200px] gap-8 mx-auto items-start mt-4`}
+        className={`flex flex-col w-full  max-w-[1200px] gap-8 mx-auto items-start mt-4`}
         dir={isArabic ? "rtl" : "ltr"}
       >
         {/* Breadcrumb */}
@@ -170,16 +170,18 @@ export const BuyerProfileMainSection = () => {
 
         <div className={`flex items-start justify-between gap-6 w-full `}>
           {!isMobile && <ProfileSideBar />}
-          <main className="flex flex-col w-full max-w-[894px] gap-10">
-            <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
-              {t("profile.title")}
-            </h2>
+          <main className="flex flex-col w-full max-w-[894px] gap-10 px-4 sm:px-6 md:px-8 lg:px-0">
+            {!isMobile && (
+              <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
+                {t("profile.title")}
+              </h2>
+            )}
 
             <form className="flex flex-col gap-6 w-full " onSubmit={handleSave}>
               <div className="flex flex-col gap-6 w-full">
                 <div className="flex items-center justify-between gap-6 w-full">
                   <div className="flex flex-col gap-3 flex-1">
-                    <Label className="text-[20px] font-[cairo] font-medium">
+                    <Label className="text-[16px] md:text-[18px] lg:text-[20px] font-[cairo] font-medium">
                       {t("profile.firstName")}
                     </Label>
                     <Input
@@ -188,7 +190,7 @@ export const BuyerProfileMainSection = () => {
                       onChange={handleChange}
                       onBlur={() => handleBlur("firstName")}
                       placeholder={t("firstNamePlaceholder")}
-                      className={`h-14 font-[cairo] bg-transparent border-[1px] ${
+                      className={`h-14 font-[cairo] bg-transparent border-[1px] rounded-lg ${
                         errors.firstName && touchedFields.firstName
                           ? "border-red-500"
                           : "border-[#C4C4C4]"
@@ -199,7 +201,7 @@ export const BuyerProfileMainSection = () => {
                     )}
                   </div>
                   <div className="flex flex-col gap-3 flex-1">
-                    <Label className="text-[20px] font-[cairo] font-medium">
+                    <Label className="text-[16px] md:text-[18px] lg:text-[20px] font-[cairo] font-medium">
                       {t("profile.lastName")}
                     </Label>
                     <Input
@@ -209,7 +211,7 @@ export const BuyerProfileMainSection = () => {
                       onChange={handleChange}
                       onBlur={() => handleBlur("lastName")}
                       placeholder={t("lastNamePlaceholder")}
-                      className={`h-14 font-[cairo] bg-transparent border-[1px] ${
+                      className={`h-14 font-[cairo] bg-transparent border-[1px] rounded-lg ${
                         errors.lastName && touchedFields.lastName
                           ? "border-red-500"
                           : "border-[#C4C4C4]"
@@ -222,7 +224,7 @@ export const BuyerProfileMainSection = () => {
                 </div>
 
                 <div className="flex flex-col gap-3 w-full">
-                  <Label className="text-[20px] font-[cairo] font-medium">
+                  <Label className="text-[16px] md:text-[18px] lg:text-[20px] font-[cairo] font-medium">
                     {t("profile.email")}
                   </Label>
                   <Input
@@ -231,7 +233,7 @@ export const BuyerProfileMainSection = () => {
                     onChange={handleChange}
                     onBlur={() => handleBlur("email")}
                     placeholder={t("emailPlaceholder")}
-                    className={`h-14 font-[cairo] bg-transparent border-[1px] ${
+                    className={`h-14 font-[cairo] bg-transparent border-[1px] rounded-lg ${
                       errors.email && touchedFields.email
                         ? "border-red-500"
                         : "border-[#C4C4C4]"
@@ -243,7 +245,7 @@ export const BuyerProfileMainSection = () => {
                 </div>
 
                 <div className="flex flex-col gap-3 w-full">
-                  <Label className="text-[20px] font-[cairo] font-medium">
+                  <Label className="text-[16px] md:text-[18px] lg:text-[20px] font-[cairo] font-medium">
                     {t("profile.phone")}
                   </Label>
 
@@ -251,7 +253,7 @@ export const BuyerProfileMainSection = () => {
                   <div
                     className={`flex ${
                       isArabic ? "flex-row-reverse" : "flex-row"
-                    } h-14 items-center gap-2 px-4 py-2 w-full rounded-[10px] border ${
+                    } h-14 items-center gap-2 px-4 py-2 w-full rounded-[10px] border  ${
                       errors.phoneNumber && touchedFields.phoneNumber
                         ? "border-red-500"
                         : "border-[#c3c3c3]"
@@ -294,7 +296,7 @@ export const BuyerProfileMainSection = () => {
                   isArabic
                     ? "bg-gradient-to-l from-[#805b3c] to-[#d3baa4]"
                     : "bg-gradient-to-r from-[#805b3c] to-[#d3baa4]"
-                } text-white text-[18px] font-bold font-[cairo] hover:opacity-90`}
+                } text-white text-[16px] lg:text-[18px] font-bold font-[cairo] hover:opacity-90`}
               >
                 {t("profile.save")}
               </Button>

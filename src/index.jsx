@@ -33,6 +33,7 @@ import { BuyerOrders } from "./screens/BuyerProfile/BuyerOrders/BuyerOrders";
 import { BuyerChangePassword } from "./screens/BuyerProfile/BuyerChangePassword/BuyerChangePassword";
 import { BuyerWishList } from "./screens/BuyerProfile/BuyerWishList/BuyerWishList";
 import { BuyerAddress } from "./screens/BuyerProfile/BuyerAddress/BuyerAddress";
+import { MobileProfileSettings } from "./screens/BuyerProfile/MobileProfileSettings/MobileProfileSettings";
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
@@ -74,6 +75,10 @@ createRoot(document.getElementById("app")).render(
             <Route path="/profile/orders" element={<BuyerOrders />} />
             <Route path="/profile/favorites" element={<BuyerWishList />} />
             <Route path="/Cart" element={<CartScreen />} />
+            <Route
+              path="/ProfileSettings"
+              element={<MobileProfileSettings />}
+            />
           </Routes>
         </Router>
       </HeroUIProvider>

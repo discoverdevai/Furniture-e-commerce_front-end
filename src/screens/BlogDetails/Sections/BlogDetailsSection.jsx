@@ -15,10 +15,8 @@ export const BlogDetailsSection = () => {
     const fetchBlogDetails = async () => {
       try {
         console.log("ID" + id);
-        
-        const res = await api.get(`/api/blogs/${id}`, {
-          params: { lang: i18n.language },
-        });
+
+        const res = await api.get(`/api/blogs/${id}`);
         if (res.data.success) {
           setBlog(res.data.data);
         }

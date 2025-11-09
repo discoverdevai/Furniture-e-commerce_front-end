@@ -27,7 +27,9 @@ const NAV_ITEMS = [
   "about_us",
   "contact_us",
 ];
-const DRAWER_EXTRA_ITEMS = [{ key: "Drawer_profile", path: "/profile" }];
+const DRAWER_EXTRA_ITEMS = [
+  { key: "Drawer_profile", path: "/ProfileSettings" },
+];
 const PATHS = {
   home: "/home",
   stores: "/stores",

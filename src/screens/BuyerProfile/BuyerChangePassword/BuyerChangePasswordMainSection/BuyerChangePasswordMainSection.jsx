@@ -179,11 +179,13 @@ export const BuyerChangePasswordMainSection = () => {
         <div className={`flex items-start justify-start gap-6 w-full`}>
           {!isMobile && <ProfileSideBar />}{" "}
           <main
-            className={`flex flex-col w-full max-w-[894px] items-start gap-10`}
+            className={`flex flex-col w-full max-w-[894px] items-start gap-10 px-4 sm:px-6 md:px-8 lg:px-0`}
           >
-            <h2 className="text-[#1a1713] font-semibold font-[cairo] text-[32px]">
-              {t("changePassword.title")}
-            </h2>
+            {!isMobile && (
+              <h2 className="text-[#1a1713] font-semibold font-[cairo] text-[32px]">
+                {t("changePassword.title")}
+              </h2>
+            )}
 
             <form
               className="flex flex-col items-start gap-6 w-full"
@@ -192,7 +194,7 @@ export const BuyerChangePasswordMainSection = () => {
               <div className="flex flex-col items-start gap-6 w-full">
                 {/* Current password */}
                 <div className="flex flex-col items-end gap-3 w-full">
-                  <Label className="self-stretch text-[20px] font-medium font-[cairo] text-[#1a1713]">
+                  <Label className="self-stretch text-[16px] md:text-[18px] lg:text-[20px] font-medium font-[cairo] text-[#1a1713]">
                     {t("changePassword.currentPassword")}
                   </Label>
 
@@ -232,7 +234,7 @@ export const BuyerChangePasswordMainSection = () => {
 
                 {/* New password */}
                 <div className="flex flex-col items-end gap-3 w-full">
-                  <Label className="self-stretch text-[20px] font-medium font-[cairo] text-[#1a1713]">
+                  <Label className="self-stretch text-[16px] md:text-[18px] lg:text-[20px] font-medium font-[cairo] text-[#1a1713]">
                     {t("changePassword.newPassword")}
                   </Label>
 
@@ -270,7 +272,7 @@ export const BuyerChangePasswordMainSection = () => {
 
                 {/* Confirm new password */}
                 <div className="flex flex-col items-end gap-3 w-full">
-                  <Label className="self-stretch text-[20px] font-medium font-[cairo] text-[#1a1713]">
+                  <Label className="self-stretch px-4 sm:px-6 md:px-8 lg:px-0 font-medium font-[cairo] text-[#1a1713]">
                     {t("changePassword.confirmPassword")}
                   </Label>
 
@@ -320,7 +322,7 @@ export const BuyerChangePasswordMainSection = () => {
                                  ? "bg-gradient-to-l from-[#805b3c] to-[#d3baa4]"
                                  : "bg-gradient-to-r from-[#805b3c] to-[#d3baa4]"
                              } 
-                     text-white text-[18px] font-bold font-[cairo] hover:opacity-90`}
+                     text-white text-[16px] lg:text-[18px] font-bold font-[cairo] hover:opacity-90`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">

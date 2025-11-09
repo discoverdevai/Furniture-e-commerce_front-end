@@ -98,11 +98,13 @@ export const BuyerAddressMainSection = () => {
         >
           {!isMobile && <ProfileSideBar />}{" "}
           <main
-            className={`flex flex-col w-full max-w-[894px] gap-10 items-start`}
+            className={`flex flex-col w-full max-w-[894px] gap-10 items-start px-4 sm:px-6 md:px-8 lg:px-0`}
           >
-            <h2 className="font-[cairo] text-[32px] font-semibold text-[#1a1713]">
-              {t("addresses.title")}
-            </h2>
+            {!isMobile && (
+              <h2 className="font-[cairo] text-[32px] font-semibold text-[#1a1713]">
+                {t("addresses.title")}
+              </h2>
+            )}
 
             <div className="flex flex-col items-start gap-6 w-full">
               {addresses.map((address) => (
@@ -153,7 +155,7 @@ export const BuyerAddressMainSection = () => {
                 type="button"
                 variant="outline"
                 onClick={handleAddClick}
-                className="h-14 w-full min-w-[400px] font-[cairo] rounded-[10px] border border-[#835f40] bg-transparent text-[#835f40] hover:bg-[#835f40] hover:text-white"
+                className="h-14 w-full md:w-3/5 lg:w-3/5 mx-auto  font-[cairo] rounded-[10px] border border-[#835f40] bg-transparent text-[#835f40] hover:bg-[#835f40] hover:text-white"
               >
                 {t("addresses.addNew")}
               </Button>
