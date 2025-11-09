@@ -13,7 +13,7 @@ export const CartScreen = () => {
     >
       <AppNavbar/>
      <section className="w-full pt-7 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-20 mb-20">
-        <CartSection/>
+ <CartSection/>
       </section>
       
       <FooterSection/>

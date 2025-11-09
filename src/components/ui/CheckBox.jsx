@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 
-const CheckBox = ({ id, label, defaultChecked }) => {
+const CheckBox = ({ id, label, defaultChecked, onCheckedChange }) => {
   const [checked, setChecked] = useState(defaultChecked || false);
 
   const handleChange = () => {
-    setChecked(!checked);
+    const newChecked = !checked;
+    setChecked(newChecked);
+    if (onCheckedChange) onCheckedChange(newChecked); // ✅ notify parent
   };
 
   const checkboxStyle = {
