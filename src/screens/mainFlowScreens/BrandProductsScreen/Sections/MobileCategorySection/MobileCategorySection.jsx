@@ -8,6 +8,7 @@ import { Button } from "../../../../../components/ui/OffersCategoriesButton";
 import { Checkbox } from "../../../../../components/ui/OffersCategoriesCheckBox";
 import { Drawer, DrawerContent, DrawerTrigger } from "../../../../../components/ui/drawer";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const filters = [
   { label: "متوفر", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
@@ -19,6 +20,7 @@ const filters = [
 ];
 
 export const MobileCategorySection = () => {
+  const navigate = useNavigate()
   const { i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const [open, setOpen] = useState(false);
@@ -26,7 +28,7 @@ export const MobileCategorySection = () => {
   return (
     <header className="flex w-[343px] items-center justify-between relative">
       {/* Back Button */}
-      <Button variant="ghost" size="icon" className="w-12 h-12">
+      <Button onClick={() => navigate(-1)} variant="ghost" size="icon" className="w-12 h-12">
         {isArabic ? (
           <ChevronRightIcon className="w-6 h-6" />
         ) : (

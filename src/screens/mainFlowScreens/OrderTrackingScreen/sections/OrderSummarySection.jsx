@@ -3,7 +3,7 @@ import { Card, CardContent } from "../../../../components/ui/card";
 
 export const OrderSummarySection = () => {
   return (
-    <Card className="w-96 rounded-[10px] border border-[#c3c3c3]">
+    <Card className="w-full rounded-[10px] border border-[#c3c3c3]">
       <CardContent className="flex items-start gap-3 p-3">
         <div className="flex w-full items-center gap-3">
           <div className="flex flex-col flex-1 items-start gap-3">

@@ -12,7 +12,7 @@ const summaryItems = [
 
 export const ProductDetailsSection = () => {
   return (
-    <section className="flex flex-col w-full max-w-sm items-start gap-6">
+    <section className="flex flex-col w-full max-w-sm items-start gap-6 mx-auto">
       <Card className="w-full rounded-[10px] border-[#c3c3c3]">
         <CardContent className="flex items-start gap-3 p-3">
           <article className="flex w-full items-center gap-3">

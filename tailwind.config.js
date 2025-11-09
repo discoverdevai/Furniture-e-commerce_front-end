@@ -20,7 +20,7 @@ module.exports = {
           '"Segoe UI Emoji"',
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
-        ],
+        ], cairo: ['Cairo', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -56,78 +56,81 @@ export const OrderStatusSection = () => {
               
 
                 <div className="inline-flex items-start gap-6">
-                  <img
-                    className="w-[222px] h-[213px] rounded-[10px] object-cover"
-                    alt="Element"
-                    src={order.image}
-                  />
+                 <img
+  className="
+    w-[56px] h-[54px] rounded-[8px] opacity-100 
+    -rotate-[180deg] 
+    sm:w-[222px] sm:h-[213px] sm:rounded-[10px] sm:rotate-0
+    object-cover
+  "
+  alt="Element"
+  src={order.image}
+/>
+
                   <div className="flex flex-col items-start gap-6">
-                    <div className="flex flex-col items-start gap-4">
-                      <div className="flex flex-col items-start justify-center gap-4">
-                        <div className="font-[number:var(--h-5-font-weight)] text-[#4f4f4f] text-[length:var(--h-5-font-size)] text-right leading-[var(--h-5-line-height)] font-h-5 tracking-[var(--h-5-letter-spacing)] [font-style:var(--h-5-font-style)]">
-                          #{order.id}
-                        </div>
+                 <div className="flex flex-col items-start gap-4">
+  <div className="flex flex-col items-start justify-center gap-4">
+    {/* Order ID */}
+    <div className="text-[14px] lg:text-[length:var(--h-5-font-size)] font-[number:var(--h-5-font-weight)] text-[#4f4f4f] text-start leading-[var(--h-5-line-height)] font-h-5 tracking-[var(--h-5-letter-spacing)] [font-style:var(--h-5-font-style)]">
+      #{order.id}
+    </div>
 
-                        <div className="font-[number:var(--h-3-font-weight)] text-[#1a1713] text-[length:var(--h-3-font-size)] leading-[var(--h-3-line-height)]  font-h-3 tracking-[var(--h-3-letter-spacing)] [font-style:var(--h-3-font-style)]">
-                          {order.title}
-                        </div>
+    {/* Title */}
+    <div className="text-[14px] lg:text-[length:var(--h-3-font-size)] font-[number:var(--h-3-font-weight)] text-[#1a1713] leading-[var(--h-3-line-height)] font-h-3 tracking-[var(--h-3-letter-spacing)] [font-style:var(--h-3-font-style)]">
+      {order.title}
+    </div>
 
-                        <div className="font-normal text-[#1a1713] text-base leading-4  [font-family:'Cairo',Helvetica] tracking-[0]">
-                          <span className="font-[number:var(--h-5-font-weight)] font-h-5 [font-style:var(--h-5-font-style)] tracking-[var(--h-5-letter-spacing)] leading-[var(--h-5-line-height)] text-[length:var(--h-5-font-size)]">
-                            العدد
-                          </span>
-                          <span className="font-semibold text-2xl leading-6">
-                            {" "}
-                            : {order.quantity}
-                          </span>
-                        </div>
+    {/* Quantity */}
+    <div className="text-[14px] lg:text-base font-normal text-[#1a1713] leading-4 [font-family:'Cairo',Helvetica] tracking-[0]">
+      <span className="text-[14px] lg:text-[length:var(--h-5-font-size)] font-[number:var(--h-5-font-weight)] font-h-5 [font-style:var(--h-5-font-style)] tracking-[var(--h-5-letter-spacing)] leading-[var(--h-5-line-height)]">
+        العدد
+      </span>
+      <span className="text-[14px] lg:text-2xl font-semibold leading-6">
+        {" "} : {order.quantity}
+      </span>
+    </div>
 
-                        <div className="font-normal text-transparent text-base leading-4  [font-family:'Cairo',Helvetica] tracking-[0]">
-                          <span className="font-[number:var(--h-5-font-weight)] text-[#1a1713] font-h-5 [font-style:var(--h-5-font-style)] tracking-[var(--h-5-letter-spacing)] leading-[var(--h-5-line-height)] text-[length:var(--h-5-font-size)]">
-                            السعر
-                          </span>
-                          <span className="font-semibold text-[#1a1713] text-2xl leading-6">
-                            {" "}
-                            :{" "}
-                          </span>
-                          <span className="font-semibold text-[#835f40] text-2xl leading-[0.1px]">
-                            {order.price}
-                          </span>
-                          <span className="font-semibold text-[#1a1713] text-2xl leading-6">
-                            &nbsp;
-                          </span>
-                          <span className="font-medium text-[#835f40] text-lg leading-[18px]">
-                            ر.س
-                          </span>
-                        </div>
-                      </div>
+    {/* Price */}
+    <div className="text-[14px] lg:text-base font-normal text-[#1a1713] leading-4 [font-family:'Cairo',Helvetica] tracking-[0]">
+      <span className="text-[14px] lg:text-[length:var(--h-5-font-size)] font-[number:var(--h-5-font-weight)] font-h-5 [font-style:var(--h-5-font-style)] tracking-[var(--h-5-letter-spacing)] leading-[var(--h-5-line-height)]">
+        السعر
+      </span>
+      <span className="text-[14px] lg:text-2xl font-semibold text-[#1a1713] leading-6"> : </span>
+      <span className="text-[14px] lg:text-2xl font-semibold text-[#835f40] leading-[0.1px]">
+        {order.price}
+      </span>
+      <span className="text-[14px] lg:text-2xl font-semibold text-[#1a1713] leading-6">&nbsp;</span>
+      <span className="text-[14px] lg:text-lg font-medium text-[#835f40] leading-[18px]">
+        ر.س
+      </span>
+    </div>
+  </div>
 
-                      <div className="font-normal text-[#1a1713] text-base leading-4  [font-family:'Cairo',Helvetica] tracking-[0]">
-                        <span className="font-[number:var(--h-5-font-weight)] font-h-5 [font-style:var(--h-5-font-style)] tracking-[var(--h-5-letter-spacing)] leading-[var(--h-5-line-height)] text-[length:var(--h-5-font-size)]">
-                          تاريخ الاستلام المتوقع
-                        </span>
-                        <span className="font-semibold text-2xl leading-6">
-                          {" "}
-                          : {order.deliveryDate}
-                        </span>
-                      </div>
+  {/* Delivery Date */}
+  <div className="text-[14px] lg:text-base font-normal text-[#1a1713] leading-4 [font-family:'Cairo',Helvetica] tracking-[0]">
+    <span className="text-[14px] lg:text-[length:var(--h-5-font-size)] font-[number:var(--h-5-font-weight)] font-h-5 [font-style:var(--h-5-font-style)] tracking-[var(--h-5-letter-spacing)] leading-[var(--h-5-line-height)]">
+      تاريخ الاستلام المتوقع
+    </span>
+    <span className="text-[14px] lg:text-2xl font-semibold leading-6"> : {order.deliveryDate}</span>
+  </div>
 
-                      <div className="inline-flex items-center justify-center gap-2">
-                        <div className="font-[number:var(--h4-medium-font-weight)] text-[#1a1713] text-[length:var(--h4-medium-font-size)] leading-[var(--h4-medium-line-height)] whitespace-nowrap  font-h4-medium tracking-[var(--h4-medium-letter-spacing)] [font-style:var(--h4-medium-font-style)]">
-                          اللون :
-                        </div>
-                                                <div className="w-[22px] h-[22px] bg-[#bbb7b6] rounded-[11px] border border-solid border-[#1a1713]" />
+  {/* Color */}
+  <div className="inline-flex items-center justify-center gap-2 text-[14px] lg:text-[length:var(--h4-medium-font-size)]">
+    <div className="font-[number:var(--h4-medium-font-weight)] text-[#1a1713] leading-[var(--h4-medium-line-height)] whitespace-nowrap font-h4-medium tracking-[var(--h4-medium-letter-spacing)] [font-style:var(--h4-medium-font-style)]">
+      اللون :
+    </div>
+    <div className="w-[22px] h-[22px] bg-[#bbb7b6] rounded-[11px] border border-solid border-[#1a1713]" />
+  </div>
+</div>
 
-                      </div>
-                    </div>
                   </div>
 
                   
                 </div>
                   <Badge
-                  className={`${order.statusBg} ${order.statusColor} inline-flex items-center justify-center gap-2 p-3 rounded-[10px] h-auto font-h5-regular font-[number:var(--h5-regular-font-weight)] text-[length:var(--h5-regular-font-size)] tracking-[var(--h5-regular-letter-spacing)] leading-[var(--h5-regular-line-height)] [font-style:var(--h5-regular-font-style)] hover:${order.statusBg}`}
+                  className={`${order.statusBg} ${order.statusColor} inline-flex  items-center  justify-center gap-2 p-1 rounded-[10px] h-auto font-h5-regular font-[number:var(--h5-regular-font-weight)] text-[length:var(--h5-regular-font-size)] tracking-[var(--h5-regular-letter-spacing)] leading-[var(--h5-regular-line-height)] [font-style:var(--h5-regular-font-style)] hover:${order.statusBg}`}
                 >
-                  <span className="">{order.status}</span>
+                  <span className="text-[12px] lg:text-[length:var(--h-3-font-size)]">{order.status}</span>
                 </Badge>
               </div>
             </CardContent>
