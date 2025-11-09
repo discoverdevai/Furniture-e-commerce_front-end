@@ -5,7 +5,7 @@ const resources = {
   ar: {
     translation: {
       titles: {
-        default: "المعرض الإلكترونيss للأثاث",
+        default: "اssلمعرض الإلكترونيss للأثاث",
         signIn: "تسجيل الدخول",
         register: "إنشاء حساب",
         forgotPassword: "نسيت كلمة المرور",
