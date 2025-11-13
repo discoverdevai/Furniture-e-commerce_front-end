@@ -35,6 +35,7 @@ import { BuyerWishList } from "./screens/BuyerProfile/BuyerWishList/BuyerWishLis
 import { BuyerAddress } from "./screens/BuyerProfile/BuyerAddress/BuyerAddress";
 import { SearchResult } from "./screens/Search/SearchResult";
 import { MobileProfileSettings } from "./screens/BuyerProfile/MobileProfileSettings/MobileProfileSettings";
+import {ProtectedRoute} from "./Api/Guard/ProtectedRoute"
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
@@ -68,15 +69,35 @@ createRoot(document.getElementById("app")).render(
             <Route path="/store/:storeName" element={<BrandProdutsScreen />} />
             <Route path="/profile" element={<BuyerProfile />} />
             <Route path="/brand-product" element={<BrandProdutsScreen />} />
-            <Route path="/order-screen" element={<OrderScreen />} />
-            <Route path="/order-tracking" element={<OrderTrackingScreen />} />
-            <Route path="/previous-orders" element={<PreviousOrdersScreen />} />
 
+            <Route
+              path="/order-screen"
+              element={
+                <ProtectedRoute>
+                  <OrderScreen />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/order-tracking/:orderNumber"
+              element={
+                <ProtectedRoute>
+                  <OrderTrackingScreen />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/previous-orders"
+              element={
+                <ProtectedRoute>
+                  <PreviousOrdersScreen />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/profile/change-password"
               element={<BuyerChangePassword />}
             />
-            <Route path="/profile/orders" element={<BuyerOrders />} />
             <Route path="/profile/saved-addresses" element={<BuyerAddress />} />
             <Route path="/profile/orders" element={<BuyerOrders />} />
             <Route path="/profile/favorites" element={<BuyerWishList />} />

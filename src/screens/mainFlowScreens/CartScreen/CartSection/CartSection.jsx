@@ -28,6 +28,9 @@ export const CartSection = () => {
     return { subtotal, tax, shipping, total };
   };
 
+ 
+
+
   // 📦 Fetch Cart Items
   useEffect(() => {
     const fetchCart = async () => {
@@ -92,6 +95,44 @@ export const CartSection = () => {
 
     fetchCart();
   }, []);
+
+  const handlePayNow = () => {
+  if (!token) {
+    Swal.fire({
+      title: "تنبيه",
+      text: "يجب تسجيل الدخول أولاً للمتابعة",
+      icon: "warning",
+      confirmButtonText: "تسجيل الدخول",
+      showCancelButton: true,
+      cancelButtonText: "إلغاء",
+      customClass: {
+        popup: "rounded-[15px] p-6",
+        title: "font-['Cairo',Helvetica] text-center",
+        htmlContainer: "font-['Cairo',Helvetica] text-center",
+        confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+        cancelButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/");
+      }
+    });
+    return; // stop further execution
+  }
+
+  // Prevent clicking while still loading or empty cart
+  if (!totals || cartItems.length === 0) return;
+
+  const orderData = {
+    items: cartItems,
+    totals,
+  };
+
+  // Save temporarily in localStorage or navigate state
+  localStorage.setItem("orderData", JSON.stringify(orderData));
+
+  navigate("/order-screen", { state: orderData });
+};
 
   // ➕ Increase quantity
   const handleIncrease = async (item) => {
@@ -473,7 +514,7 @@ export const CartSection = () => {
               </>
             )}
 
-            <Button className="h-14 w-full rounded-[10px] bg-gradient-to-l from-[#805b3c] to-[#d3baa4] hover:opacity-90 p-2">
+            <Button  onClick={() => handlePayNow()} className="h-14 w-full rounded-[10px] bg-gradient-to-l from-[#805b3c] to-[#d3baa4] hover:opacity-90 p-2">
               <span className="text-white font-medium font-[cairo] ">
                 الدفع الآن
               </span>

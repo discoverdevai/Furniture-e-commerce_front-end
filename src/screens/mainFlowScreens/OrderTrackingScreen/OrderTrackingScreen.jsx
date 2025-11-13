@@ -3,8 +3,13 @@ import { DeliveryDetailsSection } from "./sections/DeliveryDetailsSection";
 import { OrderSummarySection } from "./sections/OrderSummarySection";
 import { FooterSection } from "../../../components/Layout/FooterSection";
 import {AppNavbar}from "../../../components/Layout/Navbar"
+import { useParams, useNavigate } from "react-router-dom";
+
 
 export const OrderTrackingScreen = () => {
+   const { orderNumber } = useParams();
+  console.log("order1" + orderNumber);
+  
   return (
      <div
       className="font-cairo min-h-screen w-full bg-cover bg-center bg-no-repeat"
@@ -19,14 +24,14 @@ export const OrderTrackingScreen = () => {
 </header>
    <main className="flex flex-col lg:flex-row items-start gap-6 w-full">
   {/* Mobile: full width; Desktop: 2/3 */}
-  <div className="w-full lg:w-2/3">
-    <DeliveryDetailsSection />
+  <div className="w-full">
+    <DeliveryDetailsSection orderNumber={orderNumber}  />
   </div>
 
   {/* Mobile: full width; Desktop: 1/3 */}
-  <div className="w-full lg:w-1/3">
+  {/* <div className="w-full lg:w-1/3">
     <OrderSummarySection />
-  </div>
+  </div> */}
 </main>
 
     </div>
