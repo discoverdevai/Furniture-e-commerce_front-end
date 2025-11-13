@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMediaQuery } from "@mui/material";
+import { useMediaQuery, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { AppNavbar } from "../../../../components/Layout/Navbar";
 import { ProfileSideBar } from "../../../../components/ProfileSideBar";
@@ -16,21 +16,29 @@ export const BuyerWishListMainSection = () => {
   const navigate = useNavigate();
 
   const [wishlistItems, setWishlistItems] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
+  const [displayWishlist, setDisplayWishlist] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // ✅ Fetch wishlist + cart
   useEffect(() => {
-    const fetchWishlistProducts = async () => {
-      const userData = JSON.parse(localStorage.getItem("userData"));
-      const token = userData?.token;
-
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        if (token) {
-          // 🟢 Logged-in user → Fetch wishlist from backend
-          const response = await api.get("/api/wishlist");
-          const wishlistData = response.data.data || [];
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const token = userData?.token;
 
-          const mapped = wishlistData.map((item) => ({
+        if (token) {
+          // Logged-in user
+          const [wishlistResp, cartResp] = await Promise.all([
+            api.get("/api/wishlist"),
+            api.get("/api/cart/items"),
+          ]);
+
+          const wishlistData = wishlistResp.data.data || [];
+          const cartData = cartResp.data.data.items || [];
+
+          const mappedWishlist = wishlistData.map((item) => ({
             id: item.product.id,
             title: item.product.name,
             description: item.product.description,
@@ -41,23 +49,21 @@ export const BuyerWishListMainSection = () => {
             rating: item.product.averageRating,
             isOnSale: item.product.isOnSale,
             isInWishlist: true,
+            stock: item.product.stockQuantity,
           }));
 
-          setWishlistItems(mapped);
+          setWishlistItems(mappedWishlist);
+          setCartItems(cartData);
         } else {
-          // 🔵 Guest user → Fetch all products and filter by wishlist IDs
+          // Guest user
           const wishlistIds =
             JSON.parse(localStorage.getItem("wishlist")) || [];
-          if (wishlistIds.length === 0) {
-            setWishlistItems([]);
-            return;
-          }
+          const localCart = JSON.parse(localStorage.getItem("cart")) || [];
 
           const productsResponse = await api.get("/api/products");
           const allProducts = productsResponse.data.data.products || [];
-          console.log("All Products:", allProducts);
 
-          const filtered = allProducts
+          const filteredWishlist = allProducts
             .filter((p) => wishlistIds.includes(p.id))
             .map((p) => ({
               id: p.id,
@@ -70,104 +76,121 @@ export const BuyerWishListMainSection = () => {
               rating: p.averageRating,
               isOnSale: p.isOnSale,
               isInWishlist: true,
+              stock: p.stockQuantity,
             }));
 
-          setWishlistItems(filtered);
+          setWishlistItems(filteredWishlist);
+          setCartItems(localCart);
         }
-      } catch (error) {
-        console.error("❌ Error fetching wishlist:", error);
+      } catch (err) {
+        console.error("Error fetching wishlist/cart:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchWishlistProducts();
+    fetchData();
   }, []);
 
-  // ---------------------------------------------------------------------------------
-  // 💖 Toggle Wishlist Logic (Both Modes)
-  // ---------------------------------------------------------------------------------
+  // ✅ Recalculate stockLeft whenever cart or wishlist changes
+  useEffect(() => {
+    if (!wishlistItems.length) return;
+
+    const updated = wishlistItems.map((p) => {
+      const qtyInCart =
+        cartItems.find((c) => c.productId === p.id)?.quantity || 0;
+
+      return { ...p, stockLeft: Math.max(p.stock - qtyInCart, 0) };
+    });
+
+    setDisplayWishlist(updated);
+  }, [cartItems, wishlistItems]);
+
+  // ✅ Toggle wishlist item
   const handleToggleWishlist = async (productId) => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const token = userData?.token;
 
     if (token) {
       try {
-        const product = wishlistItems.find((p) => p.id === productId);
-
-        if (product.isInWishlist) {
-          // DELETE from backend
+        const target = wishlistItems.find((p) => p.id === productId);
+        if (target?.isInWishlist) {
           await api.delete(`/api/wishlist/${productId}`);
           setWishlistItems((prev) => prev.filter((p) => p.id !== productId));
+          
         } else {
-          // ADD to backend
           await api.post(`/api/wishlist/${productId}`);
-          setWishlistItems((prev) =>
-            prev.map((p) =>
-              p.id === productId ? { ...p, isInWishlist: true } : p
-            )
-          );
+          setWishlistItems((prev) => [
+            ...prev,
+            { ...target, isInWishlist: true },
+          ]);
         }
-      } catch (error) {
-        console.error("❌ Wishlist toggle failed:", error);
+      } catch (err) {
+        console.error("Error toggling wishlist:", err);
       }
     } else {
-      // 🔵 Guest mode
-      setWishlistItems((prev) => {
-        const updated = prev.map((p) =>
-          p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
-        );
-        const updatedWishlistIds = updated
-          .filter((p) => p.isInWishlist)
-          .map((p) => p.id);
-        localStorage.setItem("wishlist", JSON.stringify(updatedWishlistIds));
-        return updated.filter((p) => p.isInWishlist); // remove unhearted products
-      });
+      // Guest logic
+      const updated = wishlistItems.map((p) =>
+        p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
+      );
+      const updatedIds = updated.filter((p) => p.isInWishlist).map((p) => p.id);
+      localStorage.setItem("wishlist", JSON.stringify(updatedIds));
+      setWishlistItems(updated);
     }
   };
 
-  // ---------------------------------------------------------------------------------
-  // 🛒 Add to Cart Logic (Both Modes)
-  // ---------------------------------------------------------------------------------
+  // ✅ Add to cart
   const handleAddToCart = async (productId, quantity = 1, variant = null) => {
+    const product = wishlistItems.find((p) => p.id === productId);
+    const alreadyInCart =
+      cartItems.find((c) => c.productId === productId)?.quantity || 0;
+
+    if (alreadyInCart >= product.stock) {
+      alert("الكمية المطلوبة أكبر من المخزون / Out of stock");
+      return;
+    }
+
     const userData = JSON.parse(localStorage.getItem("userData"));
     const token = userData?.token;
-    const cartItem = { productId, quantity, variant };
 
     if (token) {
       try {
-        await api.post("/api/cart/add", cartItem);
-        setCartItems((prev) => [...prev, cartItem]);
-      } catch (error) {
-        console.error("Error adding to cart:", error);
+        await api.post("/api/cart/add", { productId, quantity, variant });
+        setCartItems((prev) => {
+          const existingItem = prev.find(
+            (item) => item.productId === productId
+          );
+          if (existingItem) {
+            return prev.map((item) =>
+              item.productId === productId
+                ? { ...item, quantity: item.quantity + quantity }
+                : item
+            );
+          } else {
+            return [...prev, { productId, quantity, variant }];
+          }
+        });
+      } catch (err) {
+        console.error("Add to cart failed:", err);
       }
     } else {
-      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const productData = wishlistItems.find((p) => p.id === productId);
-
-      const localCartItem = {
-        ...cartItem,
-        product: productData,
-      };
-
-      const existingIndex = existingCart.findIndex(
-        (item) => item.productId === productId && item.variant === variant
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingIndex = localCart.findIndex(
+        (c) => c.productId === productId && c.variant === variant
       );
 
       if (existingIndex > -1) {
-        existingCart[existingIndex].quantity += quantity;
+        localCart[existingIndex].quantity += quantity;
       } else {
-        existingCart.push(localCartItem);
+        localCart.push({ productId, quantity, variant });
       }
 
-      localStorage.setItem("cart", JSON.stringify(existingCart));
-      setCartItems(existingCart);
+      localStorage.setItem("cart", JSON.stringify(localCart));
+      setCartItems(localCart);
     }
   };
 
-  // ---------------------------------------------------------------------------------
-  // 🧾 Render Section
-  // ---------------------------------------------------------------------------------
+  // ✅ Loading view
   if (loading)
     return (
       <div className="flex justify-center items-center py-20">
@@ -177,13 +200,14 @@ export const BuyerWishListMainSection = () => {
       </div>
     );
 
+  // ✅ UI rendering
   return (
     <section
       className="bg-no-repeat bg-cover"
       style={{ backgroundImage: `url(/blogs-header-bg.png)` }}
     >
       <div className="w-full pt-3">
-        <div className="max-w-[1440px] mx-auto ">
+        <div className="max-w-[1440px] mx-auto">
           <AppNavbar />
         </div>
       </div>
@@ -192,34 +216,62 @@ export const BuyerWishListMainSection = () => {
         className={`flex flex-col w-full max-w-[1200px] gap-8 mx-auto items-start mt-4`}
         dir={isArabic ? "rtl" : "ltr"}
       >
-        {!isMobile && <ProfileBreadcrumb />}
+        {isMobile ? (
+          <div className="relative flex items-center justify-center w-full">
+            <IconButton
+              onClick={() => navigate(-1)}
+              edge="start"
+              className={`!p-2 absolute ${isArabic ? "right-3" : "left-2"}`}
+            >
+              <img
+                src="/breadcrumb-arrow.svg"
+                alt="breadcrumb arrow"
+                className={`w-6 h-6 ${isArabic ? "rotate-180" : ""}`}
+              />
+            </IconButton>
+            <h4 className="text-center text-xl font-medium text-[#1A1713] font-[cairo] mx-auto">
+              {t("sidebar.favorites")}
+            </h4>
+          </div>
+        ) : (
+          <ProfileBreadcrumb />
+        )}
 
-        <div className={`flex items-start justify-between gap-6 w-full`}>
+        <div className="flex items-start justify-between gap-6 w-full">
           {!isMobile && <ProfileSideBar />}
 
-          <main className="flex flex-col w-full max-w-[894px] gap-10">
-            <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
-              {t("wishlist.title")}
-            </h2>
+          <main
+            className={`flex flex-col w-full max-w-[894px] gap-10 ${
+              isMobile && "mt-5"
+            }`}
+          >
+            {!isMobile && (
+              <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
+                {t("wishlist.title")}
+              </h2>
+            )}
 
-            {wishlistItems.length === 0 ? (
+            {displayWishlist.length === 0 ? (
               <div className="flex flex-col items-center py-16 text-center">
                 <p className="text-[#1a1713] text-lg font-medium">
                   لا توجد منتجات في المفضلة حاليًا
                 </p>
                 <Button
-                  className="mt-6 w-[50%] font-[cairo] text-[#ffffff] hover:bg-[#835p40] bg-[#835f40]"
+                  className="mt-6 w-[50%] font-[cairo] text-[#ffffff] hover:bg-[#835f40] bg-[#835f40]"
                   onClick={() => navigate("/home")}
                 >
                   تصفح المنتجات
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {wishlistItems.map((item) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto">
+                {displayWishlist.map((item) => (
                   <GlobalProductCard
                     key={item.id}
                     {...item}
+                    stock={item.stockLeft} // remaining stock
+                    disabled={item.stockLeft === 0} // disable if no stock
+                    isRTL={isArabic} // pass RTL info
                     onToggleWishlist={handleToggleWishlist}
                     onAddToCart={handleAddToCart}
                   />

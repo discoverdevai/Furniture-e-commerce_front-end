@@ -7,12 +7,14 @@ import { ArrowLeftIcon } from "lucide-react"; // optional icon
 import { MobileCategorySection } from "./MobileCategorySection/MobileCategorySection";
 import { useDispatch, useSelector } from "react-redux";
 import { setGlobalValue } from "../../../Store/Store";
-
+import { useMediaQuery } from "@mui/material";
 
 export const StoresMain = () => {
   const dispatch = useDispatch();
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery("(max-width:900px)");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export const StoresMain = () => {
   const handleCardClick = (name) => {
     const encodedName = encodeURIComponent(name);
     navigate(`/store/${encodedName}`);
-     dispatch(setGlobalValue({ key: "storeName", value: name }));
+    dispatch(setGlobalValue({ key: "storeName", value: name }));
   };
 
   return (
@@ -52,8 +54,8 @@ export const StoresMain = () => {
       </div>
 
       {/* ✅ Mobile-only header section */}
-    
-        <div className="block md:hidden mx-auto">
+
+      <div className={`${isMobile ? "block mx-auto" : "hidden"}`}>
         <MobileCategorySection />
       </div>
 

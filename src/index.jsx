@@ -34,10 +34,9 @@ import { BuyerChangePassword } from "./screens/BuyerProfile/BuyerChangePassword/
 import { BuyerWishList } from "./screens/BuyerProfile/BuyerWishList/BuyerWishList";
 import { BuyerAddress } from "./screens/BuyerProfile/BuyerAddress/BuyerAddress";
 import { SearchResult } from "./screens/Search/SearchResult";
+import { MobileProfileSettings } from "./screens/BuyerProfile/MobileProfileSettings/MobileProfileSettings";
 import {ProtectedRoute} from "./Api/Guard/ProtectedRoute"
 
-/* import { MobileProfileSettings } from "./screens/BuyerProfile/MobileProfileSettings/MobileProfileSettings";
- */
 createRoot(document.getElementById("app")).render(
   <StrictMode>
     <Provider store={store}>
@@ -63,7 +62,10 @@ createRoot(document.getElementById("app")).render(
             <Route path="/search2" element={<MobileSearch />} />
             <Route path="/search-result" element={<SearchResult />} />
             <Route path="/recently-arrived" element={<RecentlyArrived />} />
-            <Route path="/product-details/:id/:storeName" element={<ProductDetails />} />
+            <Route
+              path="/product-details/:id/:storeName"
+              element={<ProductDetails />}
+            />
             <Route path="/store/:storeName" element={<BrandProdutsScreen />} />
             <Route path="/profile" element={<BuyerProfile />} />
             <Route path="/brand-product" element={<BrandProdutsScreen />} />
@@ -100,10 +102,10 @@ createRoot(document.getElementById("app")).render(
             <Route path="/profile/orders" element={<BuyerOrders />} />
             <Route path="/profile/favorites" element={<BuyerWishList />} />
             <Route path="/Cart" element={<CartScreen />} />
-            {/*  <Route
+            <Route
               path="/ProfileSettings"
               element={<MobileProfileSettings />}
-            /> */}
+            />
           </Routes>
         </Router>
       </HeroUIProvider>
