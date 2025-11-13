@@ -1,10 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
+import { useMediaQuery } from "@mui/material";
 
 export const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
+  const isMobile = useMediaQuery("(max-width: 900px)");
 
   if (!isOpen) return null;
 
@@ -15,8 +17,16 @@ export const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
       dir={isArabic ? "rtl" : "ltr"}
     >
       <div
-        className="relative w-full  bg-white rounded-[10px] px-6 py-10 shadow-lg flex flex-col items-center gap-6"
-        style={{ width: "707px", height: "521px" }}
+        className={`relative bg-white p-6 shadow-lg flex flex-col items-center gap-6 ${
+          isMobile ? "rounded-t-[30px] p-1 pb-8 " : "rounded-[10px] px-6 py-10"
+        }`}
+        style={{
+          width: isMobile ? "100%" : "707px",
+          height: isMobile ? "auto" : "521px",
+          bottom: isMobile ? 0 : "auto",
+          position: isMobile ? "absolute" : "static",
+          transition: "all 0.3s ease-in-out",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Icon from public directory */}

@@ -11,12 +11,13 @@ import { useMediaQuery } from "@mui/material";
 import { ProfileBreadcrumb } from "../../../../components/ProfileBreadcrumb";
 import api from "../../../../Api/Axios";
 import Swal from "sweetalert2";
+import { IconButton } from "@mui/material";
 
 export const BuyerProfileMainSection = () => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const isMobile = useMediaQuery("(max-width:900px)");
-
+  const navigate = useNavigate();
   //Define state for user data
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -77,6 +78,9 @@ export const BuyerProfileMainSection = () => {
   const handleBlur = (field) => {
     setTouchedFields((prev) => ({ ...prev, [field]: true }));
     validateForm();
+  };
+  const handleBackClick = () => {
+    navigate(-1);
   };
 
   // Validation functions
@@ -162,15 +166,46 @@ export const BuyerProfileMainSection = () => {
         </div>
       </div>
       <div
-        className={`flex flex-col w-full  max-w-[1200px] gap-8 mx-auto items-start mt-4`}
+        className={`flex flex-col w-full  max-w-[1200px] gap-2 mx-auto items-start mt-4`}
         dir={isArabic ? "rtl" : "ltr"}
       >
         {/* Breadcrumb */}
-        {!isMobile && <ProfileBreadcrumb />}
+        {isMobile ? (
+          <div
+            className={`relative flex items-center justify-center w-full  ${
+              isArabic ? "" : ""
+            }`}
+          >
+            {/* Back Button */}
+            <IconButton
+              onClick={handleBackClick}
+              edge="start"
+              className={`!p-2 absolute ${isArabic ? "right-2" : "left-2"} `}
+            >
+              <img
+                src="/breadcrumb-arrow.svg"
+                alt="breadcrumb arrow"
+                className={`w-6 h-6 ${isArabic ? "rotate-180" : ""}`}
+                style={{ filter: "brightness(0) saturate(100%)" }}
+              />
+            </IconButton>
+
+            {/* Title */}
+            <h4 className="text-center text-xl font-medium text-[#1A1713] font-[cairo] mx-auto">
+              {t("sidebar.MobileprofileTitle")}
+            </h4>
+          </div>
+        ) : (
+          <ProfileBreadcrumb />
+        )}
 
         <div className={`flex items-start justify-between gap-6 w-full `}>
           {!isMobile && <ProfileSideBar />}
-          <main className="flex flex-col w-full max-w-[894px] gap-10 px-4 sm:px-6 md:px-8 lg:px-0">
+          <main
+            className={`flex flex-col w-full max-w-[894px] gap-10 px-4 sm:px-6 md:px-8 lg:px-0 ${
+              isMobile && "mt-5"
+            }`}
+          >
             {!isMobile && (
               <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
                 {t("profile.title")}

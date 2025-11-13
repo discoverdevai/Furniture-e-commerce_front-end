@@ -278,6 +278,7 @@ const resources = {
           "حدث خطأ أثناء تحديث الملف الشخصي. يرجى المحاولة مرة أخرى لاحقاً.",
       },
       sidebar: {
+        MobileprofileTitle: "الملف الشخصي",
         profile: "الملف الشخصي",
         changePassword: "تغيير كلمة المرور",
         orders: "الطلبات",
@@ -644,6 +645,7 @@ const resources = {
           "An error occurred while updating your profile. Please try again later.",
       },
       sidebar: {
+        MobileprofileTitle: "Profile",
         profile: "Profile",
         changePassword: "Change Password",
         orders: "Orders",

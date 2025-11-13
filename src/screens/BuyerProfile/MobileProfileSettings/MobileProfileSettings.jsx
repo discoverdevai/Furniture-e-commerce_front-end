@@ -1,10 +1,10 @@
 import React from "react";
 import { FooterSection } from "../../../components/Layout/FooterSection";
-import { BuyerProfileMainSection } from "../BuyerProfile/BuyerProfileMainSection/BuyerProfileMainSection";
+import { MobileProfileMainSection } from "../MobileProfileSettings/MobileProfileMainSection/MobileProfileMainSection";
 
-export const MobileProfileMainSection = () => (
+export const MobileProfileSettings = () => (
   <>
-    <BuyerProfileMainSection />
+    <MobileProfileMainSection />
     <FooterSection />
   </>
 );
