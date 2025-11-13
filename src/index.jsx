@@ -34,6 +34,7 @@ import { BuyerChangePassword } from "./screens/BuyerProfile/BuyerChangePassword/
 import { BuyerWishList } from "./screens/BuyerProfile/BuyerWishList/BuyerWishList";
 import { BuyerAddress } from "./screens/BuyerProfile/BuyerAddress/BuyerAddress";
 import { SearchResult } from "./screens/Search/SearchResult";
+import {ProtectedRoute} from "./Api/Guard/ProtectedRoute"
 
 /* import { MobileProfileSettings } from "./screens/BuyerProfile/MobileProfileSettings/MobileProfileSettings";
  */
@@ -60,21 +61,41 @@ createRoot(document.getElementById("app")).render(
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/search" element={<SearchDropdown />} />
             <Route path="/search2" element={<MobileSearch />} />
-             <Route path="/search-result" element={<SearchResult />} />
+            <Route path="/search-result" element={<SearchResult />} />
             <Route path="/recently-arrived" element={<RecentlyArrived />} />
             <Route path="/product-details/:id/:storeName" element={<ProductDetails />} />
-             <Route path="/store/:storeName" element={<BrandProdutsScreen />} />
+            <Route path="/store/:storeName" element={<BrandProdutsScreen />} />
             <Route path="/profile" element={<BuyerProfile />} />
             <Route path="/brand-product" element={<BrandProdutsScreen />} />
-            <Route path="/order-screen" element={<OrderScreen />} />
-            <Route path="/order-tracking" element={<OrderTrackingScreen />} />
-            <Route path="/previous-orders" element={<PreviousOrdersScreen />} />
 
+            <Route
+              path="/order-screen"
+              element={
+                <ProtectedRoute>
+                  <OrderScreen />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/order-tracking/:orderNumber"
+              element={
+                <ProtectedRoute>
+                  <OrderTrackingScreen />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/previous-orders"
+              element={
+                <ProtectedRoute>
+                  <PreviousOrdersScreen />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/profile/change-password"
               element={<BuyerChangePassword />}
             />
-            <Route path="/profile/orders" element={<BuyerOrders />} />
             <Route path="/profile/saved-addresses" element={<BuyerAddress />} />
             <Route path="/profile/orders" element={<BuyerOrders />} />
             <Route path="/profile/favorites" element={<BuyerWishList />} />
