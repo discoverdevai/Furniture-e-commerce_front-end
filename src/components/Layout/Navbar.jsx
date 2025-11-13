@@ -316,6 +316,7 @@ export const AppNavbar = () => {
                   navigate(path);
                   toggleDrawer();
                 }}
+                onClose={() => toggleDrawer()}
               >
                 <ListItemText
                   primary={t(key)}
@@ -330,9 +331,6 @@ export const AppNavbar = () => {
           </List>
         </Drawer>
       </AppBar>
-
-      {/* ===== Search Modal (Desktop only) ===== */}
-      <SearchModal open={isSearchOpen} onClose={toggleSearchModal} />
     </>
   );
 };

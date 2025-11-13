@@ -17,8 +17,8 @@ export const GlobalProductCard = ({
   onToggleWishlist,
   onAddToCart,
   disabled = false,
-  stock = 0, // ✅ stock prop
-  isRTL = false, // for text alignment
+  stock = 0,
+  isRTL = false,
 }) => {
   const [wish, setWish] = useState(isInWishlist);
 
@@ -45,6 +45,22 @@ export const GlobalProductCard = ({
       key={id}
       className="relative flex flex-col justify-between w-[240px] sm:w-[282px] flex-shrink-0 rounded-[16px] border border-solid border-[#c3c3c3] sm:rounded-3xl overflow-hidden bg-white snap-center"
     >
+      {/* Heart icon, always clickable */}
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-3 z-30">
+        <Button
+          onClick={handleWishlistClick}
+          variant="ghost"
+          size="icon"
+          className="w-8 h-8 sm:w-10 sm:h-10 bg-[#ffffff33] rounded-full hover:bg-[#ffffff4d]"
+        >
+          <img
+            src={wish ? "/heart-red.svg" : "/heart-empty.svg"}
+            alt="wishlist"
+            className="w-5 h-5 sm:w-6 sm:h-6"
+          />
+        </Button>
+      </div>
+
       {/* Out of stock overlay */}
       {isOutOfStock && (
         <div className="absolute inset-0 bg-white/40 backdrop-blur-[0.3px] z-10 flex items-center justify-center text-center p-4">
@@ -54,7 +70,7 @@ export const GlobalProductCard = ({
         </div>
       )}
 
-      {/* Image */}
+      {/* Image with possible blur */}
       <div
         className={`relative w-full h-[160px] sm:h-[271px] rounded-t-[16px] overflow-hidden ${
           isOutOfStock ? "blur-[0.3px]" : ""
@@ -66,22 +82,6 @@ export const GlobalProductCard = ({
           src={image}
         />
 
-        {/* Wishlist */}
-        <div className="absolute top-2 right-2 sm:top-4 sm:right-3 flex justify-end z-20">
-          <Button
-            onClick={handleWishlistClick}
-            variant="ghost"
-            size="icon"
-            className="w-8 h-8 sm:w-10 sm:h-10 bg-[#ffffff33] rounded-full hover:bg-[#ffffff4d]"
-          >
-            <img
-              src={wish ? "/heart-red.svg" : "/heart-empty.svg"}
-              alt="wishlist"
-              className="w-5 h-5 sm:w-6 sm:h-6"
-            />
-          </Button>
-        </div>
-
         {isOnSale && (
           <img
             className="absolute top-[90px] sm:top-[127px] left-1/2 -translate-x-1/2 w-[120px] sm:w-[194px] h-24 sm:h-36 object-cover"
@@ -91,7 +91,7 @@ export const GlobalProductCard = ({
         )}
       </div>
 
-      {/* Content */}
+      {/* Description and info */}
       <div
         className={`flex flex-col items-start gap-1 sm:gap-2 p-2 sm:p-4 flex-grow ${
           isOutOfStock ? "blur-[0.3px]" : ""
@@ -122,7 +122,7 @@ export const GlobalProductCard = ({
         </div>
       </div>
 
-      {/* Price & Cart */}
+      {/* Price and Cart Button */}
       <div className={`mt-auto w-full ${isOutOfStock ? "blur-[0.3px]" : ""}`}>
         <div className="w-full h-10 sm:h-14 bg-[#ffffff80] flex items-center justify-between px-2 sm:px-3 rounded-b-[16px] sm:rounded-b-[24px]">
           <div className="flex flex-col items-end gap-0 sm:gap-1">
@@ -138,7 +138,7 @@ export const GlobalProductCard = ({
 
           <Button
             onClick={handleAddToCartClick}
-            disabled={disabled || isOutOfStock} // disable if out of stock
+            disabled={disabled || isOutOfStock}
             className={`group relative flex items-center justify-center rounded-[50px] overflow-hidden transition-all duration-500 ease-in-out p-2 
              ${
                disabled || isOutOfStock
@@ -156,7 +156,7 @@ export const GlobalProductCard = ({
                  disabled || isOutOfStock
                    ? "grayscale opacity-50"
                    : "group-hover:translate-x-[-4px]"
-               } `}
+               }`}
               />
               <span
                 className={`max-w-0 opacity-0 group-hover:max-w-[120px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out text-[#835f40] font-bold text-xs sm:text-base whitespace-nowrap [font-family:'Cairo',Helvetica] ml-0 group-hover:ml-2

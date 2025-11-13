@@ -10,10 +10,13 @@ import { useMediaQuery } from "@mui/material";
 import { ProfileBreadcrumb } from "../../../../components/ProfileBreadcrumb";
 import api from "../../../../Api/Axios";
 import Swal from "sweetalert2";
+import { IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const BuyerChangePasswordMainSection = () => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:900px)");
   // State for inputs
   const [currentPassword, setCurrentPassword] = useState("");
@@ -39,6 +42,9 @@ export const BuyerChangePasswordMainSection = () => {
   const handleFieldBlur = (field) => {
     setTouchedFields((prev) => ({ ...prev, [field]: true }));
     validateForm();
+  };
+  const handleBackClick = () => {
+    navigate(-1);
   };
 
   const validateForm = () => {
@@ -174,12 +180,43 @@ export const BuyerChangePasswordMainSection = () => {
       <div
         className={`flex flex-col w-full max-w-[1200px] mx-auto items-start gap-8 mt-4`}
       >
-        {!isMobile && <ProfileBreadcrumb />}
+        {isMobile ? (
+          <div
+            className={`relative flex items-center justify-center w-full  ${
+              isArabic ? "" : ""
+            }`}
+          >
+            {/* Back Button */}
+            <IconButton
+              onClick={handleBackClick}
+              edge="start"
+              className={`!p-2 absolute ${
+                isArabic ? "right-2" : "left-2"
+              } z-10`}
+            >
+              <img
+                src="/breadcrumb-arrow.svg"
+                alt="breadcrumb arrow"
+                className={`w-6 h-6 ${isArabic ? "rotate-180" : ""}`}
+                style={{ filter: "brightness(0) saturate(100%)" }}
+              />
+            </IconButton>
+
+            {/* Title */}
+            <h4 className="text-center text-xl font-medium text-[#1A1713] font-[cairo] mx-auto">
+              {t("sidebar.changePassword")}
+            </h4>
+          </div>
+        ) : (
+          <ProfileBreadcrumb />
+        )}
 
         <div className={`flex items-start justify-start gap-6 w-full`}>
           {!isMobile && <ProfileSideBar />}{" "}
           <main
-            className={`flex flex-col w-full max-w-[894px] items-start gap-10 px-4 sm:px-6 md:px-8 lg:px-0`}
+            className={`flex flex-col w-full max-w-[894px] items-start gap-10 px-4 sm:px-6 md:px-8 lg:px-0 ${
+              isMobile && "mt-5"
+            }`}
           >
             {!isMobile && (
               <h2 className="text-[#1a1713] font-semibold font-[cairo] text-[32px]">
