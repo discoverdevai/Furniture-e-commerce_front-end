@@ -28,9 +28,6 @@ export const CartSection = () => {
     return { subtotal, tax, shipping, total };
   };
 
- 
-
-
   // 📦 Fetch Cart Items
   useEffect(() => {
     const fetchCart = async () => {
@@ -79,7 +76,7 @@ export const CartSection = () => {
             total:
               (item.product?.price || item.product?.oldPrice || 0) *
               item.quantity,
-            vendorName: item.product?.shop || "غير معروف",
+            storeName: item.product?.storeName || "غير معروف",
             stock: item.product?.stock || 1,
           }));
 
@@ -97,42 +94,42 @@ export const CartSection = () => {
   }, []);
 
   const handlePayNow = () => {
-  if (!token) {
-    Swal.fire({
-      title: "تنبيه",
-      text: "يجب تسجيل الدخول أولاً للمتابعة",
-      icon: "warning",
-      confirmButtonText: "تسجيل الدخول",
-      showCancelButton: true,
-      cancelButtonText: "إلغاء",
-      customClass: {
-        popup: "rounded-[15px] p-6",
-        title: "font-['Cairo',Helvetica] text-center",
-        htmlContainer: "font-['Cairo',Helvetica] text-center",
-        confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
-        cancelButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/");
-      }
-    });
-    return; // stop further execution
-  }
+    if (!token) {
+      Swal.fire({
+        title: "تنبيه",
+        text: "يجب تسجيل الدخول أولاً للمتابعة",
+        icon: "warning",
+        confirmButtonText: "تسجيل الدخول",
+        showCancelButton: true,
+        cancelButtonText: "إلغاء",
+        customClass: {
+          popup: "rounded-[15px] p-6",
+          title: "font-['Cairo',Helvetica] text-center",
+          htmlContainer: "font-['Cairo',Helvetica] text-center",
+          confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+          cancelButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/");
+        }
+      });
+      return; // stop further execution
+    }
 
-  // Prevent clicking while still loading or empty cart
-  if (!totals || cartItems.length === 0) return;
+    // Prevent clicking while still loading or empty cart
+    if (!totals || cartItems.length === 0) return;
 
-  const orderData = {
-    items: cartItems,
-    totals,
+    const orderData = {
+      items: cartItems,
+      totals,
+    };
+
+    // Save temporarily in localStorage or navigate state
+    localStorage.setItem("orderData", JSON.stringify(orderData));
+
+    navigate("/order-screen", { state: orderData });
   };
-
-  // Save temporarily in localStorage or navigate state
-  localStorage.setItem("orderData", JSON.stringify(orderData));
-
-  navigate("/order-screen", { state: orderData });
-};
 
   // ➕ Increase quantity
   const handleIncrease = async (item) => {
@@ -173,7 +170,7 @@ export const CartSection = () => {
         quantity: p.quantity,
         price: p.product?.price || p.product?.oldPrice || 0,
         total: (p.product?.price || p.product?.oldPrice || 0) * p.quantity,
-        vendorName: p.product?.shop || "غير معروف",
+        storeName: p.product?.storeName || "غير معروف",
         stock: p.product?.stock || 1,
       }));
       setCartItems(updatedItems);
@@ -220,7 +217,7 @@ export const CartSection = () => {
         quantity: p.quantity,
         price: p.product?.price || p.product?.oldPrice || 0,
         total: (p.product?.price || p.product?.oldPrice || 0) * p.quantity,
-        vendorName: p.product?.shop || "غير معروف",
+        storeName: p.product?.storeName || "غير معروف",
         stock: p.product?.stock || 1,
       }));
       setCartItems(updatedItems);
@@ -296,7 +293,7 @@ export const CartSection = () => {
               price: p.product?.price || p.product?.oldPrice || 0,
               total:
                 (p.product?.price || p.product?.oldPrice || 0) * p.quantity,
-              vendorName: p.product?.shop || "غير معروف",
+              storeName: p.product?.storeName || "غير معروف",
               stock: p.product?.stock || 1,
             }));
 
@@ -347,7 +344,7 @@ export const CartSection = () => {
     return (
       <div className="flex justify-center items-center py-20">
         <p className="text-[#683800] font-semibold text-lg !font-[cairo]">
-          جاري تحميل سلة المشتريات...
+          {isRTL ? "جاري تحميل سلة المشتريات..." : "Loading shopping cart..."}
         </p>
       </div>
     );
@@ -357,13 +354,15 @@ export const CartSection = () => {
       <div className="flex flex-col items-center justify-center py-20">
         <img src={"/empty-cart.svg"} alt="Empty Cart" className="w-48 mb-6" />
         <p className="text-[#683800] font-semibold text-lg font-[cairo]">
-          سلة المشتريات فارغة
+          {isRTL
+            ? "سلة المشتريات الخاصة بك فارغة حالياً."
+            : "Your shopping cart is currently empty."}
         </p>
         <Button
           className="mt-6 w-[50%] font-[cairo] text-[#ffffff] hover:bg-[#835p40] bg-[#835f40]"
           onClick={() => navigate("/home")}
         >
-          العودة للتسوق
+          {isRTL ? "العودة إلى المتجر" : "Back to Store"}
         </Button>
       </div>
     );
@@ -371,7 +370,7 @@ export const CartSection = () => {
   return (
     <div className="mx-auto flex flex-col w-full max-w-[1200px] items-start gap-8">
       <h2 className="self-stretch text-black text-[32px] font-semibold font-[cairo] mx-3">
-        السلة
+        {isRTL ? "سلة المشتريات" : "Shopping Cart"}
       </h2>
 
       <div className="flex items-start justify-start gap-6 w-full flex-wrap lg:flex-nowrap">
@@ -407,11 +406,13 @@ export const CartSection = () => {
                             {/* 💰 Price */}
                             <div className="text-2xl text-[#835f40] font-semibold">
                               {item.price}{" "}
-                              <span className="text-base">ر.س</span>
+                              <span className="text-base">
+                                {isRTL ? "ر.س" : "SAR"}
+                              </span>
                             </div>
                             <div className="inline-flex items-center justify-center gap-2">
                               <h4 className="font-[cairo] text-xl text-[#000000]">
-                                اللون :
+                                {isRTL ? "اللون:" : "color:"}
                               </h4>
                               <div className="w-[22px] h-[22px] bg-[#b3afad] rounded-[50px] border-[1px] border-solid border-[#1a1713]" />
                             </div>
@@ -421,7 +422,7 @@ export const CartSection = () => {
                         {/* 🔢 Quantity Controls */}
                         <div className="flex flex-col items-start gap-3 w-full">
                           <h4 className="text-black text-[20px] font-medium font-[cairo]">
-                            العدد
+                            {isRTL ? "العدد:" : "Quantity:"}
                           </h4>
 
                           <div className="flex items-center justify-center gap-10 w-full h-12 p-2 rounded-[10px] border border-solid border-[#c3c3c3]">
@@ -460,7 +461,7 @@ export const CartSection = () => {
                       >
                         <img src="/trash.svg" alt="trash" className="w-6 h-6" />
                         <h4 className="text-[#1a1713] text-xl font-medium font-[cairo]">
-                          حذف
+                          {isRTL ? "حذف المنتج" : "Delete Item"}
                         </h4>
                       </Button>
                     </div>
@@ -474,17 +475,23 @@ export const CartSection = () => {
         {/* 💳 Order Summary */}
         <Card className="w-full lg:w-96 bg-[#f2f2f2] rounded-[10px] border-0">
           <CardContent className="flex flex-col items-center justify-center gap-6 p-4">
-            <div className="flex flex-row flex-grow w-full border border-[#A67C52]/80 rounded-[10px_0_0_10px] overflow-hidden ">
+            <div
+              className={`flex flex-row flex-grow w-full border border-[#A67C52]/80 ${
+                isRTL ? "rounded-[10px_0_0_10px]" : "rounded-[0_10px_10px_0]"
+              } overflow-hidden `}
+            >
               {/* Input */}
               <Input
                 type="text"
-                placeholder="ادخل كود الخصم"
-                className="flex-1 px-4 py-3 text-[#757474] placeholder:text-[#757474] focus:outline-none bg-[#f2f2f2] text-right font-[cairo] border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                placeholder={isRTL ? "أدخل كود الخصم" : "Enter discount code"}
+                className={`flex-1 px-4 py-3 text-[#757474] placeholder:text-[#757474] focus:outline-none bg-[#f2f2f2] ${
+                  isRTL ? "text-right" : "text-left"
+                } font-[cairo] border-0 focus-visible:ring-0 focus-visible:ring-offset-0`}
               />
 
               {/* Button */}
               <Button className="bg-gradient-to-l from-[#805b3c] to-[#d3baa4] text-white w-[151px] font-[cairo] font-semibold px-6 py-3 hover:opacity-90 transition-all duration-300 rounded-none">
-                تفعيل
+                {isRTL ? "تفعيل" : "Apply"}
               </Button>
             </div>
 
@@ -492,29 +499,42 @@ export const CartSection = () => {
               <>
                 <div className="flex flex-col items-start gap-4 w-full">
                   <div className="flex justify-between w-full font-[cairo]">
-                    <span>المجموع الفرعي :</span>
-                    <span>{totals.subtotal.toFixed(2)} ر.س</span>
+                    <span>{isRTL ? "المجموع الفرعي:" : "Subtotal:"}</span>
+                    <span>
+                      {totals.subtotal.toFixed(2)} {isRTL ? " ر.س" : " SAR"}
+                    </span>
                   </div>
                   <div className="flex justify-between w-full font-[cairo]">
-                    <span>الضريبة :</span>
-                    <span>{totals.tax.toFixed(2)} ر.س</span>
+                    <span>{isRTL ? "الضريبة:" : "Tax:"}</span>
+                    <span>
+                      {totals.tax.toFixed(2)}
+                      {isRTL ? " ر.س" : " SAR"}
+                    </span>
                   </div>
                   <div className="flex justify-between w-full font-[cairo]">
-                    <span>الشحن :</span>
-                    <span>{totals.shipping.toFixed(2)} ر.س</span>
+                    <span>{isRTL ? "الشحن:" : "Shipping:"}</span>
+                    <span>
+                      {totals.shipping.toFixed(2)}
+                      {isRTL ? " ر.س" : " SAR"}
+                    </span>
                   </div>
                 </div>
 
                 <Separator className="w-full h-px bg-[#c3c3c3]" />
 
                 <div className="flex justify-between w-full text-[#835f40] font-semibold font-[cairo]">
-                  <span>الإجمالي :</span>
-                  <span>{totals.total.toFixed(2)} ر.س</span>
+                  <span>{isRTL ? "المجموع:" : "Total:"}</span>
+                  <span>
+                    {totals.total.toFixed(2)} {isRTL ? " ر.س" : " SAR"}
+                  </span>
                 </div>
               </>
             )}
 
-            <Button  onClick={() => handlePayNow()} className="h-14 w-full rounded-[10px] bg-gradient-to-l from-[#805b3c] to-[#d3baa4] hover:opacity-90 p-2">
+            <Button
+              onClick={() => handlePayNow()}
+              className="h-14 w-full rounded-[10px] bg-gradient-to-l from-[#805b3c] to-[#d3baa4] hover:opacity-90 p-2"
+            >
               <span className="text-white font-medium font-[cairo] ">
                 الدفع الآن
               </span>

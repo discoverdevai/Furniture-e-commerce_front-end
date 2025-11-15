@@ -77,7 +77,7 @@ export const Categories = () => {
 
       <div className="relative z-10 flex flex-col w-full max-w-[1200px] items-end gap-10 sm:gap-14 px-4 py-12 sm:py-20">
         <h2 className="self-stretch text-[#1a1713] text-lg sm:text-[length:var(--h2-semiboald-font-size)] leading-[var(--h2-semiboald-line-height)] font-h2-semiboald tracking-[var(--h2-semiboald-letter-spacing)]">
-          الأقسام
+          {isArabic ? "الفئات" : "Categories"}
         </h2>
 
         <div className="flex items-center justify-center gap-4 sm:gap-12 w-full">
@@ -111,7 +111,10 @@ export const Categories = () => {
             >
               {Array.from({ length: totalSlides }).map((_, slideIndex) => {
                 const start = slideIndex * cardsPerSlide;
-                const slideCards = categories.slice(start, start + cardsPerSlide);
+                const slideCards = categories.slice(
+                  start,
+                  start + cardsPerSlide
+                );
 
                 return (
                   <div

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./button";
 import { StarIcon } from "lucide-react";
 
@@ -14,6 +15,7 @@ export const GlobalProductCard = ({
   saleImage,
   isOnSale,
   isInWishlist = false,
+  storeName,
   onToggleWishlist,
   onAddToCart,
   disabled = false,
@@ -21,19 +23,27 @@ export const GlobalProductCard = ({
   isRTL = false,
 }) => {
   const [wish, setWish] = useState(isInWishlist);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setWish(isInWishlist);
   }, [isInWishlist]);
 
-  const handleWishlistClick = () => {
+  // Centralized navigation handler
+  const handleCardClick = () => {
+    navigate(`/product-details/${id}/${storeName}`);
+  };
+
+  const handleWishlistClick = (e) => {
+    e.stopPropagation();
     const newValue = !wish;
     setWish(newValue);
     onToggleWishlist(id, newValue);
   };
 
-  const handleAddToCartClick = () => {
-    if (!disabled && onAddToCart) {
+  const handleAddToCartClick = (e) => {
+    e.stopPropagation();
+    if (!disabled && !isOutOfStock && onAddToCart) {
       onAddToCart(id);
     }
   };
@@ -43,7 +53,8 @@ export const GlobalProductCard = ({
   return (
     <div
       key={id}
-      className="relative flex flex-col justify-between w-[240px] sm:w-[282px] flex-shrink-0 rounded-[16px] border border-solid border-[#c3c3c3] sm:rounded-3xl overflow-hidden bg-white snap-center"
+      onClick={handleCardClick}
+      className="relative flex flex-col justify-between w-[240px] sm:w-[282px] flex-shrink-0 rounded-[16px] border border-solid border-[#c3c3c3] sm:rounded-3xl overflow-hidden bg-white snap-center cursor-pointer"
     >
       {/* Heart icon, always clickable */}
       <div className="absolute top-2 right-2 sm:top-4 sm:right-3 z-30">
@@ -127,11 +138,12 @@ export const GlobalProductCard = ({
         <div className="w-full h-10 sm:h-14 bg-[#ffffff80] flex items-center justify-between px-2 sm:px-3 rounded-b-[16px] sm:rounded-b-[24px]">
           <div className="flex flex-col items-end gap-0 sm:gap-1">
             <div className="font-bold text-[#835f40] text-sm sm:text-lg">
-              {price} <span className="font-medium">ر.س</span>
+              {isOnSale ? price : oldPrice}{" "}
+              <span className="font-medium">{isRTL ? "ر.س" : "SAR"}</span>
             </div>
             {isOnSale && (
               <div className="text-[#1a1713] text-[10px] sm:text-xs line-through">
-                {oldPrice} ر.س
+                {oldPrice} {isRTL ? "ر.س" : "SAR"}
               </div>
             )}
           </div>

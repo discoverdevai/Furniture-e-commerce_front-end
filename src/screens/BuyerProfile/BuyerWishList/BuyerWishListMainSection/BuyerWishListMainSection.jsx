@@ -94,7 +94,10 @@ export const BuyerWishListMainSection = () => {
 
   // ✅ Recalculate stockLeft whenever cart or wishlist changes
   useEffect(() => {
-    if (!wishlistItems.length) return;
+    if (wishlistItems.length === 0) {
+      setDisplayWishlist([]);
+      return;
+    }
 
     const updated = wishlistItems.map((p) => {
       const qtyInCart =
@@ -117,7 +120,6 @@ export const BuyerWishListMainSection = () => {
         if (target?.isInWishlist) {
           await api.delete(`/api/wishlist/${productId}`);
           setWishlistItems((prev) => prev.filter((p) => p.id !== productId));
-          
         } else {
           await api.post(`/api/wishlist/${productId}`);
           setWishlistItems((prev) => [
@@ -253,14 +255,16 @@ export const BuyerWishListMainSection = () => {
 
             {displayWishlist.length === 0 ? (
               <div className="flex flex-col items-center py-16 text-center">
-                <p className="text-[#1a1713] text-lg font-medium">
-                  لا توجد منتجات في المفضلة حاليًا
+                <p className="text-[#1a1713] text-lg font-medium font-[cairo]">
+                  {isArabic
+                    ? "لا توجد منتجات في المفضلة حاليًا"
+                    : "No products in your wishlist currently"}
                 </p>
                 <Button
                   className="mt-6 w-[50%] font-[cairo] text-[#ffffff] hover:bg-[#835f40] bg-[#835f40]"
                   onClick={() => navigate("/home")}
                 >
-                  تصفح المنتجات
+                  {isArabic ? "تصفح المنتجات" : "Browse Products"}
                 </Button>
               </div>
             ) : (
