@@ -49,7 +49,7 @@ const MostPurchased = () => {
             id: item.id,
             title: item.name,
             description: item.description,
-            price: item.price,
+            price: item.salePrice,
             oldPrice: item.originalPrice,
             shop: item.vendorName,
             image: item.imageUrl || "/image 4.png",
@@ -58,6 +58,7 @@ const MostPurchased = () => {
             isOnSale: item.isOnSale,
             stock: item.stockQuantity,
             isInWishlist: false,
+            storeName: item.vendorName,
           }));
           // 2️⃣ Check login state
           if (token) {
@@ -298,8 +299,8 @@ const MostPurchased = () => {
       <div className="pt-12 px-12 lg:px-32">
         {/* Header */}
         <div className="w-full flex items-center justify-between pb-4">
-          <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold">
-            الأكثر مبيعا
+          <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold [font-family:'Cairo']">
+            {isRTL ? "الأكثر مبيعا" : "Most Purchased"}
           </h1>
           <Button
             variant="ghost"
@@ -309,10 +310,14 @@ const MostPurchased = () => {
               window.scrollTo(0, 0);
             }}
           >
-            <span className="text-[#683800] text-[16px] font-medium">
-              عرض المزيد
+            <span className="text-[#683800] text-[16px] font-medium font-['Cairo']">
+              {isRTL ? "عرض المزيد" : "Show More"}
             </span>
-            <img className="w-6 h-6" alt="arrow" src="/line-arrow-right.svg" />
+            <img
+              src="/line-arrow-right.svg"
+              alt="arrow"
+              className={`w-6 h-6 ${isRTL ? "" : "rotate-180"}`}
+            />{" "}
           </Button>
         </div>
 

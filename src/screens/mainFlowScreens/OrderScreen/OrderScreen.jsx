@@ -37,7 +37,7 @@ export const OrderScreen = () => {
 
     const orderPayload = {
       shippingAddressId: 1, // Can be dynamic later
-      billingAddressId: 1,  // Can be dynamic later
+      billingAddressId: 1, // Can be dynamic later
       paymentMethodId: selectedPayment.id,
       orderItems: cartItems.map((item) => ({
         productId: item.productId,
