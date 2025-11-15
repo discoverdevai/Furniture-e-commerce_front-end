@@ -14,7 +14,12 @@ export const PreviousOrdersScreen = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await api.get("/api/buyer/orders/history");
+        const response = await api.get("/api/buyer/orders/history", {
+  params: {
+    page: 0,   // or any dynamic value
+    size: 1000,  // or any dynamic value
+  },
+});
         if (response.data.success) {
           setOrders(response.data.data);
         }
@@ -29,7 +34,7 @@ export const PreviousOrdersScreen = () => {
 
   // Split orders by status
   const currentOrders = orders.filter(
-    (o) => o.status === "PENDING" || o.status === "DELIVERING"
+    (o) => o.status === "PENDING" || o.status === "DELIVERING" || o.status === "CONFIRMED"
   );
   const previousOrders = orders.filter(
     (o) => o.status === "DELIVERED" || o.status === "CANCELLED" || o.status === "SHIPPED"

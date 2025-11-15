@@ -3,26 +3,26 @@ import { Card, CardContent } from "../../../components/ui/card";
 import { AppNavbar } from "../../../components/Layout/Navbar";
 import api from "../../../Api/Axios";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeftIcon } from "lucide-react"; // optional icon
-import { MobileCategorySection } from "./MobileCategorySection/MobileCategorySection";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setGlobalValue } from "../../../Store/Store";
 import { useMediaQuery } from "@mui/material";
+import { MobileCategorySection } from "./MobileCategorySection/MobileCategorySection";
 
 export const StoresMain = () => {
   const dispatch = useDispatch();
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery("(max-width:900px)");
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const response = await api.get("/api/products/vendor");
-        if (response.data.success && response.data.data?.vendors) {
-          setVendors(response.data.data.vendors);
+        const response = await api.get("/api/vendors");
+
+        // ✅ Adjusted based on your new API shape
+        if (response.data.success && Array.isArray(response.data.data)) {
+          setVendors(response.data.data);
         } else {
           console.error("Unexpected API response:", response.data);
         }
@@ -54,7 +54,6 @@ export const StoresMain = () => {
       </div>
 
       {/* ✅ Mobile-only header section */}
-
       <div className={`${isMobile ? "block mx-auto" : "hidden"}`}>
         <MobileCategorySection />
       </div>
@@ -65,7 +64,7 @@ export const StoresMain = () => {
         ) : vendors.length > 0 ? (
           vendors.map((vendor, index) => (
             <Card
-              key={index}
+              key={vendor.id || index}
               onClick={() =>
                 handleCardClick(vendor.businessNameAr || vendor.businessName)
               }

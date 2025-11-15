@@ -8,7 +8,9 @@ const globalSlice = createSlice({
     Email: null,
     identifierType: null,
     storeName:null,
-    selectedPayment:null
+    selectedPayment:null,
+    addressId:null,
+    address:null
 
     // add anything else you need here
   },

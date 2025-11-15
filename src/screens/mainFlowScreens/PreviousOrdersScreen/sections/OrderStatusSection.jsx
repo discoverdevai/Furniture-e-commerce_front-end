@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Badge } from "../../../../components/ui/badge";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import api from "../../../../Api/Axios";
+import { DeletePopup } from "../../../../components/Common/Popups/DeletePopup"; // import the dialog component
 
 // Backend status mapped to Arabic label and colors
 const statusStyles = {
   PENDING: { label: "قيد الانتظار", bg: "bg-[#ebf0fb]", color: "text-[#00154c]" },
+   CONFIRMED: { label: " تجهيز", bg: "bg-[#ebf0fb]", color: "text-[#00154c]" },
   DELIVERING: { label: "جاري التوصيل", bg: "bg-[#fbfce2]", color: "text-[#414706]" },
   DELIVERED: { label: "تم التوصيل", bg: "bg-[#f6f0ea]", color: "text-[#5a2c00]" },
-   SHIPPED: { label: "تم التحميل", bg: "bg-[#f6f0ea]", color: "text-[#5a2c00]" },
+  SHIPPED: { label: "تم التحميل", bg: "bg-[#f6f0ea]", color: "text-[#5a2c00]" },
   CANCELLED: { label: "ملغي", bg: "bg-[#fbeaea]", color: "text-[#a60000]" },
 };
 
@@ -18,6 +22,10 @@ export const OrderStatusSection = ({ orders = [] }) => {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
   const isArabic = i18n.language === "ar";
+
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [currentOrderNumber, setCurrentOrderNumber] = useState(null);
+  const [orderList, setOrderList] = useState(orders); // local copy for UI updates
 
   if (orders.length === 0) {
     return (
@@ -28,22 +36,63 @@ export const OrderStatusSection = ({ orders = [] }) => {
   }
 
   const handleCardClick = (orderNumber) => {
-    console.log("order0" + orderNumber);
-    
     navigate(`/order-tracking/${orderNumber}`);
+  };
+
+  const handleOpenCancelDialog = (orderNumber) => {
+    setCurrentOrderNumber(orderNumber);
+    setOpenCancelDialog(true);
+  };
+
+  const handleCancelOrder = async () => {
+    try {
+      const response = await api.put(
+        `/api/buyer/orders/cancel/${currentOrderNumber}`,
+        { reason: "Ordered by mistake" }
+      );
+
+      if (response.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "تم الإلغاء",
+          text: "تم إلغاء الطلب بنجاح",
+        });
+
+        // update order status in local state
+        setOrderList((prev) =>
+          prev.map((order) =>
+            order.orderNumber === currentOrderNumber
+              ? { ...order, status: "CANCELLED" }
+              : order
+          )
+        );
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "فشل الإلغاء",
+          text: response.data.message,
+        });
+      }
+      setOpenCancelDialog(false); // close dialog
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "حدث خطأ",
+        text: "تعذر إلغاء الطلب، حاول مرة أخرى",
+      });
+      console.error("Cancel order error:", error);
+    }
   };
 
   return (
     <section
-      className={`flex flex-col items-start gap-6 w-full ${
-        isArabic ? "text-right" : "text-left"
-      }`}
+      className={`flex flex-col items-start gap-6 w-full ${isArabic ? "text-right" : "text-left"}`}
       dir={isArabic ? "rtl" : "ltr"}
     >
-      {orders.map((order) => {
+      {orderList.map((order) => {
         const style = statusStyles[order.status] || {};
         const firstItem = order.orderItems?.[0];
-        const showCancel = order.status === "PENDING";
+        const showCancel = (order.status === "PENDING") ||(order.status === "CONFIRMED");
 
         return (
           <div key={order.id} className="flex flex-col gap-4 w-full">
@@ -55,14 +104,12 @@ export const OrderStatusSection = ({ orders = [] }) => {
               <CardContent className="flex flex-col sm:flex-row sm:items-start sm:justify-between p-4 gap-4">
                 {/* Left Section: Image and Info */}
                 <div className="flex items-start gap-4 w-full sm:w-auto">
-                  {/* Product Image */}
                   <img
                     className="w-[56px] h-[54px] sm:w-[222px] sm:h-[213px] rounded-[10px] object-cover"
                     alt={firstItem?.productName}
                     src={firstItem?.productImage || "/image 4.png"}
                   />
 
-                  {/* Product Details */}
                   <div className="flex flex-col items-start gap-2 sm:gap-3">
                     <div className="text-[14px] font-semibold text-[#4f4f4f]">
                       #{order.orderNumber}
@@ -74,9 +121,7 @@ export const OrderStatusSection = ({ orders = [] }) => {
 
                     <div className="text-[14px] text-[#1a1713]">
                       العدد :{" "}
-                      <span className="font-semibold text-2xl">
-                        {firstItem?.quantity}
-                      </span>
+                      <span className="font-semibold text-2xl">{firstItem?.quantity}</span>
                     </div>
 
                     <div className="text-[14px] text-[#1a1713]">
@@ -90,14 +135,11 @@ export const OrderStatusSection = ({ orders = [] }) => {
                     <div className="text-[14px] text-[#1a1713]">
                       تاريخ الاستلام المتوقع :{" "}
                       <span className="font-semibold text-2xl">
-                        {new Date(order.expectedDeliveryDate).toLocaleDateString(
-                          "ar-EG",
-                          {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
+                        {new Date(order.expectedDeliveryDate).toLocaleDateString("ar-EG", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
                       </span>
                     </div>
                   </div>
@@ -114,17 +156,14 @@ export const OrderStatusSection = ({ orders = [] }) => {
               </CardContent>
             </Card>
 
-            {/* Cancel Button (only for pending orders) */}
+            {/* Cancel Button */}
             {showCancel && (
               <Button
                 variant="ghost"
                 className="inline-flex items-center justify-start gap-3 h-auto p-0 hover:bg-transparent"
+                onClick={() => handleOpenCancelDialog(order.orderNumber)}
               >
-                <img
-                  className="w-6 h-6"
-                  alt="Close circle"
-                  src="./close-circle.svg"
-                />
+                <img className="w-6 h-6" alt="Close circle" src="./close-circle.svg" />
                 <span className="font-medium text-[#4f4f4f] text-[16px] whitespace-nowrap">
                   إلغاء الطلب
                 </span>
@@ -133,6 +172,14 @@ export const OrderStatusSection = ({ orders = [] }) => {
           </div>
         );
       })}
+
+      {/* Cancel Order Dialog */}
+      <DeletePopup
+        open={openCancelDialog}
+        onClose={() => setOpenCancelDialog(false)}
+        orderNumber={currentOrderNumber}
+        handleCancelOrder={handleCancelOrder} // pass handler
+      />
     </section>
   );
 };
