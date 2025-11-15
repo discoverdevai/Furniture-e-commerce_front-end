@@ -3,6 +3,11 @@ import { useTranslation } from "react-i18next";
 import { ProfileOrderCard } from "../../../../components/ui/ProfileOrderCard";
 import { ProfileSideBar } from "../../../../components/ProfileSideBar";
 import { AppNavbar } from "../../../../components/Layout/Navbar";
+import { ProfileBreadcrumb } from "../../../../components/ProfileBreadcrumb";
+import { IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+import { useMediaQuery } from "@mui/material";
 
 const ordersData = {
   current: [
@@ -51,6 +56,11 @@ export const BuyerOrdersMainSection = () => {
   const [activeTab, setActiveTab] = useState("current");
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
+  const isMobile = useMediaQuery("(max-width:900px)");
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   return (
     <section
@@ -63,30 +73,54 @@ export const BuyerOrdersMainSection = () => {
         </div>
       </div>
       <div
-        className={`flex flex-col w-full max-w-[1200px] gap-8 mx-auto ${
-          isArabic ? "items-end text-right" : "items-start text-left"
-        }`}
+        className={`flex flex-col w-full  max-w-[1200px] gap-2 mx-auto items-start mt-4`}
+        dir={isArabic ? "rtl" : "ltr"}
       >
-        <nav className="inline-flex items-center gap-2">
-          <div className="font-h5-regular text-[#4f4f4f]">
-            {t("orders.title")}
+        {isMobile ? (
+          <div
+            className={`relative flex items-center justify-center w-full  ${
+              isArabic ? "" : ""
+            }`}
+          >
+            {/* Back Button */}
+            <IconButton
+              onClick={handleBackClick}
+              edge="start"
+              className={`!p-2 absolute ${isArabic ? "right-2" : "left-2"} `}
+            >
+              <img
+                src="/breadcrumb-arrow.svg"
+                alt="breadcrumb arrow"
+                className={`w-6 h-6 ${isArabic ? "rotate-180" : ""}`}
+                style={{ filter: "brightness(0) saturate(100%)" }}
+              />
+            </IconButton>
+
+            {/* Title */}
+            <h4 className="text-center text-xl font-medium text-[#1A1713] font-[cairo] mx-auto">
+              {t("sidebar.orders")}
+            </h4>
           </div>
-        </nav>
+        ) : (
+          <ProfileBreadcrumb />
+        )}
 
         <div
           className={`flex items-start justify-between gap-6 w-full ${
             isArabic ? "flex-row" : ""
           }`}
         >
-          <ProfileSideBar />
+          {!isMobile && <ProfileSideBar />}{" "}
           <main className="flex flex-col w-full max-w-[894px] gap-10">
             <div className="flex items-center justify-between w-full">
-              <button className="font-h5-regular text-[#4f4f4f] hover:text-[#835f40]">
+              {/* <button className="font-h5-regular text-[#4f4f4f] hover:text-[#835f40]">
                 {t("orders.favorites")}
-              </button>
-              <h1 className="font-h2-semiboald text-[#1a1713]">
-                {t("orders.title")}
-              </h1>
+              </button> */}
+              {!isMobile && (
+                <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
+                  {t("orders.title")}
+                </h2>
+              )}
             </div>
 
             <div className="flex items-center justify-start gap-4 w-full border-b border-[#e0e0e0]">

@@ -1,6 +1,7 @@
 import React from "react";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 import { Button } from "../../../../components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const reviewsData = [
   {
@@ -8,7 +9,7 @@ const reviewsData = [
     name: "آلاء خميس",
     date: "15 يوليو 2025",
     avatar: "/Ellipse 32.png",
-    rating: "/frame-1984081579.svg",
+    rating: "/star.svg",
     text: "بصراحة تجربة الشراء كانت جدا مميزة. أول ما شفت القطعة عجبني شكلها، ولما وصلتني طلعت أحلى من الصور. الخامة فخمة والتفاصيل مرتبة وواضح إن الشغل متقن. مرة مريحة وغيرت شكل الغرفة بالكامل، صارت أحلى وأرتب بكثير.",
     showActions: true,
   },
@@ -17,7 +18,7 @@ const reviewsData = [
     name: "عهود بن ناصر",
     date: "15 يوليو 2025",
     avatar: "/Ellipse 32.png",
-    rating: "/frame-1984081579.svg",
+    rating: "/star.svg",
     text: "تجربة رائعة مع القطعة، والتوصيل كان سريع.",
     showActions: false,
   },
@@ -26,7 +27,7 @@ const reviewsData = [
     name: "محمد أحمد",
     date: "15 يوليو 2025",
     avatar: "/Ellipse 32.png",
-    rating: "/frame-1984081579.svg",
+    rating: "/star.svg",
     text: "الخدمة ممتازة والجودة عالية.",
     showActions: false,
   },
@@ -41,10 +42,12 @@ const ratingsData = [
 ];
 
 export const RatingsCardSection = () => {
+  const { i18n } = useTranslation();
+  const isAabic = i18n.language === "ar";
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-6 flex flex-col gap-6 font-cairo">
       <h2 className="text-2xl md:text-3xl font-semibold text-right text-[#1a1713]">
-        أراء العملاء
+        {isAabic ? "التقييمات و المراجعات" : "Ratings & Reviews"}
       </h2>
 
       <div className="flex flex-col md:flex-row gap-6 md:items-start">
@@ -53,7 +56,11 @@ export const RatingsCardSection = () => {
           <div className="flex items-center gap-2">
             <div className="text-3xl font-semibold text-[#1a1713]">4.5</div>
             <div className="flex flex-col gap-2 w-[152px]">
-              <img src="/frame-1984081579.svg" alt="Rating stars" className="w-full" />
+              <img
+                src="/star.svg"
+                alt="Rating stars"
+                className="w-[24px] h-[24px]"
+              />
               <span className="text-sm text-gray-500">+5 الف تقيم</span>
             </div>
           </div>
@@ -61,7 +68,9 @@ export const RatingsCardSection = () => {
           <div className="flex flex-col gap-3 w-full">
             {ratingsData.map((rating) => (
               <div key={rating.stars} className="flex items-center gap-2">
-                <span className="text-sm text-[#1a1713]">{rating.percentage}%</span>
+                <span className="text-sm text-[#1a1713]">
+                  {rating.percentage}%
+                </span>
                 <div className="w-full h-1 bg-gray-300 rounded-full relative">
                   {rating.percentage > 0 && (
                     <div
@@ -92,8 +101,12 @@ export const RatingsCardSection = () => {
                     className="w-10 h-10 rounded-full"
                   />
                   <div className="flex flex-col text-sm">
-                    <span className="font-semibold text-[#1a1713]">{review.name}</span>
-                    <span className="text-[10px] text-gray-500">{review.date}</span>
+                    <span className="font-semibold text-[#1a1713]">
+                      {review.name}
+                    </span>
+                    <span className="text-[10px] text-gray-500">
+                      {review.date}
+                    </span>
                   </div>
                 </div>
                 <p className="text-[10px] font-normal leading-[150%] text-gray-700">
@@ -129,13 +142,23 @@ export const RatingsCardSection = () => {
                         className="w-14 h-14 rounded-full"
                       />
                       <div className="flex flex-col">
-                        <span className="font-semibold text-lg text-[#1a1713]">{review.name}</span>
-                        <span className="text-sm text-gray-500">{review.date}</span>
+                        <span className="font-semibold text-lg text-[#1a1713]">
+                          {review.name}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {review.date}
+                        </span>
                       </div>
                     </div>
                   </div>
-                  <img src={review.rating} alt="Rating stars" className="w-[152px]" />
-                  <p className="text-sm text-gray-800 leading-6 font-cairo">{review.text}</p>
+                  <img
+                    src={review.rating}
+                    alt="Rating stars"
+                    className="w-[24px] h-[24px]"
+                  />
+                  <p className="text-sm text-gray-800 leading-6 font-cairo">
+                    {review.text}
+                  </p>
                 </div>
               </div>
             ))}

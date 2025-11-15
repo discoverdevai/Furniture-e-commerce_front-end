@@ -1,6 +1,6 @@
 import { OffersCategories } from "./Sections/RecentlyArrivedCategories";
 import { AppNavbar } from "../../components/Layout/Navbar";
-import BestSelling from "./Sections/RecentlyArrived/RecentlyArrived";
+import RecentlyArrivedMainSection from "./Sections/RecentlyArrivedMainSection/RecentlyArrivedMainSection";
 import { FooterSection } from "../../components/Layout/FooterSection";
 
 export const RecentlyArrived = () => {
@@ -13,7 +13,7 @@ export const RecentlyArrived = () => {
       <section className="w-full pt-7 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-20">
         <OffersCategories />
       </section>
-      <BestSelling />
+      <RecentlyArrivedMainSection />
       <FooterSection />
     </div>
   );
