@@ -13,12 +13,48 @@ const categories = [
 ];
 
 const filters = [
-  { key: "available", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
-  { key: "pattern", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "color", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "top_rated", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "price", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "recently_arrived", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
+  {
+    ar: "متوفر",
+    en: "Available",
+    icon: "checkbox",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "النمط",
+    en: "Style",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "اللون",
+    en: "Color",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "الاعلى تقيما",
+    en: "Top Rated",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "السعر",
+    en: "Price",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "الأكثر مبيعا",
+    en: "Best Sellers",
+    icon: "checkbox",
+    checked: true,
+    textColor: "text-[#835f40]",
+  },
 ];
 
 export const OffersCategories = () => {
@@ -93,14 +129,19 @@ export const OffersCategories = () => {
                   text-[length:var(--h-5-font-size)]
                   tracking-[var(--h-5-letter-spacing)]
                   leading-[var(--h-5-line-height)]
-                  whitespace-nowrap ${isArabic ? "[direction:rtl]" : "[direction:ltr]"}
+                  whitespace-nowrap ${
+                    isArabic ? "[direction:rtl]" : "[direction:ltr]"
+                  }
                   [font-style:var(--h-5-font-style)]`}
               >
-                {t(filter.key)}
+                {isArabic ? filter.ar : filter.en}
               </div>
 
               {filter.icon === "checkbox" ? (
-                <Checkbox checked={filter.checked} className="w-6 h-6 mt-[-4px] mb-[-4px]" />
+                <Checkbox
+                  checked={filter.checked}
+                  className="w-6 h-6 mt-[-4px] mb-[-4px]"
+                />
               ) : (
                 <ChevronDownIcon className="w-6 h-6 mt-[-4px] mb-[-4px]" />
               )}
