@@ -5,6 +5,8 @@ import api from "../../Api/Axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppNavbar } from "../../components/Layout/Navbar";
 import { FooterSection } from "../../components/Layout/FooterSection";
+import { useTranslation } from "react-i18next";
+
 
 export const SearchResult = () => {
   const [products, setProducts] = useState([]);
@@ -12,6 +14,8 @@ export const SearchResult = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
 
   const params = new URLSearchParams(location.search);
   const query = params.get("q");
@@ -88,73 +92,102 @@ export const SearchResult = () => {
     };
 
     fetchSearchResults();
-  }, [query, categoryParam]); // 🔹 Added categoryParam to dependency array
+  }, [query, categoryParam]);
+  
+  // 🔹 Added categoryParam to dependency array
 
   // 💖 Toggle wishlist
   const handleToggleWishlist = async (productId) => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const token = userData?.token;
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const token = userData.token;
 
     if (token) {
       try {
-        const product = products.find((p) => p.id === productId);
-        if (product.isInWishlist) {
-          await api.delete(`/api/wishlist/${productId}`);
-        } else {
-          await api.post(`/api/wishlist/${productId}`);
-        }
-        setProducts((prev) =>
+        const current = offers.find((p) => p.id === productId).isInWishlist;
+        if (current) await api.delete(`/api/wishlist/${productId}`);
+        else await api.post(`/api/wishlist/${productId}`);
+        setOffers((prev) =>
           prev.map((p) =>
             p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
           )
         );
-      } catch (error) {
-        console.error("❌ Wishlist toggle failed:", error);
+      } catch {
+        console.error("❌ Wishlist toggle failed");
       }
     } else {
-      setProducts((prev) => {
+      setOffers((prev) => {
         const updated = prev.map((p) =>
           p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
         );
-        const updatedWishlistIds = updated
-          .filter((p) => p.isInWishlist)
-          .map((p) => p.id);
-        localStorage.setItem("wishlist", JSON.stringify(updatedWishlistIds));
+        const ids = updated.filter((p) => p.isInWishlist).map((p) => p.id);
+        localStorage.setItem("wishlist", JSON.stringify(ids));
         return updated;
       });
     }
   };
 
-  // 🛒 Add to cart
+  // 5️⃣ Add to cart
   const handleAddToCart = async (productId, quantity = 1, variant = null) => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const token = userData?.token;
+    const prod = offers.find((p) => p.id === productId);
+    const inCart =
+      cartItems.find((c) => c.productId === productId)?.quantity || 0;
+    if (inCart + quantity > prod.stock) {
+      return Swal.fire({
+        icon: "warning",
+        title: isRTL ? "نفدت الكمية" : "Out of stock",
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const token = userData.token;
     const cartItem = { productId, quantity, variant };
 
     if (token) {
       try {
         await api.post("/api/cart/add", cartItem);
-        setCartItems((prev) => [...prev, cartItem]);
-      } catch (error) {
-        console.error("Error adding to cart:", error);
+        await fetchCart();
+        Swal.fire({
+          icon: "success",
+          title: t("cartAlerts.success_title"),
+          text: t("cartAlerts.added_successfully"),
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } catch {
+        Swal.fire({
+          icon: "error",
+          title: t("cartAlerts.error"),
+          text: t("cartAlerts.something_went_wrong"),
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } else {
-      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const productData = products.find((p) => p.id === productId);
-      const localCartItem = { ...cartItem, product: productData };
-
-      const existingIndex = existingCart.findIndex(
-        (item) => item.productId === productId && item.variant === variant
+      const ls = JSON.parse(localStorage.getItem("cart")) || [];
+      const idx = ls.findIndex(
+        (c) => c.productId === productId && c.variant === variant
       );
-
-      if (existingIndex > -1) {
-        existingCart[existingIndex].quantity += quantity;
-      } else {
-        existingCart.push(localCartItem);
-      }
-
-      localStorage.setItem("cart", JSON.stringify(existingCart));
-      setCartItems(existingCart);
+      if (idx > -1) ls[idx].quantity += quantity;
+      else ls.push({ ...cartItem, product: prod });
+      localStorage.setItem("cart", JSON.stringify(ls));
+      setCartItems(ls);
+      Swal.fire({
+        icon: "success",
+        title: t("cartAlerts.success_title"),
+        text: t("cartAlerts.added_successfully"),
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
@@ -219,6 +252,9 @@ export const SearchResult = () => {
                 {...product}
                 onToggleWishlist={handleToggleWishlist}
                 onAddToCart={handleAddToCart}
+              stock={product.stockLeft}
+              disabled={product.stockLeft === 0}
+              isRTL={isRTL}
               />
             ))}
           </div>

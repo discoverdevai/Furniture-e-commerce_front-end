@@ -34,7 +34,7 @@ export const MobileProfileMainSection = ({ onClose }) => {
     },
     {
       label: t("sidebar.orders"),
-      path: "/profile/orders",
+      path: "/previous-orders",
       icon: "/Mobile-order-icon.svg",
     },
     {

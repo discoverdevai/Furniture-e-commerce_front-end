@@ -36,6 +36,9 @@ import { BuyerAddress } from "./screens/BuyerProfile/BuyerAddress/BuyerAddress";
 import { SearchResult } from "./screens/Search/SearchResult";
 import { MobileProfileSettings } from "./screens/BuyerProfile/MobileProfileSettings/MobileProfileSettings";
 import {ProtectedRoute} from "./Api/Guard/ProtectedRoute"
+import { CategoriesScreen } from "./screens/Categories/AllCategories";
+import { BuyerWishList2 } from "./screens/BuyerProfile/BuyerWishListNotLoggedIn/BuyerWishList";
+
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
@@ -48,7 +51,7 @@ createRoot(document.getElementById("app")).render(
             <Route path="/offers" element={<OffersScreen />} />
             <Route path="/blog/:id" element={<BlogDetails />} />
             <Route path="*" element={<Home />} />
-            <Route path="/" element={<SignIn />} />
+            <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -69,6 +72,8 @@ createRoot(document.getElementById("app")).render(
             <Route path="/store/:storeName" element={<BrandProdutsScreen />} />
             <Route path="/profile" element={<BuyerProfile />} />
             <Route path="/brand-product" element={<BrandProdutsScreen />} />
+            <Route path="/categories/:id" element={<CategoriesScreen />} />
+            <Route path="/signIn" element={<SignIn />} />
 
             <Route
               path="/order-screen"
@@ -96,11 +101,16 @@ createRoot(document.getElementById("app")).render(
             />
             <Route
               path="/profile/change-password"
-              element={<BuyerChangePassword />}
+             element={
+                <ProtectedRoute>
+                  <BuyerChangePassword />
+                </ProtectedRoute>
+              }
             />
             <Route path="/profile/saved-addresses" element={<BuyerAddress />} />
             <Route path="/profile/orders" element={<BuyerOrders />} />
             <Route path="/profile/favorites" element={<BuyerWishList />} />
+            <Route path="/favorites" element={<BuyerWishList2 />} />
             <Route path="/Cart" element={<CartScreen />} />
             <Route
               path="/ProfileSettings"

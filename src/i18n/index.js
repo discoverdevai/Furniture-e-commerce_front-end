@@ -5,7 +5,7 @@ const resources = {
   ar: {
     translation: {
       titles: {
-        default: "المعرض الإلكتروني weqweqwللأثاث",
+        default: "المعرض الإلكتروني للأثاث",
         signIn: "تسجيل الدخول",
         register: "إنشاء حساب",
         forgotPassword: "نسيت كلمة المرور",
@@ -78,6 +78,8 @@ const resources = {
       regionRequired: "المنطقة مطلوبة",
       cityRequired: "المدينة مطلوبة",
       termsRequired: "يجب الموافقة على الشروط والأحكام",
+      recently_arrived:"وصل حيثا",
+      
       // Verification modal
       verificationCode: "رمز التحقق",
       verificationDescription:
@@ -368,6 +370,8 @@ const resources = {
           okButton: "موافق",
         },
       },
+      see_more:"انظر المزيد",
+      login:"تسجيل الدخول",
     },
   },
   en: {
@@ -397,6 +401,7 @@ const resources = {
         wishlist: "Wishlist",
         cart: "Shopping Cart",
       },
+      login:"Login",
       welcome: "Welcome to (Website Name)",
       signIn: "Sign In",
       phoneNumberOrEmail: "Phone Number/Email",
@@ -737,6 +742,8 @@ const resources = {
           okButton: "OK",
         },
       },
+      recently_arrived:"Recently Arrived",
+      see_more:"See more"
     },
   },
 };

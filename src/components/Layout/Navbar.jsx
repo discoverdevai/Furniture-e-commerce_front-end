@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   "blogs",
   "about_us",
   "contact_us",
+  "login"
 ];
 const DRAWER_EXTRA_ITEMS = [
   { key: "Drawer_profile", path: "/ProfileSettings" },
@@ -39,7 +40,8 @@ const PATHS = {
   about_us: "/about-us",
   contact_us: "/contact-us",
   profile: "/profile",
-  search: "/search2", // 👈 mobile search page
+  search: "/search2",
+  login:"/signIn" // 👈 mobile search page
 };
 
 export const AppNavbar = () => {
@@ -227,13 +229,37 @@ export const AppNavbar = () => {
                 height={24}
               />
             </IconButton>
+             {!localStorage.getItem("userData") ||
+  !JSON.parse(localStorage.getItem("userData")).token ? (
+        <>
+      {/* Login icon */}
+      <IconButton
+        onClick={() => navigate("/signIn")}
+        color="inherit"
+        title="Login"
+      >
+        <img src="/login-svgrepo-com.svg" alt="Login" width={24} height={24} />
+      </IconButton>
 
-            <NavIconButton
-              to="/profile"
-              icon="/profile.svg"
-              activeIcon="/active-profile.svg"
-              alt="Profile"
-            />
+      {/* Favorites icon */}
+      <IconButton
+        onClick={() => navigate("/favorites")}
+        color="inherit"
+        title="Favorites"
+      >
+        <img src="/favorite-svgrepo-com.svg" alt="Favorites" width={24} height={24} />
+      </IconButton>
+    </>
+  ) : (
+    <NavIconButton
+      to="/profile"
+      icon="/profile.svg"
+      activeIcon="/active-profile.svg"
+      alt="Profile"
+    />
+  )}
+
+        
 
             <NavIconButton
               to="/cart"
@@ -331,6 +357,8 @@ export const AppNavbar = () => {
           </List>
         </Drawer>
       </AppBar>
+
+        <SearchModal open={isSearchOpen} onClose={toggleSearchModal} />
     </>
   );
 };

@@ -1,66 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
 import { Checkbox } from "../../../components/ui/OffersCategoriesCheckBox";
 import { useTranslation } from "react-i18next";
 import { MobileCategorySection } from "./MobileCategorySection/MobileCategorySection";
-
-const categories = [
-  { image: "/image 4.png", key: "chairs", rounded: true },
-  { image: "/image 4.png", key: "tables", rounded: true },
-  { image: "/image 4.png", key: "tv_units", rounded: true },
-  { image: "/image 4.png", key: "corner_sofa", rounded: true },
-  { image: "/image 4.png", key: "sofa", rounded: true },
-];
+import api from "../../../Api/Axios"; // axios instance
 
 const filters = [
-  { key: "available", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
-  { key: "pattern", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "color", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "top_rated", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "price", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { key: "recently_arrived", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
+  { label: "متوفر", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
+  { label: "النمط", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { label: "اللون", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { label: "الاعلى تقيما", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { label: "السعر", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { label: "العروض و التخفيضات", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
 ];
 
 export const OffersCategories = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
+
+  const [vendors, setVendors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 🔥 Fetch vendors
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const response = await api.get("/api/vendors");
+        if (response.data.success) {
+          setVendors(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error loading vendors:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVendors();
+  }, []);
 
   return (
     <div className="flex flex-col items-start gap-6 relative">
-      {/* 📱 Mobile Category Section — shown in md and smaller */}
+      {/* 📱 Mobile Category Section */}
       <div className="block md:hidden mx-auto">
         <MobileCategorySection />
       </div>
 
-      {/* 🪑 Categories Section — shared */}
+      {/* 🏬 Vendors Section */}
       <div
         className={`w-full flex items-center relative overflow-x-auto scrollbar-hide gap-10 p-4
           sm:justify-center sm:bg-[#f2f2f2] sm:rounded-3xl bg-transparent`}
       >
-        {categories.map((category, index) => (
-          <button
-            key={index}
-            className="flex flex-col items-center justify-center cursor-pointer bg-transparent border-0 p-0 flex-shrink-0 w-[68px] h-[90px] sm:w-[98px] sm:h-[120px]"
-          >
-            <img
-              className={`w-[68px] h-[68px] sm:w-[98px] sm:h-[98px] ${
-                category.rounded ? "rounded-full object-cover" : ""
-              }`}
-              alt={t(category.key)}
-              src={category.image}
-            />
-            <div
-              className={`mt-2 text-[12px] sm:text-[14px] font-h5-regular text-[#1a1713] text-center ${
-                isArabic ? "[direction:rtl]" : "[direction:ltr]"
-              }`}
+        {loading && <div className="w-full text-center py-4">جاري التحميل...</div>}
+
+        {!loading && vendors.length === 0 && (
+          <div className="text-center w-full py-4">لا يوجد متاجر</div>
+        )}
+
+        {!loading &&
+          vendors.map((vendor) => (
+            <button
+              key={vendor.id}
+              className="flex flex-col items-center justify-center cursor-pointer bg-transparent border-0 p-0 flex-shrink-0 w-[68px] h-[90px] sm:w-[98px] sm:h-[120px]"
             >
-              {t(category.key)}
-            </div>
-          </button>
-        ))}
+              {/* 🔵 STATIC ICON IMAGE HERE */}
+              <img
+                src="/stores-icon.png"
+                alt={vendor.businessName}
+                className="w-[68px] h-[68px] sm:w-[98px] sm:h-[98px] rounded-full object-cover"
+              />
+
+              <div className="mt-2 text-[12px] sm:text-[14px] font-h5-regular text-[#1a1713] text-center [direction:rtl]">
+                {vendor.businessName}
+              </div>
+            </button>
+          ))}
       </div>
 
-      {/* 💠 Filters Section — shown on screens > md */}
+      {/* 💠 Filters Section */}
       <div
         className={`hidden md:flex self-stretch w-full flex-[0_0_auto] rounded-[10px] items-center relative 
         ${isArabic ? "divide-x" : "divide-x-reverse"} divide-[#c3c3c3]`}
@@ -93,10 +110,10 @@ export const OffersCategories = () => {
                   text-[length:var(--h-5-font-size)]
                   tracking-[var(--h-5-letter-spacing)]
                   leading-[var(--h-5-line-height)]
-                  whitespace-nowrap ${isArabic ? "[direction:rtl]" : "[direction:ltr]"}
+                  whitespace-nowrap [direction:rtl]
                   [font-style:var(--h-5-font-style)]`}
               >
-                {t(filter.key)}
+                {filter.label}
               </div>
 
               {filter.icon === "checkbox" ? (

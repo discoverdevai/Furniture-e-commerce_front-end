@@ -4,21 +4,23 @@ import { Checkbox } from "../../../components/ui/OffersCategoriesCheckBox";
 import { useTranslation } from "react-i18next";
 import { MobileCategorySection } from "./MobileCategorySection/MobileCategorySection";
 
+// Categories with Arabic and English labels
 const categories = [
-  { image: "/image 4.png", label: "كراسي", rounded: true },
-  { image: "/image 4.png", label: "طاولات", rounded: true },
-  { image: "/image 4.png", label: "وحدات تلفاز", rounded: true },
-  { image: "/image 4.png", label: "ركنة", rounded: true },
-  { image: "/image 4.png", label: "كنب", rounded: true },
+  { image: "/image 4.png", ar: "كراسي", en: "Chairs", rounded: true },
+  { image: "/image 4.png", ar: "طاولات", en: "Tables", rounded: true },
+  { image: "/image 4.png", ar: "وحدات تلفاز", en: "TV Units", rounded: true },
+  { image: "/image 4.png", ar: "ركنة", en: "Corner Sofa", rounded: true },
+  { image: "/image 4.png", ar: "كنب", en: "Sofa", rounded: true },
 ];
 
+// Filters with Arabic and English labels
 const filters = [
-  { label: "متوفر", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
-  { label: "النمط", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "اللون", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "الاعلى تقيما", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "السعر", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: " الأكثر مبيعا ", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
+  { ar: "متوفر", en: "Available", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
+  { ar: "النمط", en: "Style", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { ar: "اللون", en: "Color", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { ar: "الاعلى تقيما", en: "Top Rated", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { ar: "السعر", en: "Price", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { ar: "الأكثر مبيعا", en: "Best Sellers", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
 ];
 
 export const OffersCategories = () => {
@@ -46,11 +48,11 @@ export const OffersCategories = () => {
               className={`w-[68px] h-[68px] sm:w-[98px] sm:h-[98px] ${
                 category.rounded ? "rounded-full object-cover" : ""
               }`}
-              alt={category.label}
+              alt={isArabic ? category.ar : category.en}
               src={category.image}
             />
             <div className="mt-2 text-[12px] sm:text-[14px] font-h5-regular text-[#1a1713] text-center [direction:rtl]">
-              {category.label}
+              {isArabic ? category.ar : category.en}
             </div>
           </button>
         ))}
@@ -92,7 +94,7 @@ export const OffersCategories = () => {
                   whitespace-nowrap [direction:rtl]
                   [font-style:var(--h-5-font-style)]`}
               >
-                {filter.label}
+                {isArabic ? filter.ar : filter.en}
               </div>
 
               {filter.icon === "checkbox" ? (
