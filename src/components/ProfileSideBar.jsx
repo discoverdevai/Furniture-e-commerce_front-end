@@ -14,7 +14,7 @@ export const ProfileSideBar = () => {
   const menuItems = [
     { label: t("sidebar.profile"), path: "/profile" },
     { label: t("sidebar.changePassword"), path: "/profile/change-password" },
-    { label: t("sidebar.orders"), path: "/profile/orders" },
+    { label: t("sidebar.orders"), path: "/previous-orders" },
     { label: t("sidebar.favorites"), path: "/profile/favorites" },
     { label: t("sidebar.savedAddresses"), path: "/profile/saved-addresses" },
   ];

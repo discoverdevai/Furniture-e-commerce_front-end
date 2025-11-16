@@ -228,12 +228,37 @@ export const AppNavbar = () => {
               />
             </IconButton>
 
-            <NavIconButton
-              to="/profile"
-              icon="/profile.svg"
-              activeIcon="/active-profile.svg"
-              alt="Profile"
-            />
+            {/* Conditional Profile/Login icon */}
+  {!localStorage.getItem("userData") ||
+  !JSON.parse(localStorage.getItem("userData")).token ? (
+     <>
+      {/* Login icon */}
+      <IconButton
+        onClick={() => navigate("/signIn")}
+        color="inherit"
+        title="Login"
+      >
+        <img src="/login-svgrepo-com.svg" alt="Login" width={24} height={24} />
+      </IconButton>
+
+      {/* Favorites icon */}
+      <IconButton
+        onClick={() => navigate("/favorites")}
+        color="inherit"
+        title="Favorites"
+      >
+        <img src="/favorite-svgrepo-com.svg" alt="Favorites" width={24} height={24} />
+      </IconButton>
+    </>
+  ) : (
+    <NavIconButton
+      to="/profile"
+      icon="/profile.svg"
+      activeIcon="/active-profile.svg"
+      alt="Profile"
+    />
+  )}
+
 
             <NavIconButton
               to="/cart"
