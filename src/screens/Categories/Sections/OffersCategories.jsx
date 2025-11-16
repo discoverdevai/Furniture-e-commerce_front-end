@@ -6,12 +6,48 @@ import { MobileCategorySection } from "./MobileCategorySection/MobileCategorySec
 import api from "../../../Api/Axios"; // axios instance
 
 const filters = [
-  { label: "متوفر", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
-  { label: "النمط", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "اللون", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "الاعلى تقيما", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "السعر", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "العروض و التخفيضات", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
+  {
+    ar: "متوفر",
+    en: "Available",
+    icon: "checkbox",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "النمط",
+    en: "Style",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "اللون",
+    en: "Color",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "الاعلى تقيما",
+    en: "Top Rated",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "السعر",
+    en: "Price",
+    icon: "arrow",
+    checked: false,
+    textColor: "text-[#1a1713]",
+  },
+  {
+    ar: "الأكثر مبيعا",
+    en: "Best Sellers",
+    icon: "checkbox",
+    checked: true,
+    textColor: "text-[#835f40]",
+  },
 ];
 
 export const OffersCategories = () => {
@@ -51,7 +87,9 @@ export const OffersCategories = () => {
         className={`w-full flex items-center relative overflow-x-auto scrollbar-hide gap-10 p-4
           sm:justify-center sm:bg-[#f2f2f2] sm:rounded-3xl bg-transparent`}
       >
-        {loading && <div className="w-full text-center py-4">جاري التحميل...</div>}
+        {loading && (
+          <div className="w-full text-center py-4">جاري التحميل...</div>
+        )}
 
         {!loading && vendors.length === 0 && (
           <div className="text-center w-full py-4">لا يوجد متاجر</div>
@@ -113,11 +151,14 @@ export const OffersCategories = () => {
                   whitespace-nowrap [direction:rtl]
                   [font-style:var(--h-5-font-style)]`}
               >
-                {filter.label}
+                {isArabic ? filter.ar : filter.en}
               </div>
 
               {filter.icon === "checkbox" ? (
-                <Checkbox checked={filter.checked} className="w-6 h-6 mt-[-4px] mb-[-4px]" />
+                <Checkbox
+                  checked={filter.checked}
+                  className="w-6 h-6 mt-[-4px] mb-[-4px]"
+                />
               ) : (
                 <ChevronDownIcon className="w-6 h-6 mt-[-4px] mb-[-4px]" />
               )}
