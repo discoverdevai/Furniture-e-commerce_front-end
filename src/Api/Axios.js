@@ -3,6 +3,7 @@ import i18n from "../i18n/index";
 // Create Axios instance
 const api = axios.create({
   baseURL: "https://furniture-e-commerce-pddm.onrender.com", // change this to your backend base URL
+  /*  baseURL: "http://localhost:8080", */
 });
 
 // Request Interceptor
@@ -11,8 +12,8 @@ api.interceptors.request.use(
     const lang = i18n.language || "ar";
     const userData = JSON.parse(localStorage.getItem("userData"));
     const token = userData?.token;
-    console.log("s"+token);
-    
+    console.log("s" + token);
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // attach token
     }

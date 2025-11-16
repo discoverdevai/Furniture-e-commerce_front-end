@@ -78,8 +78,8 @@ const resources = {
       regionRequired: "المنطقة مطلوبة",
       cityRequired: "المدينة مطلوبة",
       termsRequired: "يجب الموافقة على الشروط والأحكام",
-      recently_arrived:"وصل حيثا",
-      
+      recently_arrived: "وصل حيثا",
+
       // Verification modal
       verificationCode: "رمز التحقق",
       verificationDescription:
@@ -144,6 +144,7 @@ const resources = {
       about_us: "من نحن",
       contact_us: "تواصل معنا",
       Drawer_profile: "الملف الشخصي",
+      Drawer_signIn: "تسجيل الدخول",
       // Footer
       footer_newsletter_title: "تابع أخبارنا عبر البريد الإلكتروني",
       footer_newsletter_placeholder: "ادخل بريدك الإلكتروني",
@@ -370,8 +371,8 @@ const resources = {
           okButton: "موافق",
         },
       },
-      see_more:"انظر المزيد",
-      login:"تسجيل الدخول",
+      see_more: "انظر المزيد",
+      login: "تسجيل الدخول",
     },
   },
   en: {
@@ -401,7 +402,7 @@ const resources = {
         wishlist: "Wishlist",
         cart: "Shopping Cart",
       },
-      login:"Login",
+      login: "Login",
       welcome: "Welcome to (Website Name)",
       signIn: "Sign In",
       phoneNumberOrEmail: "Phone Number/Email",
@@ -513,6 +514,7 @@ const resources = {
       about_us: "About Us",
       contact_us: "Contact Us",
       Drawer_profile: "Profile",
+      Drawer_signIn: "Sign In",
       // Footer
       footer_newsletter_title: "Follow our news via email",
       footer_newsletter_placeholder: "Enter your email",
@@ -742,8 +744,8 @@ const resources = {
           okButton: "OK",
         },
       },
-      recently_arrived:"Recently Arrived",
-      see_more:"See more"
+      recently_arrived: "Recently Arrived",
+      see_more: "See more",
     },
   },
 };

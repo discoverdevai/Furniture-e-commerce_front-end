@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { GlobalProductCard } from "../../components/ui/GlobalProductCard";
 import { Button } from "../../components/ui/button";
+import Swal from "sweetalert2";
 import api from "../../Api/Axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppNavbar } from "../../components/Layout/Navbar";
 import { FooterSection } from "../../components/Layout/FooterSection";
 import { useTranslation } from "react-i18next";
 
-
 export const SearchResult = () => {
-  const [products, setProducts] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  const [products, setProducts] = useState([]); // raw products + wishlist flag
+  const [cartItems, setCartItems] = useState([]); // items in cart
+  const [displayProducts, setDisplayProducts] = useState([]); // products w/ stockLeft
   const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
@@ -19,94 +21,126 @@ export const SearchResult = () => {
 
   const params = new URLSearchParams(location.search);
   const query = params.get("q");
-  const categoryParam = params.get("c"); // 🔹 added
+  const categoryParam = params.get("c");
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (!query) return;
-      setLoading(true);
-
-      const userData = JSON.parse(localStorage.getItem("userData"));
-      const token = userData?.token;
-
+  // 1️⃣ fetchCart exactly like MostPurchased
+  const fetchCart = useCallback(async () => {
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const token = userData.token;
+    if (token) {
       try {
-        const response = await api.get(`/api/search?q=${query}`);
-        if (response.data.success) {
-          const searchProducts = response.data.data?.products || [];
+        const res = await api.get("/api/cart/items");
+        setCartItems(res.data?.data?.items || []);
+      } catch (err) {
+        console.error("❌ Could not fetch cart items:", err);
+      }
+    } else {
+      const ls = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartItems(ls);
+    }
+  }, []);
 
-          // 🔹 map to consistent product structure
-          const mappedProducts = searchProducts.map((item) => ({
+  // 2️⃣ Fetch search results + sync wishlist
+  useEffect(() => {
+    if (!query) return;
+    setLoading(true);
+
+    (async () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem("userData")) || {};
+        const token = userData.token;
+        const resp = await api.get(
+          `/api/search?q=${encodeURIComponent(query)}`
+        );
+        if (!resp.data.success) return;
+
+        // map to consistent shape
+        let items =
+          resp.data.data?.products.map((item) => ({
             id: item.id,
             title: item.name,
             description: item.description,
-            price: item.price,
+            price: item.salePrice,
             oldPrice: item.originalPrice,
             shop: item.vendorName,
+            storeName: item.vendorName,
             image: item.imageUrl || "/image 4.png",
             saleImage: "/004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
             rating: item.averageRating,
             isOnSale: item.isOnSale,
-            categoryName: item.categoryName, // 🔹 required for filtering
-            isInWishlist: false,
-          }));
+            stock: item.stockQuantity, // ← your API field for total stock
+            categoryName: item.categoryName,
+            isInWishlist: false, // will override next
+          })) || [];
 
-          // 🔹 Filter by category if param exists
-          let filteredProducts = mappedProducts;
-          if (categoryParam) {
-            const selectedCategories = categoryParam
-              .split(",")
-              .map((c) => c.trim().toLowerCase());
-
-            filteredProducts = mappedProducts.filter((item) =>
-              selectedCategories.includes(item.categoryName?.toLowerCase())
-            );
-          }
-
-          // 🟢 Sync wishlist for logged-in users
-          if (token) {
-            const wishlistResponse = await api.get("/api/wishlist");
-            const wishlistIds =
-              wishlistResponse.data?.data?.map((w) => w.productId) || [];
-
-            const syncedProducts = filteredProducts.map((p) => ({
-              ...p,
-              isInWishlist: wishlistIds.includes(p.id),
-            }));
-            setProducts(syncedProducts);
-          } else {
-            // 🔵 Guest users: sync with localStorage wishlist
-            const storedWishlist =
-              JSON.parse(localStorage.getItem("wishlist")) || [];
-            const syncedProducts = filteredProducts.map((p) => ({
-              ...p,
-              isInWishlist: storedWishlist.includes(p.id),
-            }));
-            setProducts(syncedProducts);
-          }
+        // optional category filtering
+        if (categoryParam) {
+          const cats = categoryParam
+            .split(",")
+            .map((c) => c.trim().toLowerCase());
+          items = items.filter(
+            (p) =>
+              p.categoryName?.toLowerCase &&
+              cats.includes(p.categoryName.toLowerCase())
+          );
         }
-      } catch (error) {
-        console.error("❌ Error fetching search results:", error);
+
+        // sync wishlist
+        if (token) {
+          const wl = await api.get("/api/wishlist");
+          const wlIds = wl.data?.data?.map((w) => w.productId) || [];
+          items = items.map((p) => ({
+            ...p,
+            isInWishlist: wlIds.includes(p.id),
+          }));
+        } else {
+          const stored = JSON.parse(localStorage.getItem("wishlist")) || [];
+          items = items.map((p) => ({
+            ...p,
+            isInWishlist: stored.includes(p.id),
+          }));
+        }
+
+        setProducts(items);
+      } catch (err) {
+        console.error("❌ Error fetching search results:", err);
       } finally {
         setLoading(false);
+        fetchCart(); // after we have products, fetch cart so we can compute stockLeft
       }
-    };
+    })();
+  }, [query, categoryParam, fetchCart]);
 
-    fetchSearchResults();
-  }, [query, categoryParam]);
-  
-  // 🔹 Added categoryParam to dependency array
+  // 3️⃣ Compute stockLeft after both products & cartItems are updated
+  useEffect(() => {
+    if (!products.length) {
+      setDisplayProducts([]);
+      return;
+    }
+    const withStock = products.map((p) => {
+      const inCartQty =
+        cartItems.find((c) => c.productId === p.id)?.quantity || 0;
+      return {
+        ...p,
+        stockLeft: Math.max(p.stock - inCartQty, 0),
+      };
+    });
+    setDisplayProducts(withStock);
+  }, [products, cartItems]);
 
-  // 💖 Toggle wishlist
+  // 4️⃣ Toggle wishlist (fixed to use products/setProducts)
   const handleToggleWishlist = async (productId) => {
     const userData = JSON.parse(localStorage.getItem("userData")) || {};
     const token = userData.token;
-
     if (token) {
       try {
-        const current = offers.find((p) => p.id === productId).isInWishlist;
-        if (current) await api.delete(`/api/wishlist/${productId}`);
-        else await api.post(`/api/wishlist/${productId}`);
-        setOffers((prev) =>
+        const prod = products.find((p) => p.id === productId);
+        if (prod.isInWishlist) {
+          await api.delete(`/api/wishlist/${productId}`);
+        } else {
+          await api.post(`/api/wishlist/${productId}`);
+        }
+        setProducts((prev) =>
           prev.map((p) =>
             p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
           )
@@ -115,7 +149,7 @@ export const SearchResult = () => {
         console.error("❌ Wishlist toggle failed");
       }
     } else {
-      setOffers((prev) => {
+      setProducts((prev) => {
         const updated = prev.map((p) =>
           p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
         );
@@ -126,12 +160,12 @@ export const SearchResult = () => {
     }
   };
 
-  // 5️⃣ Add to cart
+  // 5️⃣ Add to cart (fixed to use products & fetchCart)
   const handleAddToCart = async (productId, quantity = 1, variant = null) => {
-    const prod = offers.find((p) => p.id === productId);
-    const inCart =
+    const prod = products.find((p) => p.id === productId);
+    const inCartQty =
       cartItems.find((c) => c.productId === productId)?.quantity || 0;
-    if (inCart + quantity > prod.stock) {
+    if (inCartQty + quantity > prod.stock) {
       return Swal.fire({
         icon: "warning",
         title: isRTL ? "نفدت الكمية" : "Out of stock",
@@ -191,76 +225,79 @@ export const SearchResult = () => {
     }
   };
 
-  // 🌀 Loading state
+  // loading / empty states
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
         <p className="text-[#683800] font-semibold text-lg">
-          جاري تحميل نتائج البحث...
+          {isRTL ? "جاري تحميل نتائج البحث..." : "Loading search results..."}
         </p>
       </div>
     );
   }
-
-  // 🚫 Empty results
-  if (!products.length) {
+  if (!displayProducts.length) {
     return (
       <div className="flex flex-col justify-center items-center py-0">
         <AppNavbar />
-        <img src="/search-empty-svgrepo-com.svg" alt="No results" className="w-40 mb-4" />
+        <img
+          src="/search-empty-svgrepo-com.svg"
+          alt="No results"
+          className="w-40 mb-4"
+        />
         <p className="text-[#683800] text-lg font-semibold">
-          لا توجد نتائج مطابقة للبحث "{query}"
+          {isRTL
+            ? ` لا توجد نتائج مطابقة للبحث "${query}"`
+            : `No matching results for "${query}"`}
         </p>
         <FooterSection />
       </div>
     );
   }
 
-  // ✅ Render product cards
+  // render
   return (
-    <>
-      <section style={{ backgroundImage: "url('/image 37.png')" }}>
-        <AppNavbar />
-        <div className="pt-12 px-12 lg:px-32">
-          <div className="w-full flex items-center justify-between pb-4">
-            <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold">
-              نتائج البحث عن "{query}"
-            </h1>
-            <Button
-              variant="ghost"
-              className="inline-flex items-center gap-3 h-auto p-0 hover:bg-transparent"
-              onClick={() => {
-                navigate("/home");
-                window.scrollTo(0, 0);
-              }}
-            >
-              <span className="text-[#683800] text-[16px] font-medium">
-                العودة للرئيسية
-              </span>
-              <img
-                className="w-6 h-6"
-                alt="arrow"
-                src="/line-arrow-right.svg"
-              />
-            </Button>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-8 py-6">
-            {products.map((product) => (
-              <GlobalProductCard
-                key={product.id}
-                {...product}
-                onToggleWishlist={handleToggleWishlist}
-                onAddToCart={handleAddToCart}
-              stock={product.stockLeft}
-              disabled={product.stockLeft === 0}
-              isRTL={isRTL}
-              />
-            ))}
-          </div>
+    <section style={{ backgroundImage: "url('/image 37.png')" }}>
+      <AppNavbar />
+      <div className="pt-12 px-12 lg:px-32">
+        <div className="w-full flex items-center justify-between pb-4">
+          <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold">
+            {isRTL
+              ? `نتائج البحث عن "${query}"`
+              : `Search results for "${query}"`}
+          </h1>
+          <Button
+            variant="ghost"
+            className="inline-flex items-center gap-3 h-auto p-0 hover:bg-transparent"
+            onClick={() => {
+              navigate("/home");
+              window.scrollTo(0, 0);
+            }}
+          >
+            <span className="text-[#683800] text-[16px] font-medium">
+              {isRTL ? "العودة للصفحة الرئيسية" : "Back to Home"}
+            </span>
+            <img
+              className={`w-6 h-6 ${isRTL ? "" : "rotate-180"}`}
+              alt="arrow"
+              src="/line-arrow-right.svg"
+            />
+          </Button>
         </div>
-        <FooterSection />
-      </section>
-    </>
+        <div className="flex flex-wrap justify-center gap-8 py-6">
+          {displayProducts.map((p) => (
+            <GlobalProductCard
+              key={p.id}
+              {...p}
+              stock={p.stockLeft}
+              disabled={p.stockLeft === 0}
+              isRTL={isRTL}
+              onToggleWishlist={handleToggleWishlist}
+              onAddToCart={handleAddToCart}
+            />
+          ))}
+        </div>
+      </div>
+      <FooterSection />
+    </section>
   );
 };

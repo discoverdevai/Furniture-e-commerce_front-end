@@ -5,6 +5,7 @@ import { AppNavbar } from "../../../components/Layout/Navbar";
 import { FooterSection } from "../../../components/Layout/FooterSection";
 import { PaymentInformationSection } from "./PaymentInformationSection/PaymentInformationSection";
 import { ProductDetailsSection } from "./ProductDetailsSection/ProductDetailsSection";
+import { useTranslation } from "react-i18next";
 import api from "../../../Api/Axios";
 import { ConfirmationModal } from "../../../components/Common/Popups/ConfirmationPopup";
 import { useSelector } from "react-redux";
@@ -12,8 +13,9 @@ import { useSelector } from "react-redux";
 export const OrderScreen = () => {
   const selectedPayment = useSelector((state) => state.global.selectedPayment);
   const addressFromStore = useSelector((state) => state.global.address);
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
   console.log("address from store ", addressFromStore);
-  
 
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
@@ -64,8 +66,7 @@ export const OrderScreen = () => {
 
     // Compare addressFromStore with fetched addresses
     const matchingAddress = userAddresses.find(
-      (addr) =>
-        addr.street === addressFromStore.street 
+      (addr) => addr.street === addressFromStore.street
     );
 
     if (matchingAddress) {

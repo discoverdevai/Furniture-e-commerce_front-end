@@ -382,88 +382,91 @@ export const CartSection = () => {
               ? item.quantity >= item.availableStock
               : item.quantity >= (item.stock || 1);
             return (
-           <Card
-  key={item.id}
-  className="flex flex-col md:flex-row w-full rounded-[10px] border border-solid border-[#c3c3c3]"
->
-  <CardContent className="flex flex-col md:flex-row items-start justify-start gap-4 md:gap-6 p-4 w-full">
-    {/* Product Image */}
-    <img
-      className="w-full md:w-[214px] h-[206px] rounded-[10px] object-cover flex-shrink-0"
-      alt={item.name}
-      src={item.image}
-    />
+              <Card
+                key={item.id}
+                className="flex flex-col md:flex-row w-full rounded-[10px] border border-solid border-[#c3c3c3]"
+              >
+                <CardContent className="flex flex-col md:flex-row items-start justify-start gap-4 md:gap-6 p-4 w-full">
+                  {/* Product Image */}
+                  <img
+                    className="w-full md:w-[214px] h-[206px] rounded-[10px] object-cover flex-shrink-0"
+                    alt={item.name}
+                    src={item.image}
+                  />
 
-    {/* Details */}
-    <div className="flex flex-col items-start gap-4 flex-1 w-full">
-      {/* Product Name & Price */}
-      <div className="flex flex-col gap-2 w-full">
-        <h2 className="text-[#1a1713] text-lg md:text-xl font-semibold">
-          {item.name}
-        </h2>
-        <div className="text-xl md:text-2xl text-[#835f40] font-semibold">
-          {item.price}{" "}
-          <span className="text-sm md:text-base">
-            {isRTL ? "ر.س" : "SAR"}
-          </span>
-        </div>
+                  {/* Details */}
+                  <div className="flex flex-col items-start gap-4 flex-1 w-full">
+                    {/* Product Name & Price */}
+                    <div className="flex flex-col gap-2 w-full">
+                      <h2 className="text-[#1a1713] text-lg md:text-xl font-semibold">
+                        {item.name}
+                      </h2>
+                      <div className="text-xl md:text-2xl text-[#835f40] font-semibold">
+                        {item.price}{" "}
+                        <span className="text-sm md:text-base">
+                          {isRTL ? "ر.س" : "SAR"}
+                        </span>
+                      </div>
 
-        {/* Color */}
-        <div className="flex items-center gap-2">
-          <h4 className="font-[cairo] text-sm md:text-xl text-[#000000]">
-            {isRTL ? "اللون:" : "color:"}
-          </h4>
-          <div className="w-5 h-5 md:w-[22px] md:h-[22px] bg-[#b3afad] rounded-full border border-[#1a1713]" />
-        </div>
-      </div>
+                      {/* Color */}
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-[cairo] text-sm md:text-xl text-[#000000]">
+                          {isRTL ? "اللون:" : "color:"}
+                        </h4>
+                        <div className="w-5 h-5 md:w-[22px] md:h-[22px] bg-[#b3afad] rounded-full border border-[#1a1713]" />
+                      </div>
+                    </div>
 
-      {/* Quantity Controls */}
-      <div className="flex flex-col gap-2 w-full">
-        <h4 className="text-black text-[16px] md:text-[20px] font-medium font-[cairo]">
-          {isRTL ? "العدد:" : "Quantity:"}
-        </h4>
-        <div className="flex items-center justify-between gap-4 md:gap-10 w-full h-10 md:h-12 p-2 rounded-[10px] border border-solid border-[#c3c3c3]">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 p-0 hover:bg-transparent"
-            onClick={() => handleIncrease(item)}
-            disabled={isPlusDisabled}
-          >
-            <PlusIcon className="w-6 h-6 text-[#4f4f4f]" />
-          </Button>
+                    {/* Quantity Controls */}
+                    <div className="flex flex-col gap-2 w-full">
+                      <h4 className="text-black text-[16px] md:text-[20px] font-medium font-[cairo]">
+                        {isRTL ? "العدد:" : "Quantity:"}
+                      </h4>
+                      <div className="flex items-center justify-between gap-4 md:gap-10 w-full h-10 md:h-12 p-2 rounded-[10px] border border-solid border-[#c3c3c3]">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 p-0 hover:bg-transparent"
+                          onClick={() => handleIncrease(item)}
+                          disabled={isPlusDisabled}
+                        >
+                          <PlusIcon className="w-6 h-6 text-[#4f4f4f]" />
+                        </Button>
 
-          <div className="text-[#4f4f4f] text-base md:text-lg text-center">
-            {item.quantity}
-          </div>
+                        <div className="text-[#4f4f4f] text-base md:text-lg text-center">
+                          {item.quantity}
+                        </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 p-0 hover:bg-transparent"
-            onClick={() => handleDecrease(item)}
-            disabled={isMinusDisabled}
-          >
-            <MinusIcon className="w-6 h-6 text-[#4f4f4f]" />
-          </Button>
-        </div>
-      </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 p-0 hover:bg-transparent"
+                          onClick={() => handleDecrease(item)}
+                          disabled={isMinusDisabled}
+                        >
+                          <MinusIcon className="w-6 h-6 text-[#4f4f4f]" />
+                        </Button>
+                      </div>
+                    </div>
 
-      {/* Delete Button */}
-      <Button
-        variant="ghost"
-        className="inline-flex items-center justify-start gap-2 h-auto p-0 hover:bg-transparent mt-2"
-        onClick={() => handleDelete(item)}
-      >
-        <img src="/trash.svg" alt="trash" className="w-5 h-5 md:w-6 md:h-6" />
-        <h4 className="text-[#1a1713] text-sm md:text-xl font-medium font-[cairo]">
-          {isRTL ? "حذف المنتج" : "Delete Item"}
-        </h4>
-      </Button>
-    </div>
-  </CardContent>
-</Card>
-
+                    {/* Delete Button */}
+                    <Button
+                      variant="ghost"
+                      className="inline-flex items-center justify-start gap-2 h-auto p-0 hover:bg-transparent mt-2"
+                      onClick={() => handleDelete(item)}
+                    >
+                      <img
+                        src="/trash.svg"
+                        alt="trash"
+                        className="w-5 h-5 md:w-6 md:h-6"
+                      />
+                      <h4 className="text-[#1a1713] text-sm md:text-xl font-medium font-[cairo]">
+                        {isRTL ? "حذف المنتج" : "Delete Item"}
+                      </h4>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -532,7 +535,7 @@ export const CartSection = () => {
               className="h-14 w-full rounded-[10px] bg-gradient-to-l from-[#805b3c] to-[#d3baa4] hover:opacity-90 p-2"
             >
               <span className="text-white font-medium font-[cairo] ">
-                الدفع الآن
+                {isRTL ? "ادفع الآن" : "Pay Now"}
               </span>
             </Button>
           </CardContent>

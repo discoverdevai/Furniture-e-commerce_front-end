@@ -196,8 +196,8 @@ export const BuyerWishListMainSection = () => {
   if (loading)
     return (
       <div className="flex justify-center items-center py-20">
-        <p className="text-[#683800] font-semibold text-lg">
-          جاري تحميل قائمة المفضلة...
+        <p className="text-[#683800] font-semibold text-lg font-[cairo]">
+          {isArabic ? "جاري التحميل..." : "Loading..."}
         </p>
       </div>
     );
@@ -218,40 +218,15 @@ export const BuyerWishListMainSection = () => {
         className={`flex flex-col w-full max-w-[1200px] gap-8 mx-auto items-start mt-4`}
         dir={isArabic ? "rtl" : "ltr"}
       >
-        {isMobile ? (
-          <div className="relative flex items-center justify-center w-full">
-            <IconButton
-              onClick={() => navigate(-1)}
-              edge="start"
-              className={`!p-2 absolute ${isArabic ? "right-3" : "left-2"}`}
-            >
-              <img
-                src="/breadcrumb-arrow.svg"
-                alt="breadcrumb arrow"
-                className={`w-6 h-6 ${isArabic ? "rotate-180" : ""}`}
-              />
-            </IconButton>
-            <h4 className="text-center text-xl font-medium text-[#1A1713] font-[cairo] mx-auto">
-              {t("sidebar.favorites")}
-            </h4>
-          </div>
-        ) : (
-          <ProfileBreadcrumb />
-        )}
-
-        <div className="flex items-start justify-between gap-6 w-full">
-          {/* {!isMobile && <ProfileSideBar />} */}
-
+        <div className="flex items-center justify-center gap-6 w-full">
           <main
-            className={`flex flex-col w-full max-w-[894px] gap-10 ${
+            className={`flex flex-col w-full max-w-[1200px] gap-10 ${
               isMobile && "mt-5"
             }`}
           >
-            {!isMobile && (
-              <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
-                {t("wishlist.title")}
-              </h2>
-            )}
+            <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713] px-3">
+              {t("wishlist.title")}
+            </h2>
 
             {displayWishlist.length === 0 ? (
               <div className="flex flex-col items-center py-16 text-center">

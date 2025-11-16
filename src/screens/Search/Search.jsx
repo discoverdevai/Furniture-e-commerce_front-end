@@ -32,9 +32,16 @@ export const SearchDropdown = () => {
       .map((cat) => cat.label);
 
     const cParam = checkedCategories.join(","); // join multiple selected
-    navigate(`/search-result?q=${encodeURIComponent(clickedText)}&c=${encodeURIComponent(cParam)}`);
-    console.log(`/search-result?q=${encodeURIComponent(clickedText)}&c=${encodeURIComponent(cParam)}`);
-    
+    navigate(
+      `/search-result?q=${encodeURIComponent(
+        clickedText
+      )}&c=${encodeURIComponent(cParam)}`
+    );
+    console.log(
+      `/search-result?q=${encodeURIComponent(
+        clickedText
+      )}&c=${encodeURIComponent(cParam)}`
+    );
   };
 
   // ✅ Update category checked state
@@ -45,13 +52,11 @@ export const SearchDropdown = () => {
   //     )
   //   );
   // };
-const toggleCategory = (id, checked) => {
-  setFilterCategories((prev) =>
-    prev.map((cat) =>
-      cat.id === id ? { ...cat, checked } : cat
-    )
-  );
-};
+  const toggleCategory = (id, checked) => {
+    setFilterCategories((prev) =>
+      prev.map((cat) => (cat.id === id ? { ...cat, checked } : cat))
+    );
+  };
 
   // ✅ Fetch recommendations
   useEffect(() => {
@@ -59,10 +64,17 @@ const toggleCategory = (id, checked) => {
       try {
         const response = await api.get("/api/search/recommendations");
         if (response.data?.success && response.data?.data) {
-          const { searchTerms = [], popularCategories = [] } = response.data.data;
+          const { searchTerms = [], popularCategories = [] } =
+            response.data.data;
           const combined = [
-            ...searchTerms.map((term, index) => ({ id: `term-${index}`, text: term })),
-            ...popularCategories.map((cat) => ({ id: `cat-${cat.id}`, text: cat.name })),
+            ...searchTerms.map((term, index) => ({
+              id: `term-${index}`,
+              text: term,
+            })),
+            ...popularCategories.map((cat) => ({
+              id: `cat-${cat.id}`,
+              text: cat.name,
+            })),
           ];
           setCommonSearch(combined);
         }
@@ -102,10 +114,12 @@ const toggleCategory = (id, checked) => {
         // setLoadingSuggestions(false);
         return;
       }
-      
+
       try {
         const response = await api.get(
-          `/api/search/suggestions?q=${encodeURIComponent(searchQuery)}&limit=10`
+          `/api/search/suggestions?q=${encodeURIComponent(
+            searchQuery
+          )}&limit=10`
         );
         if (response.data?.success && Array.isArray(response.data?.data)) {
           const names = response.data.data.map((item) => item.name);
@@ -152,7 +166,9 @@ const toggleCategory = (id, checked) => {
             <SearchIcon className="w-6 h-6" />
             <input
               type="text"
-              placeholder="ما الذي تبحث عنه ؟"
+              placeholder={
+                isArabic ? "ما الذي تبحث عنه؟" : "What are you looking for?"
+              }
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -168,15 +184,21 @@ const toggleCategory = (id, checked) => {
               <div className="flex flex-col items-start gap-4 w-full">
                 <h3 className="font-h-5 text-[#1a1713]">
                   {searchQuery.trim().length > 0
-                    ? "الكلمات المطابقة"
-                    : "اقتراحات شائعة"}
+                    ? isArabic
+                      ? "الكلمات المطابقة"
+                      : "Matching Words"
+                    : isArabic
+                    ? "اقتراحات شائعة"
+                    : "Common Suggestions"}
                 </h3>
 
                 {searchQuery.trim().length > 0 ? (
                   <div className="flex flex-col w-full items-start gap-2">
                     {loadingSuggestions ? (
-                      <span className="text-[#888]">جاري التحميل...</span>
-                    ) : suggestions.length > 0 && searchQuery.length >0?  (
+                      <span className="text-[#888]">
+                        {isArabic ? "جاري البحث" : "Searching..."}
+                      </span>
+                    ) : suggestions.length > 0 && searchQuery.length > 0 ? (
                       suggestions.map((name, index) => (
                         <Button
                           key={index}
@@ -190,7 +212,11 @@ const toggleCategory = (id, checked) => {
                         </Button>
                       ))
                     ) : (
-                      <span className="text-[#888]">لا توجد نتائج مطابقة</span>
+                      <span className="text-[#888]">
+                        {isArabic
+                          ? "لا توجد نتائج مطابقة"
+                          : "No matching results"}
+                      </span>
                     )}
                   </div>
                 ) : (
@@ -238,7 +264,9 @@ const toggleCategory = (id, checked) => {
           <div className="flex items-center justify-between w-full mb-4">
             <div className="inline-flex items-center justify-center gap-3">
               <img src="/mage_filter.svg" alt="" />
-              <div className="font-placeholder text-[#545454]">تصفية</div>
+              <div className="font-placeholder text-[#545454]">
+                {isArabic ? "تصفية" : "Filter"}
+              </div>
             </div>
 
             <Button
@@ -261,27 +289,26 @@ const toggleCategory = (id, checked) => {
             }`}
           >
             {filterCategories.map((category) => (
-  <div key={category.id} className="flex items-center gap-2 w-full">
-    <Checkbox
-      id={category.id.toString()}
-      defaultChecked={category.checked}
-      onCheckedChange={(checked) =>
-        setFilterCategories((prev) =>
-          prev.map((cat) =>
-            cat.id === category.id ? { ...cat, checked } : cat
-          )
-        )
-      }
-    />
-    <label
-      htmlFor={category.id.toString()}
-      className="font-h-5 text-[#1a1713] cursor-pointer"
-    >
-      {category.label}
-    </label>
-  </div>
-))}
-
+              <div key={category.id} className="flex items-center gap-2 w-full">
+                <Checkbox
+                  id={category.id.toString()}
+                  defaultChecked={category.checked}
+                  onCheckedChange={(checked) =>
+                    setFilterCategories((prev) =>
+                      prev.map((cat) =>
+                        cat.id === category.id ? { ...cat, checked } : cat
+                      )
+                    )
+                  }
+                />
+                <label
+                  htmlFor={category.id.toString()}
+                  className="font-h-5 text-[#1a1713] cursor-pointer"
+                >
+                  {category.label}
+                </label>
+              </div>
+            ))}
           </div>
         </aside>
       </div>

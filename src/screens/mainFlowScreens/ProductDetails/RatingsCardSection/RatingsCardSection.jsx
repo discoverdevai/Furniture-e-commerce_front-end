@@ -6,29 +6,56 @@ import { useTranslation } from "react-i18next";
 const reviewsData = [
   {
     id: 1,
-    name: "آلاء خميس",
-    date: "15 يوليو 2025",
+    name: {
+      ar: "آلاء خميس",
+      en: "Alaa Khamis",
+    },
+    date: {
+      ar: "15 يوليو 2025",
+      en: "July 15, 2025",
+    },
     avatar: "/Ellipse 32.png",
     rating: "/star.svg",
-    text: "بصراحة تجربة الشراء كانت جدا مميزة. أول ما شفت القطعة عجبني شكلها، ولما وصلتني طلعت أحلى من الصور. الخامة فخمة والتفاصيل مرتبة وواضح إن الشغل متقن. مرة مريحة وغيرت شكل الغرفة بالكامل، صارت أحلى وأرتب بكثير.",
+    text: {
+      ar: "بصراحة تجربة الشراء كانت جدا مميزة. أول ما شفت القطعة عجبني شكلها، ولما وصلتني طلعت أحلى من الصور. الخامة فخمة والتفاصيل مرتبة وواضح إن الشغل متقن. مرة مريحة وغيرت شكل الغرفة بالكامل، صارت أحلى وأرتب بكثير.",
+      en: "Honestly, the purchase experience was exceptional. The moment I saw the piece I loved its look, and when it arrived it was even better than the photos. The material is luxurious, the details are precise, and it’s clear the craftsmanship is top-notch. It’s super comfy and transformed the entire room into something far more beautiful and organized.",
+    },
     showActions: true,
   },
   {
     id: 2,
-    name: "عهود بن ناصر",
-    date: "15 يوليو 2025",
+    name: {
+      ar: "عهود بن ناصر",
+      en: "Ahoud bin Nasser",
+    },
+    date: {
+      ar: "15 يوليو 2025",
+      en: "July 15, 2025",
+    },
     avatar: "/Ellipse 32.png",
     rating: "/star.svg",
-    text: "تجربة رائعة مع القطعة، والتوصيل كان سريع.",
+    text: {
+      ar: "تجربة رائعة مع القطعة، والتوصيل كان سريع.",
+      en: "Great experience with the piece, and delivery was fast.",
+    },
     showActions: false,
   },
   {
     id: 3,
-    name: "محمد أحمد",
-    date: "15 يوليو 2025",
+    name: {
+      ar: "محمد أحمد",
+      en: "Mohamed Ahmed",
+    },
+    date: {
+      ar: "15 يوليو 2025",
+      en: "July 15, 2025",
+    },
     avatar: "/Ellipse 32.png",
     rating: "/star.svg",
-    text: "الخدمة ممتازة والجودة عالية.",
+    text: {
+      ar: "الخدمة ممتازة والجودة عالية.",
+      en: "Excellent service and high quality.",
+    },
     showActions: false,
   },
 ];
@@ -43,11 +70,11 @@ const ratingsData = [
 
 export const RatingsCardSection = () => {
   const { i18n } = useTranslation();
-  const isAabic = i18n.language === "ar";
+  const isArabic = i18n.language === "ar";
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-6 flex flex-col gap-6 font-cairo">
       <h2 className="text-2xl md:text-3xl font-semibold text-right text-[#1a1713]">
-        {isAabic ? "التقييمات و المراجعات" : "Ratings & Reviews"}
+        {isArabic ? "التقييمات و المراجعات" : "Ratings & Reviews"}
       </h2>
 
       <div className="flex flex-col md:flex-row gap-6 md:items-start">
@@ -61,7 +88,9 @@ export const RatingsCardSection = () => {
                 alt="Rating stars"
                 className="w-[24px] h-[24px]"
               />
-              <span className="text-sm text-gray-500">+5 الف تقيم</span>
+              <span className="text-sm text-gray-500">
+                {isArabic ? "+5 الف تقيم" : "+5k ratings"}
+              </span>
             </div>
           </div>
 
@@ -102,15 +131,15 @@ export const RatingsCardSection = () => {
                   />
                   <div className="flex flex-col text-sm">
                     <span className="font-semibold text-[#1a1713]">
-                      {review.name}
+                      {isArabic ? review.name.ar : review.name.en}
                     </span>
                     <span className="text-[10px] text-gray-500">
-                      {review.date}
+                      {isArabic ? review.date.ar : review.date.en}
                     </span>
                   </div>
                 </div>
                 <p className="text-[10px] font-normal leading-[150%] text-gray-700">
-                  {review.text}
+                  {isArabic ? review.text.ar : review.text.en}
                 </p>
               </div>
             ))}
@@ -124,7 +153,11 @@ export const RatingsCardSection = () => {
                 className="border border-gray-300 rounded-lg p-4 relative text-right"
               >
                 {review.showActions && (
-                  <div className="absolute top-4 left-4 flex gap-4">
+                  <div
+                    className={`absolute top-4 ${
+                      isArabic ? "left-4" : "right-4"
+                    } flex gap-4`}
+                  >
                     <Button variant="ghost" size="icon">
                       <Trash2Icon size={20} />
                     </Button>
@@ -143,10 +176,10 @@ export const RatingsCardSection = () => {
                       />
                       <div className="flex flex-col">
                         <span className="font-semibold text-lg text-[#1a1713]">
-                          {review.name}
+                          {isArabic ? review.name.ar : review.name.en}
                         </span>
                         <span className="text-sm text-gray-500">
-                          {review.date}
+                          {isArabic ? review.date.ar : review.date.en}
                         </span>
                       </div>
                     </div>
@@ -157,7 +190,7 @@ export const RatingsCardSection = () => {
                     className="w-[24px] h-[24px]"
                   />
                   <p className="text-sm text-gray-800 leading-6 font-cairo">
-                    {review.text}
+                    {isArabic ? review.text.ar : review.text.en}
                   </p>
                 </div>
               </div>
