@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { GlobalProductCard } from "../../../../components/ui/GlobalProductCard";
 import { Button } from "../../../../components/ui/button";
+import { Loader2 } from "lucide-react";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
-import { Loader2 } from "lucide-react";
 import api from "../../../../Api/Axios";
 import { useNavigate } from "react-router-dom";
 
-const Offers = ({ numberOfProducts = "all" }) => {
+const Offers = ({ categoryId }) => {
   const [offers, setOffers] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,10 +16,11 @@ const Offers = ({ numberOfProducts = "all" }) => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
-  // 1️⃣ Fetch Cart (backend if logged in, localStorage otherwise)
+  // Fetch cart items
   const fetchCart = useCallback(async () => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const token = userData?.token;
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const token = userData.token;
+
     if (token) {
       try {
         const res = await api.get("/api/cart/items");
@@ -32,21 +33,25 @@ const Offers = ({ numberOfProducts = "all" }) => {
     }
   }, []);
 
-  // 2️⃣ Fetch Offers + Wishlist
+  // Fetch products by category
   useEffect(() => {
-    const fetchOffersAndWishlist = async () => {
-      const userData = JSON.parse(localStorage.getItem("userData"));
-      const token = userData?.token;
+    const fetchCategoryProducts = async () => {
+      if (!categoryId) return;
+
+      const userData = JSON.parse(localStorage.getItem("userData")) || {};
+      const token = userData.token;
 
       try {
-        const prodRes = await api.get("/api/products/sale");
-        if (!prodRes.data.success) throw new Error();
-        let prods = prodRes.data.data.map((item) => ({
+        const res = await api.get(`/api/products/category/${categoryId}`);
+
+        if (!res.data.success) throw new Error();
+
+        let prods = res.data.data.map((item) => ({
           id: item.id,
           title: item.name,
           description: item.description,
-          price: item.salePrice,
-          oldPrice: item.originalPrice,
+          price: item.salePrice ?? item.price,
+          oldPrice: item.originalPrice || item.salePrice,
           shop: item.vendorName,
           image: item.imageUrl || "/image 4.png",
           saleImage: "/004a6ad414299e763bb7bf9ba6361c15c394e6c8.gif",
@@ -57,9 +62,11 @@ const Offers = ({ numberOfProducts = "all" }) => {
           storeName: item.vendorName,
         }));
 
+        // Wishlist handling
         if (token) {
           const wishRes = await api.get("/api/wishlist");
           const wishIds = wishRes.data?.data?.map((w) => w.productId) || [];
+
           prods = prods.map((p) => ({
             ...p,
             isInWishlist: wishIds.includes(p.id),
@@ -74,53 +81,51 @@ const Offers = ({ numberOfProducts = "all" }) => {
 
         setOffers(prods);
       } catch (err) {
-        console.error("❌ Failed to fetch offers:", err);
+        console.error("❌ Failed to fetch category products:", err);
       } finally {
         setLoading(false);
         fetchCart();
       }
     };
 
-    fetchOffersAndWishlist();
-  }, [fetchCart]);
+    fetchCategoryProducts();
+  }, [categoryId, fetchCart]);
 
-  // 3️⃣ Compute remaining stock
+  // Compute remaining stock
   useEffect(() => {
     if (!offers.length) return;
-    const withStock = offers.map((p) => {
+
+    const withStockLeft = offers.map((p) => {
       const inCartQty =
         cartItems.find((c) => c.productId === p.id)?.quantity || 0;
+
       return { ...p, stockLeft: Math.max(p.stock - inCartQty, 0) };
     });
 
-    // apply numberOfProducts limit
-    const visible =
-      numberOfProducts === "all"
-        ? withStock
-        : withStock.slice(0, Math.min(numberOfProducts, withStock.length));
-    setDisplayOffers(visible);
-  }, [offers, cartItems, numberOfProducts]);
+    setDisplayOffers(withStockLeft);
+  }, [offers, cartItems]);
 
-  // 4️⃣ Toggle wishlist
+  // Toggle wishlist
   const handleToggleWishlist = async (productId) => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const token = userData?.token;
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const token = userData.token;
 
     if (token) {
       try {
-        const isIn = offers.find((p) => p.id === productId).isInWishlist;
-        if (isIn) await api.delete(`/api/wishlist/${productId}`);
+        const current = offers.find((p) => p.id === productId).isInWishlist;
+
+        if (current) await api.delete(`/api/wishlist/${productId}`);
         else await api.post(`/api/wishlist/${productId}`);
+
         setOffers((prev) =>
           prev.map((p) =>
             p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
           )
         );
-      } catch (err) {
-        console.error("❌ Wishlist toggle failed:", err);
+      } catch {
+        console.error("❌ Wishlist toggle failed");
       }
     } else {
-      // guest mode
       setOffers((prev) => {
         const updated = prev.map((p) =>
           p.id === productId ? { ...p, isInWishlist: !p.isInWishlist } : p
@@ -132,12 +137,12 @@ const Offers = ({ numberOfProducts = "all" }) => {
     }
   };
 
-  // 5️⃣ Add to cart
+  // Add to cart
   const handleAddToCart = async (productId, quantity = 1, variant = null) => {
     const prod = offers.find((p) => p.id === productId);
-    const already =
-      cartItems.find((c) => c.productId === productId)?.quantity || 0;
-    if (already + quantity > prod.stock) {
+    const inCart = cartItems.find((c) => c.productId === productId)?.quantity || 0;
+
+    if (inCart + quantity > prod.stock) {
       return Swal.fire({
         icon: "warning",
         title: isRTL ? "نفدت الكمية" : "Out of stock",
@@ -148,14 +153,15 @@ const Offers = ({ numberOfProducts = "all" }) => {
       });
     }
 
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const token = userData?.token;
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const token = userData.token;
     const cartItem = { productId, quantity, variant };
 
     if (token) {
       try {
         await api.post("/api/cart/add", cartItem);
         await fetchCart();
+
         Swal.fire({
           icon: "success",
           title: t("cartAlerts.success_title"),
@@ -165,8 +171,7 @@ const Offers = ({ numberOfProducts = "all" }) => {
           showConfirmButton: false,
           timer: 1500,
         });
-      } catch (err) {
-        console.error(err);
+      } catch {
         Swal.fire({
           icon: "error",
           title: t("cartAlerts.error"),
@@ -178,18 +183,17 @@ const Offers = ({ numberOfProducts = "all" }) => {
         });
       }
     } else {
-      // guest cart in localStorage
       const ls = JSON.parse(localStorage.getItem("cart")) || [];
       const idx = ls.findIndex(
         (c) => c.productId === productId && c.variant === variant
       );
+
       if (idx > -1) ls[idx].quantity += quantity;
-      else {
-        const full = { ...cartItem, product: prod };
-        ls.push(full);
-      }
+      else ls.push({ ...cartItem, product: prod });
+
       localStorage.setItem("cart", JSON.stringify(ls));
       setCartItems(ls);
+
       Swal.fire({
         icon: "success",
         title: t("cartAlerts.success_title"),
@@ -202,6 +206,7 @@ const Offers = ({ numberOfProducts = "all" }) => {
     }
   };
 
+  // Loading state
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center py-20">
@@ -212,67 +217,25 @@ const Offers = ({ numberOfProducts = "all" }) => {
       </div>
     );
   }
-  
 
   return (
-   <section style={{ backgroundImage: "url('/image 37.png')" }}>
-  <div className="pt-12 px-12 lg:px-32">
-    {/* Header */}
-    <div className="w-full flex items-center justify-between pb-4">
-      <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold [font-family:'Cairo']">
-        {isRTL ? "العروض و التخفيضات" : "Offers & Discounts"}
-      </h1>
-      <Button
-        variant="ghost"
-        className="inline-flex items-center gap-3 p-0 hover:bg-transparent"
-        onClick={() => {
-          navigate("/offers");
-          window.scrollTo(0, 0);
-        }}
-      >
-        <span className="text-[#683800] text-[16px] font-medium [font-family:'Cairo']">
-          {isRTL ? "عرض المزيد" : "Show More"}
-        </span>
-        <img
-          src="/line-arrow-right.svg"
-          alt="arrow"
-          className={`w-6 h-6 ${isRTL ? "" : "rotate-180"}`}
-        />
-      </Button>
-    </div>
-
-    {/* Product Cards or Empty Message */}
-    {displayOffers.length > 0 ? (
-      <div className="flex flex-nowrap gap-8 py-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-center sm:overflow-visible">
-        {displayOffers.map((offer) => (
-          <GlobalProductCard
-            key={offer.id}
-            {...offer}
-            stock={offer.stockLeft}
-            disabled={offer.stockLeft === 0}
-            isRTL={isRTL}
-            onToggleWishlist={handleToggleWishlist}
-            onAddToCart={handleAddToCart}
-          />
-        ))}
+    <section style={{ backgroundImage: "url('/image 37.png')" }}>
+      <div className="pt-12 px-12 lg:px-32">
+        <div className="flex flex-nowrap gap-8 py-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-center sm:overflow-visible">
+          {displayOffers.map((offer) => (
+            <GlobalProductCard
+              key={offer.id}
+              {...offer}
+              stock={offer.stockLeft}
+              disabled={offer.stockLeft === 0}
+              isRTL={isRTL}
+              onToggleWishlist={handleToggleWishlist}
+              onAddToCart={handleAddToCart}
+            />
+          ))}
+        </div>
       </div>
-    ) : (
-      <div className="flex flex-col items-center justify-center py-20">
-        {/* <img
-          src="/emptybox.png"
-          alt="empty"
-          className="w-40 h-40 opacity-80 mb-6"
-        /> */}
-        <p className="text-[#683800] text-xl font-semibold [font-family:'Cairo'] text-center">
-          {isRTL
-            ? "لا توجد عروض متاحة حالياً"
-            : "No offers available right now"}
-        </p>
-      </div>
-    )}
-  </div>
-</section>
-
+    </section>
   );
 };
 

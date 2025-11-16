@@ -3,7 +3,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "../../../../components/ui/SliderButton";
 import { Card, CardContent } from "../../../../components/ui/CategoriesCard";
 import { useTranslation } from "react-i18next";
-import api from "../../../../Api/Axios"; // ✅ Make sure this path is correct
+import { useNavigate } from "react-router-dom";   // ⭐ ADD THIS
+import api from "../../../../Api/Axios";
 
 export const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -11,6 +12,8 @@ export const Categories = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
+
+  const navigate = useNavigate(); // ⭐ INIT ROUTER
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -21,7 +24,7 @@ export const Categories = () => {
             id: cat.id,
             title: cat.name,
             description: cat.description,
-            image: cat.imageUrl || "/image 16.png", // fallback image
+            image: cat.imageUrl || "/image 16.png",
           }));
           setCategories(mapped);
         }
@@ -44,6 +47,10 @@ export const Categories = () => {
 
   const handleNext = () => {
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+  };
+
+  const handleCategoryClick = (id) => {
+    navigate(`/categories/${id}`);  // ⭐ Navigation with query param
   };
 
   if (loading) {
@@ -125,6 +132,7 @@ export const Categories = () => {
                     {slideCards.map((category) => (
                       <Card
                         key={category.id}
+                        onClick={() => handleCategoryClick(category.id)}  // ⭐ CLICK HANDLER
                         className="relative rounded-2xl sm:rounded-3xl border-0 bg-[#1a1713] overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-105 w-[98px] h-[92px] xs:w-[120px] xs:h-[120px] sm:w-[180px] sm:h-[240px] md:w-[220px] md:h-[340px] lg:w-[282px] lg:h-[437px]"
                       >
                         <CardContent className="p-0 h-full flex flex-col items-center justify-end">

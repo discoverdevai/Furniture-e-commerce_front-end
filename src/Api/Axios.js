@@ -2,7 +2,7 @@ import axios from "axios";
 import i18n from "../i18n/index";
 // Create Axios instance
 const api = axios.create({
-  baseURL: "http://localhost:8080", // change this to your backend base URL
+  baseURL: "https://furniture-e-commerce-pddm.onrender.com", // change this to your backend base URL
 });
 
 // Request Interceptor

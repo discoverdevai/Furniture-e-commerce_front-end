@@ -11,7 +11,7 @@ export const PageTitleHandler = () => {
 
     // Define route → title mapping (keys used in i18n translations)
     const titles = {
-      "/": t("titles.signIn"),
+      "/": t("titles.home"),
       "/home": t("titles.home"),
       "/offers": t("titles.offers"),
       "/blogs": t("titles.blogs"),
@@ -25,8 +25,8 @@ export const PageTitleHandler = () => {
       "/recently-arrived": t("titles.recentlyArrived"),
       "/product-details": t("titles.productDetails"),
       "/profile": t("titles.profile"),
-      "/profile/change-password": t("titles.changePassword"),
-      "/profile/orders": t("titles.orders"),
+      "/profil  e/change-password": t("titles.changePassword"),
+      "/previous-orders": t("titles.orders"),
       "/profile/saved-addresses": t("titles.savedAddresses"),
       "/profile/favorites": t("titles.wishlist"),
       "/cart": t("titles.cart"),
