@@ -16,7 +16,7 @@ const RecentlyArrivedMainSection = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
-  // 1️⃣ Fetch cart (backend if logged in, else localStorage)
+  // 1️⃣ Fetch cart
   const fetchCart = useCallback(async () => {
     const userData = JSON.parse(localStorage.getItem("userData")) || {};
     const token = userData.token;
@@ -59,16 +59,10 @@ const RecentlyArrivedMainSection = () => {
         if (token) {
           const wishRes = await api.get("/api/wishlist");
           const wishIds = wishRes.data?.data?.map((w) => w.productId) || [];
-          prods = prods.map((p) => ({
-            ...p,
-            isInWishlist: wishIds.includes(p.id),
-          }));
+          prods = prods.map((p) => ({ ...p, isInWishlist: wishIds.includes(p.id) }));
         } else {
           const guestWish = JSON.parse(localStorage.getItem("wishlist")) || [];
-          prods = prods.map((p) => ({
-            ...p,
-            isInWishlist: guestWish.includes(p.id),
-          }));
+          prods = prods.map((p) => ({ ...p, isInWishlist: guestWish.includes(p.id) }));
         }
 
         setOffers(prods);
@@ -87,8 +81,7 @@ const RecentlyArrivedMainSection = () => {
   useEffect(() => {
     if (!offers.length) return;
     const withStockLeft = offers.map((p) => {
-      const inCartQty =
-        cartItems.find((c) => c.productId === p.id)?.quantity || 0;
+      const inCartQty = cartItems.find((c) => c.productId === p.id)?.quantity || 0;
       return { ...p, stockLeft: Math.max(p.stock - inCartQty, 0) };
     });
     setDisplayOffers(withStockLeft);
@@ -127,12 +120,11 @@ const RecentlyArrivedMainSection = () => {
   // 5️⃣ Add to cart
   const handleAddToCart = async (productId, quantity = 1, variant = null) => {
     const prod = offers.find((p) => p.id === productId);
-    const inCart =
-      cartItems.find((c) => c.productId === productId)?.quantity || 0;
+    const inCart = cartItems.find((c) => c.productId === productId)?.quantity || 0;
     if (inCart + quantity > prod.stock) {
       return Swal.fire({
         icon: "warning",
-        title: isRTL ? "نفدت الكمية" : "Out of stock",
+        title: t("out_of_stock"),
         toast: true,
         position: "top",
         showConfirmButton: false,
@@ -194,7 +186,7 @@ const RecentlyArrivedMainSection = () => {
       <div className="flex flex-col justify-center items-center py-20">
         <Loader2 className="w-12 h-12 text-[#683800] animate-spin mb-3" />
         <p className="text-[#683800] font-semibold text-xl font-[cairo]">
-          جاري تحميل العروض...
+          {t("loading_offers")}
         </p>
       </div>
     );
@@ -205,8 +197,12 @@ const RecentlyArrivedMainSection = () => {
       <div className="pt-12 px-12 lg:px-32">
         {/* Header */}
         <div className="w-full flex items-center justify-between pb-4">
-          <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold [font-family:'Cairo']">
-            وصل حديثا
+          <h1
+            className={`text-[#1a1713] text-[20px] sm:text-[24px] font-bold [font-family:'Cairo'] ${
+              isRTL ? "text-right" : "text-left"
+            }`}
+          >
+            {t("recently_arrived")}
           </h1>
           <Button
             variant="ghost"
@@ -217,18 +213,20 @@ const RecentlyArrivedMainSection = () => {
             }}
           >
             <span className="text-[#683800] text-[16px] font-medium [font-family:'Cairo']">
-              عرض المزيد
+              {t("see_more")}
             </span>
             <img
               src="/line-arrow-right.svg"
               alt="arrow"
               className={`w-6 h-6 ${isRTL ? "" : "rotate-180"}`}
-            />{" "}
+            />
           </Button>
         </div>
 
         {/* Product Cards */}
-        <div className="flex flex-nowrap gap-8 py-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-center sm:overflow-visible">
+        <div
+          className={`flex flex-nowrap gap-8 py-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:flex-wrap sm:justify-center sm:overflow-visible`}
+        >
           {displayOffers.map((offer) => (
             <GlobalProductCard
               key={offer.id}

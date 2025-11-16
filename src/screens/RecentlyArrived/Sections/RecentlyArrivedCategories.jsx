@@ -5,24 +5,24 @@ import { useTranslation } from "react-i18next";
 import { MobileCategorySection } from "./MobileCategorySection/MobileCategorySection";
 
 const categories = [
-  { image: "/image 4.png", label: "كراسي", rounded: true },
-  { image: "/image 4.png", label: "طاولات", rounded: true },
-  { image: "/image 4.png", label: "وحدات تلفاز", rounded: true },
-  { image: "/image 4.png", label: "ركنة", rounded: true },
-  { image: "/image 4.png", label: "كنب", rounded: true },
+  { image: "/image 4.png", key: "chairs", rounded: true },
+  { image: "/image 4.png", key: "tables", rounded: true },
+  { image: "/image 4.png", key: "tv_units", rounded: true },
+  { image: "/image 4.png", key: "corner_sofa", rounded: true },
+  { image: "/image 4.png", key: "sofa", rounded: true },
 ];
 
 const filters = [
-  { label: "متوفر", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
-  { label: "النمط", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "اللون", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "الاعلى تقيما", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: "السعر", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
-  { label: " وصل حديثا  ", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
+  { key: "available", icon: "checkbox", checked: false, textColor: "text-[#1a1713]" },
+  { key: "pattern", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { key: "color", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { key: "top_rated", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { key: "price", icon: "arrow", checked: false, textColor: "text-[#1a1713]" },
+  { key: "recently_arrived", icon: "checkbox", checked: true, textColor: "text-[#835f40]" },
 ];
 
 export const OffersCategories = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
 
   return (
@@ -46,11 +46,15 @@ export const OffersCategories = () => {
               className={`w-[68px] h-[68px] sm:w-[98px] sm:h-[98px] ${
                 category.rounded ? "rounded-full object-cover" : ""
               }`}
-              alt={category.label}
+              alt={t(category.key)}
               src={category.image}
             />
-            <div className="mt-2 text-[12px] sm:text-[14px] font-h5-regular text-[#1a1713] text-center [direction:rtl]">
-              {category.label}
+            <div
+              className={`mt-2 text-[12px] sm:text-[14px] font-h5-regular text-[#1a1713] text-center ${
+                isArabic ? "[direction:rtl]" : "[direction:ltr]"
+              }`}
+            >
+              {t(category.key)}
             </div>
           </button>
         ))}
@@ -89,10 +93,10 @@ export const OffersCategories = () => {
                   text-[length:var(--h-5-font-size)]
                   tracking-[var(--h-5-letter-spacing)]
                   leading-[var(--h-5-line-height)]
-                  whitespace-nowrap [direction:rtl]
+                  whitespace-nowrap ${isArabic ? "[direction:rtl]" : "[direction:ltr]"}
                   [font-style:var(--h-5-font-style)]`}
               >
-                {filter.label}
+                {t(filter.key)}
               </div>
 
               {filter.icon === "checkbox" ? (

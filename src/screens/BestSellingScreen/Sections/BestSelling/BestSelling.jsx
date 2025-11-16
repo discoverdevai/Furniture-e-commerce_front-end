@@ -184,12 +184,13 @@ const BestSelling = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col justify-center items-center py-20">
-        <Loader2 className="w-12 h-12 text-[#683800] animate-spin mb-3" />
-        <p className="text-[#683800] font-semibold text-xl font-[cairo]">
-          جاري تحميل العروض...
-        </p>
-      </div>
+     <div className="flex flex-col justify-center items-center py-20">
+  <Loader2 className="w-12 h-12 text-[#683800] animate-spin mb-3" />
+  <p className="text-[#683800] font-semibold text-xl font-[cairo]">
+    {isRTL ? "جاري تحميل العروض..." : "Loading offers..."}
+  </p>
+</div>
+
     );
   }
 
@@ -198,9 +199,10 @@ const BestSelling = () => {
       <div className="pt-12 px-12 lg:px-32">
         {/* Header */}
         <div className="w-full flex items-center justify-between pb-4">
-          <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold [font-family:'Cairo']">
-            الأكثر مبيعا
-          </h1>
+         <h1 className="text-[#1a1713] text-[20px] sm:text-[24px] font-bold [font-family:'Cairo']">
+  {isRTL ? "الأكثر مبيعا" : "Best Selling"}
+</h1>
+
           <Button
             variant="ghost"
             className="inline-flex items-center gap-3 p-0 hover:bg-transparent"
@@ -210,8 +212,9 @@ const BestSelling = () => {
             }}
           >
             <span className="text-[#683800] text-[16px] font-medium [font-family:'Cairo']">
-              عرض المزيد
-            </span>
+  {isRTL ? "عرض المزيد" : "See More"}
+</span>
+
             <img src="/line-arrow-right.svg" alt="arrow" className="w-6 h-6" />
           </Button>
         </div>
