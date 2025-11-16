@@ -14,7 +14,7 @@ export const ProfileSideBar = () => {
   const menuItems = [
     { label: t("sidebar.profile"), path: "/profile" },
     { label: t("sidebar.changePassword"), path: "/profile/change-password" },
-    { label: t("sidebar.orders"), path: "/previous-orders" },
+    { label: t("sidebar.orders"), path: "/profile/orders" }, // previous-orders the path with the screen must displayed in profile orders
     { label: t("sidebar.favorites"), path: "/profile/favorites" },
     { label: t("sidebar.savedAddresses"), path: "/profile/saved-addresses" },
   ];
@@ -44,7 +44,7 @@ export const ProfileSideBar = () => {
         },
       }).then(() => {
         // 5️⃣ Navigate to login page after alert
-        navigate("/");
+        navigate("/signIn");
       });
     } else {
       // Optional: handle case if userData is missing
@@ -59,7 +59,7 @@ export const ProfileSideBar = () => {
           confirmButton: "font-['Cairo',Helvetica] text-lg py-3 px-8",
         },
       }).then(() => {
-        navigate("/");
+        navigate("/signIn");
       });
     }
   };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ProfileOrderCard } from "../../../../components/ui/ProfileOrderCard";
 import { ProfileSideBar } from "../../../../components/ProfileSideBar";
@@ -6,61 +6,57 @@ import { AppNavbar } from "../../../../components/Layout/Navbar";
 import { ProfileBreadcrumb } from "../../../../components/ProfileBreadcrumb";
 import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
 import { useMediaQuery } from "@mui/material";
-
-const ordersData = {
-  current: [
-    {
-      id: "123a",
-      status: "inProgress",
-      title_ar: "أريكة - تصميم عملي ومعتزي",
-      title_en: "Sofa - Practical and Stylish Design",
-      quantity: 1,
-      price: 3000,
-      deliveryDate_ar: "30 يونيو 2025",
-      deliveryDate_en: "June 30, 2025",
-      imageUrl:
-        "https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=400",
-    },
-  ],
-  previous: [
-    {
-      id: "123b",
-      status: "completed",
-      title_ar: "كرسي - تصميم فاخر",
-      title_en: "Chair - Luxury Design",
-      quantity: 1,
-      price: 1500,
-      deliveryDate_ar: "25 مايو 2025",
-      deliveryDate_en: "May 25, 2025",
-      imageUrl:
-        "https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=400",
-    },
-    {
-      id: "123c",
-      status: "cancelled",
-      title_ar: "طاولة - تصميم حديث",
-      title_en: "Table - Modern Design",
-      quantity: 1,
-      price: 1000,
-      deliveryDate_ar: "15 يونيو 2025",
-      deliveryDate_en: "June 15, 2025",
-      imageUrl:
-        "https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=400",
-    },
-  ],
-};
+import api from "../../../../Api/Axios";
+import { ProductDetailsSection } from "../../../mainFlowScreens/PreviousOrdersScreen/sections/ProductDetailsSection";
+import { OrderStatusSection } from "../../../mainFlowScreens/PreviousOrdersScreen/sections/OrderStatusSection";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../../../../components/ui/Tabs";
 
 export const BuyerOrdersMainSection = () => {
+  const [orders, setOrders] = useState([]); // all orders
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("current");
+
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const isMobile = useMediaQuery("(max-width:900px)");
   const navigate = useNavigate();
-  const handleBackClick = () => {
-    navigate(-1);
-  };
+
+  // 1️⃣ Fetch order history on mount
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await api.get("/api/buyer/orders/history", {
+          params: { page: 0, size: 1000 },
+        });
+        if (res.data.success) {
+          setOrders(res.data.data);
+        }
+      } catch (err) {
+        console.error("❌ Error fetching orders:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  // 3️⃣ Split into tabs
+  const currentOrders = orders.filter((o) =>
+    ["PENDING", "DELIVERING", "CONFIRMED"].includes(o.status.toUpperCase())
+  );
+  const previousOrders = orders.filter((o) =>
+    ["DELIVERED", "CANCELLED", "SHIPPED"].includes(o.status.toUpperCase())
+  );
+  const listToShow = activeTab === "current" ? currentOrders : previousOrders;
+
+  const handleBackClick = () => navigate(-1);
 
   return (
     <section
@@ -72,21 +68,17 @@ export const BuyerOrdersMainSection = () => {
           <AppNavbar />
         </div>
       </div>
+
       <div
-        className={`flex flex-col w-full  max-w-[1200px] gap-2 mx-auto items-start mt-4`}
+        className="flex flex-col w-full max-w-[1200px] gap-2 mx-auto items-start mt-4"
         dir={isArabic ? "rtl" : "ltr"}
       >
         {isMobile ? (
-          <div
-            className={`relative flex items-center justify-center w-full  ${
-              isArabic ? "" : ""
-            }`}
-          >
-            {/* Back Button */}
+          <div className="relative flex items-center justify-center w-full">
             <IconButton
               onClick={handleBackClick}
               edge="start"
-              className={`!p-2 absolute ${isArabic ? "right-2" : "left-2"} `}
+              className={`!p-2 absolute ${isArabic ? "right-2" : "left-2"}`}
             >
               <img
                 src="/breadcrumb-arrow.svg"
@@ -95,8 +87,6 @@ export const BuyerOrdersMainSection = () => {
                 style={{ filter: "brightness(0) saturate(100%)" }}
               />
             </IconButton>
-
-            {/* Title */}
             <h4 className="text-center text-xl font-medium text-[#1A1713] font-[cairo] mx-auto">
               {t("sidebar.orders")}
             </h4>
@@ -105,63 +95,62 @@ export const BuyerOrdersMainSection = () => {
           <ProfileBreadcrumb />
         )}
 
-        <div
-          className={`flex items-start justify-between gap-6 w-full ${
-            isArabic ? "flex-row" : ""
-          }`}
-        >
-          {!isMobile && <ProfileSideBar />}{" "}
-          <main className="flex flex-col w-full max-w-[894px] gap-10">
-            <div className="flex items-center justify-between w-full">
-              {/* <button className="font-h5-regular text-[#4f4f4f] hover:text-[#835f40]">
-                {t("orders.favorites")}
-              </button> */}
-              {!isMobile && (
-                <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
-                  {t("orders.title")}
-                </h2>
-              )}
-            </div>
+        <div className="flex items-start justify-between gap-6 w-full">
+          {!isMobile && <ProfileSideBar />}
 
-            <div className="flex items-center justify-start gap-4 w-full border-b border-[#e0e0e0]">
-              <button
-                onClick={() => setActiveTab("previous")}
-                className={`pb-3 px-6 font-h4-medium ${
-                  activeTab === "previous"
-                    ? "text-[#835f40] border-b-2 border-[#835f40]"
-                    : "text-[#4f4f4f]"
-                }`}
-              >
-                {t("orders.previous")}
-              </button>
+          <main className="flex flex-col w-full max-w-[894px] gap-5">
+            {!isMobile && (
+              <h2 className="font-[cairo] font-semibold text-[32px] text-[#1a1713]">
+                {t("orders.title")}
+              </h2>
+            )}
 
-              <button
-                onClick={() => setActiveTab("current")}
-                className={`pb-3 px-6 font-h4-medium ${
-                  activeTab === "current"
-                    ? "text-[#835f40] border-b-2 border-[#835f40]"
-                    : "text-[#4f4f4f]"
-                }`}
-              >
-                {t("orders.current")}
-              </button>
-            </div>
+            <div className="flex flex-col items-start w-full mx-auto gap-5 pt-7 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-20 mb-20">
+              <Tabs defaultValue="current" className="w-full">
+                <TabsList className="w-full h-auto grid grid-cols-2 bg-transparent rounded-none p-0 gap-0">
+                  <TabsTrigger
+                    value="previous"
+                    className="flex-1 items-center justify-center gap-2 p-4 border-b-2 border-[#c3c3c3] bg-transparent rounded-none 
+                            data-[state=active]:bg-transparent data-[state=active]:shadow-none 
+                            data-[state=active]:border-b-2 
+                            data-[state=active]:[border-image:linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)_1] 
+                            font-[Cairo] font-semibold text-[16px] lg:text-[24px] leading-[100%] tracking-[0%] text-center 
+                            text-[#4f4f4f] data-[state=active]:text-[#835f40] whitespace-nowrap"
+                  >
+                    {isArabic ? "الطلبات السابقة" : "Previous Orders"}{" "}
+                  </TabsTrigger>
 
-            <div
-              className={`flex flex-col gap-6 w-full ${
-                isArabic ? "items-end" : "items-start"
-              }`}
-            >
-              {ordersData[activeTab].map((order, index) => (
-                <ProfileOrderCard
-                  key={index}
-                  {...order}
-                  title={isArabic ? order.title_ar : order.title_en}
-                  deliveryDate={
-                    isArabic ? order.deliveryDate_ar : order.deliveryDate_en
-                  }
-                />
-              ))}
+                  <TabsTrigger
+                    value="current"
+                    className="flex-1 items-center justify-center gap-2 p-4 border-b-2 border-transparent bg-transparent rounded-none 
+                            data-[state=active]:bg-transparent data-[state=active]:shadow-none 
+                            data-[state=active]:border-b-2 
+                            data-[state=active]:[border-image:linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)_1] 
+                            font-[Cairo] font-semibold text-[16px] lg:text-[24px] leading-[100%] tracking-[0%] text-center 
+                            text-[#4f4f4f] data-[state=active]:text-[#835f40] whitespace-nowrap"
+                  >
+                    {isArabic ? "الطلبات الحالية" : "Current Orders"}{" "}
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="previous" className="w-full">
+                  {loading ? (
+                    <div className="text-center text-gray-600 py-10">
+                      {isArabic ? "جاري التحميل..." : "Loading..."}
+                    </div>
+                  ) : (
+                    <OrderStatusSection orders={previousOrders} />
+                  )}
+                </TabsContent>
+                <TabsContent value="current" className="w-full">
+                  {loading ? (
+                    <div className="text-center text-gray-600 py-10">
+                      {isArabic ? "جاري التحميل..." : "Loading..."}
+                    </div>
+                  ) : (
+                    <OrderStatusSection orders={currentOrders} />
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
           </main>
         </div>

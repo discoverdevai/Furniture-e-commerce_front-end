@@ -196,7 +196,7 @@ const Offers = () => {
       <div className="flex flex-col justify-center items-center py-20">
         <Loader2 className="w-12 h-12 text-[#683800] animate-spin mb-3" />
         <p className="text-[#683800] font-semibold text-xl font-[cairo]">
-          جاري تحميل العروض...
+          {isRTL ? "جاري تحميل العروض..." : "Loading offers..."}
         </p>
       </div>
     );

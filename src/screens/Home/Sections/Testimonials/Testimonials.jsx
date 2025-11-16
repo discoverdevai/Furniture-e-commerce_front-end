@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, AvatarImage } from "../../../../components/ui/TestimonialAvatar";
+import {
+  Avatar,
+  AvatarImage,
+} from "../../../../components/ui/TestimonialAvatar";
 import {
   TestimonialsCard,
   TestimonialsCardContent,
 } from "../../../../components/ui/TestimonialsCard";
+import { Button } from "../../../../components/ui/button";
+
 import { useTranslation } from "react-i18next";
 import api from "../../../../Api/Axios"; // ✅ Make sure this points to your configured Axios instance
 
@@ -53,9 +58,24 @@ export const TestimonialSection = () => {
           >
             {isArabic ? "آراء العملاء" : "Customer Reviews"}
           </h2>
-          <span className="text-[#a16a35] font-medium text-[14px] cursor-pointer hover:underline">
-            {isArabic ? "المزيد" : "See more"}
-          </span>
+          {/* <Button
+            variant="ghost"
+            className="inline-flex items-center gap-3 p-0 hover:bg-transparent"
+            onClick={() => {
+              navigate("/best-selling");
+              window.scrollTo(0, 0);
+            }}
+          >
+            <span className="text-[#683800] text-[16px] font-medium [font-family:'Cairo']">
+              {isArabic ? "عرض المزيد" : "See More"}
+            </span>
+
+            <img
+              src="/line-arrow-right.svg"
+              alt="arrow"
+              className={`w-6 h-6 ${isArabic ? "" : "rotate-180"}`}
+            />
+          </Button> */}
         </div>
 
         {/* Cards container */}
@@ -100,7 +120,7 @@ export const TestimonialSection = () => {
                   />
 
                   <div className="relative flex flex-col items-center gap-2 px-3 py-[61px] min-h-[247px]">
-                    <div className="flex flex-col w-full items-start gap-11">
+                    <div className="flex flex-col w-full items-start gap-11 px-3">
                       {/* Comment */}
                       <p className="font-normal text-sm leading-[21px] [font-family:'Cairo',Helvetica] text-[#1a1713] tracking-[0]">
                         {review.comment}

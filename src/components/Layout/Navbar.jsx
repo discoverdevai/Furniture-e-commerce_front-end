@@ -26,11 +26,13 @@ const NAV_ITEMS = [
   "blogs",
   "about_us",
   "contact_us",
-  "login"
 ];
-const DRAWER_EXTRA_ITEMS = [
-  { key: "Drawer_profile", path: "/ProfileSettings" },
-];
+const userData = localStorage.getItem("userData");
+const token = userData ? JSON.parse(userData).token : null;
+
+const DRAWER_EXTRA_ITEMS = token
+  ? [{ key: "Drawer_profile", path: "/ProfileSettings" }]
+  : [{ key: "Drawer_signIn", path: "/signIn" }];
 const PATHS = {
   home: "/home",
   stores: "/stores",
@@ -41,7 +43,6 @@ const PATHS = {
   contact_us: "/contact-us",
   profile: "/profile",
   search: "/search2",
-  login:"/signIn" // 👈 mobile search page
 };
 
 export const AppNavbar = () => {
@@ -84,6 +85,7 @@ export const AppNavbar = () => {
     i18n.changeLanguage(newLang);
     document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
     document.documentElement.lang = newLang;
+    window.location.reload();
   };
 
   const handleSearchClick = () => {
@@ -229,37 +231,45 @@ export const AppNavbar = () => {
                 height={24}
               />
             </IconButton>
-             {!localStorage.getItem("userData") ||
-  !JSON.parse(localStorage.getItem("userData")).token ? (
-        <>
-      {/* Login icon */}
-      <IconButton
-        onClick={() => navigate("/signIn")}
-        color="inherit"
-        title="Login"
-      >
-        <img src="/login-svgrepo-com.svg" alt="Login" width={24} height={24} />
-      </IconButton>
+            {!localStorage.getItem("userData") ||
+            !JSON.parse(localStorage.getItem("userData")).token ? (
+              <>
+                {/* Login icon */}
+                <IconButton
+                  onClick={() => navigate("/signIn")}
+                  color="inherit"
+                  title="Login"
+                >
+                  <img
+                    src="/login-svgrepo-com.svg"
+                    alt="Login"
+                    width={24}
+                    height={24}
+                  />
+                </IconButton>
 
-      {/* Favorites icon */}
-      <IconButton
-        onClick={() => navigate("/favorites")}
-        color="inherit"
-        title="Favorites"
-      >
-        <img src="/favorite-svgrepo-com.svg" alt="Favorites" width={24} height={24} />
-      </IconButton>
-    </>
-  ) : (
-    <NavIconButton
-      to="/profile"
-      icon="/profile.svg"
-      activeIcon="/active-profile.svg"
-      alt="Profile"
-    />
-  )}
-
-        
+                {/* Favorites icon */}
+                <IconButton
+                  onClick={() => navigate("/favorites")}
+                  color="inherit"
+                  title="Favorites"
+                >
+                  <img
+                    src="/favorite-svgrepo-com.svg"
+                    alt="Favorites"
+                    width={24}
+                    height={24}
+                  />
+                </IconButton>
+              </>
+            ) : (
+              <NavIconButton
+                to="/profile"
+                icon="/profile.svg"
+                activeIcon="/active-profile.svg"
+                alt="Profile"
+              />
+            )}
 
             <NavIconButton
               to="/cart"
@@ -358,7 +368,7 @@ export const AppNavbar = () => {
         </Drawer>
       </AppBar>
 
-        <SearchModal open={isSearchOpen} onClose={toggleSearchModal} />
+      <SearchModal open={isSearchOpen} onClose={toggleSearchModal} />
     </>
   );
 };

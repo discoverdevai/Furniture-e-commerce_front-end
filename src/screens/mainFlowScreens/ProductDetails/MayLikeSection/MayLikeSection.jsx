@@ -215,7 +215,7 @@ export const MayLikeSection = ({ numberOfProducts = "all" }) => {
             variant="ghost"
             className="inline-flex items-center gap-3 p-0 hover:bg-transparent"
             onClick={() => {
-              navigate("/you-may-like");
+              navigate("/best-selling");
               window.scrollTo(0, 0);
             }}
           >

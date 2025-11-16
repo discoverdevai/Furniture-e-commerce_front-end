@@ -283,7 +283,7 @@ export const Register = () => {
   };
 
   const navigateToSignIn = () => {
-    navigate("/");
+    navigate("/signIn");
   };
 
   return (

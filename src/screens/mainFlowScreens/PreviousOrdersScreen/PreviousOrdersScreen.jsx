@@ -5,9 +5,17 @@ import { OrderSummarySection } from "./sections/OrderSummarySection";
 import { ProductDetailsSection } from "./sections/ProductDetailsSection";
 import { FooterSection } from "../../../components/Layout/FooterSection";
 import { AppNavbar } from "../../../components/Layout/Navbar";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../../components/ui/Tabs";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../../../components/ui/Tabs";
+import { useTranslation } from "react-i18next";
 
 export const PreviousOrdersScreen = () => {
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,11 +23,11 @@ export const PreviousOrdersScreen = () => {
     const fetchOrders = async () => {
       try {
         const response = await api.get("/api/buyer/orders/history", {
-  params: {
-    page: 0,   // or any dynamic value
-    size: 1000,  // or any dynamic value
-  },
-});
+          params: {
+            page: 0, // or any dynamic value
+            size: 1000, // or any dynamic value
+          },
+        });
         if (response.data.success) {
           setOrders(response.data.data);
         }
@@ -34,16 +42,25 @@ export const PreviousOrdersScreen = () => {
 
   // Split orders by status
   const currentOrders = orders.filter(
-    (o) => o.status === "PENDING" || o.status === "DELIVERING" || o.status === "CONFIRMED"
+    (o) =>
+      o.status === "PENDING" ||
+      o.status === "DELIVERING" ||
+      o.status === "CONFIRMED"
   );
   const previousOrders = orders.filter(
-    (o) => o.status === "DELIVERED" || o.status === "CANCELLED" || o.status === "SHIPPED"
+    (o) =>
+      o.status === "DELIVERED" ||
+      o.status === "CANCELLED" ||
+      o.status === "SHIPPED"
   );
 
   return (
     <div
       className="font-cairo min-h-screen w-full bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/image 36.png')", fontFamily: "'Cairo',Helvetica" }}
+      style={{
+        backgroundImage: "url('/image 36.png')",
+        fontFamily: "'Cairo',Helvetica",
+      }}
     >
       <AppNavbar />
 
@@ -61,7 +78,7 @@ export const PreviousOrdersScreen = () => {
                 font-[Cairo] font-semibold text-[16px] lg:text-[24px] leading-[100%] tracking-[0%] text-center 
                 text-[#4f4f4f] data-[state=active]:text-[#835f40] whitespace-nowrap"
             >
-              الطلبات السابقة
+              {isArabic ? "الطلبات السابقة" : "Previous Orders"}
             </TabsTrigger>
 
             <TabsTrigger
@@ -73,13 +90,15 @@ export const PreviousOrdersScreen = () => {
                 font-[Cairo] font-semibold text-[16px] lg:text-[24px] leading-[100%] tracking-[0%] text-center 
                 text-[#4f4f4f] data-[state=active]:text-[#835f40] whitespace-nowrap"
             >
-              الطلبات الحالية
+              {isArabic ? "الطلبات الحالية" : "Current Orders"}
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="current" className="w-full">
             {loading ? (
-              <div className="text-center text-gray-600 py-10">جاري التحميل...</div>
+              <div className="text-center text-gray-600 py-10">
+                {isArabic ? "جاري التحميل..." : "Loading..."}
+              </div>
             ) : (
               <OrderStatusSection orders={currentOrders} />
             )}
@@ -87,7 +106,9 @@ export const PreviousOrdersScreen = () => {
 
           <TabsContent value="previous" className="w-full">
             {loading ? (
-              <div className="text-center text-gray-600 py-10">جاري التحميل...</div>
+              <div className="text-center text-gray-600 py-10">
+                {isArabic ? "جاري التحميل..." : "Loading..."}
+              </div>
             ) : (
               <OrderStatusSection orders={previousOrders} />
             )}

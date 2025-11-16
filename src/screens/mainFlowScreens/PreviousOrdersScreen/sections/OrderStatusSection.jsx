@@ -10,12 +10,36 @@ import { DeletePopup } from "../../../../components/Common/Popups/DeletePopup"; 
 
 // Backend status mapped to Arabic label and colors
 const statusStyles = {
-  PENDING: { label: "قيد الانتظار", bg: "bg-[#ebf0fb]", color: "text-[#00154c]" },
-   CONFIRMED: { label: " تجهيز", bg: "bg-[#ebf0fb]", color: "text-[#00154c]" },
-  DELIVERING: { label: "جاري التوصيل", bg: "bg-[#fbfce2]", color: "text-[#414706]" },
-  DELIVERED: { label: "تم التوصيل", bg: "bg-[#f6f0ea]", color: "text-[#5a2c00]" },
-  SHIPPED: { label: "تم التحميل", bg: "bg-[#f6f0ea]", color: "text-[#5a2c00]" },
-  CANCELLED: { label: "ملغي", bg: "bg-[#fbeaea]", color: "text-[#a60000]" },
+  PENDING: {
+    label: { ar: "قيد الانتظار", en: "Pending" },
+    bg: "bg-[#ebf0fb]",
+    color: "text-[#00154c]",
+  },
+  CONFIRMED: {
+    label: { ar: "قيد تجهيز", en: "Being prepared" },
+    bg: "bg-[#ebf0fb]",
+    color: "text-[#00154c]",
+  },
+  DELIVERING: {
+    label: { ar: "جاري التوصيل", en: "Delivering" },
+    bg: "bg-[#fbfce2]",
+    color: "text-[#414706]",
+  },
+  DELIVERED: {
+    label: { ar: "تم التوصيل", en: "Delivered" },
+    bg: "bg-[#f6f0ea]",
+    color: "text-[#5a2c00]",
+  },
+  SHIPPED: {
+    label: { ar: "تم الشحن", en: "Shipped" },
+    bg: "bg-[#f6f0ea]",
+    color: "text-[#5a2c00]",
+  },
+  CANCELLED: {
+    label: { ar: "تم الالغاء", en: "Cancelled" },
+    bg: "bg-[#fbeaea]",
+    color: "text-[#a60000]",
+  },
 };
 
 export const OrderStatusSection = ({ orders = [] }) => {
@@ -30,7 +54,7 @@ export const OrderStatusSection = ({ orders = [] }) => {
   if (orders.length === 0) {
     return (
       <div className="text-center text-gray-500 py-10 w-full">
-        لا توجد طلبات لعرضها
+        {isArabic ? "لا توجد طلبات لعرضها" : "No orders to display"}
       </div>
     );
   }
@@ -54,8 +78,10 @@ export const OrderStatusSection = ({ orders = [] }) => {
       if (response.data.success) {
         Swal.fire({
           icon: "success",
-          title: "تم الإلغاء",
-          text: "تم إلغاء الطلب بنجاح",
+          title: isArabic ? "تم الإلغاء" : "Cancelled",
+          text: isArabic
+            ? "تم إلغاء الطلب بنجاح"
+            : "Order cancelled successfully",
         });
 
         // update order status in local state
@@ -69,7 +95,7 @@ export const OrderStatusSection = ({ orders = [] }) => {
       } else {
         Swal.fire({
           icon: "error",
-          title: "فشل الإلغاء",
+          title: isArabic ? "فشل الإلغاء" : "Failed to cancel",
           text: response.data.message,
         });
       }
@@ -77,8 +103,10 @@ export const OrderStatusSection = ({ orders = [] }) => {
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "حدث خطأ",
-        text: "تعذر إلغاء الطلب، حاول مرة أخرى",
+        title: isArabic ? "حدث خطأ" : "Error occurred",
+        text: isArabic
+          ? "تعذر إلغاء الطلب، حاول مرة أخرى"
+          : "Failed to cancel order, please try again",
       });
       console.error("Cancel order error:", error);
     }
@@ -86,13 +114,16 @@ export const OrderStatusSection = ({ orders = [] }) => {
 
   return (
     <section
-      className={`flex flex-col items-start gap-6 w-full ${isArabic ? "text-right" : "text-left"}`}
+      className={`flex flex-col items-start gap-6 w-full ${
+        isArabic ? "text-right" : "text-left"
+      }`}
       dir={isArabic ? "rtl" : "ltr"}
     >
       {orderList.map((order) => {
         const style = statusStyles[order.status] || {};
         const firstItem = order.orderItems?.[0];
-        const showCancel = (order.status === "PENDING") ||(order.status === "CONFIRMED");
+        const showCancel =
+          order.status === "PENDING" || order.status === "CONFIRMED";
 
         return (
           <div key={order.id} className="flex flex-col gap-4 w-full">
@@ -120,22 +151,30 @@ export const OrderStatusSection = ({ orders = [] }) => {
                     </div>
 
                     <div className="text-[14px] text-[#1a1713]">
-                      العدد :{" "}
-                      <span className="font-semibold text-2xl">{firstItem?.quantity}</span>
+                      {isArabic ? " العدد " : " Quantity: "}
+                      <span className="font-semibold text-2xl">
+                        {firstItem?.quantity}
+                      </span>
                     </div>
 
                     <div className="text-[14px] text-[#1a1713]">
-                      السعر :{" "}
+                      {isArabic ? "السعر :" : " Price: "}
                       <span className="font-semibold text-[#835f40] text-2xl">
                         {firstItem?.totalPrice}
                       </span>{" "}
-                      <span className="text-[#835f40] text-lg">ر.س</span>
+                      <span className="text-[#835f40] text-lg">
+                        {isArabic ? "ر.س" : "SAR"}
+                      </span>
                     </div>
 
                     <div className="text-[14px] text-[#1a1713]">
-                      تاريخ الاستلام المتوقع :{" "}
+                      {isArabic
+                        ? "تاريخ التوصيل المتوقع :"
+                        : " Expected Delivery: "}
                       <span className="font-semibold text-2xl">
-                        {new Date(order.expectedDeliveryDate).toLocaleDateString("ar-EG", {
+                        {new Date(
+                          order.expectedDeliveryDate
+                        ).toLocaleDateString("ar-EG", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
@@ -150,7 +189,7 @@ export const OrderStatusSection = ({ orders = [] }) => {
                   <Badge
                     className={`${style.bg} ${style.color} inline-flex items-center justify-center gap-2 p-1 rounded-[10px] h-auto font-semibold text-[14px]`}
                   >
-                    {style.label}
+                    {isArabic ? style.label.ar : style.label.en}
                   </Badge>
                 </div>
               </CardContent>
@@ -163,9 +202,13 @@ export const OrderStatusSection = ({ orders = [] }) => {
                 className="inline-flex items-center justify-start gap-3 h-auto p-0 hover:bg-transparent"
                 onClick={() => handleOpenCancelDialog(order.orderNumber)}
               >
-                <img className="w-6 h-6" alt="Close circle" src="./close-circle.svg" />
+                <img
+                  className="w-6 h-6"
+                  alt="Close circle"
+                  src="./close-circle.svg"
+                />
                 <span className="font-medium text-[#4f4f4f] text-[16px] whitespace-nowrap">
-                  إلغاء الطلب
+                  {isArabic ? "إلغاء الطلب" : "Cancel Order"}
                 </span>
               </Button>
             )}

@@ -1,11 +1,14 @@
 import React from "react";
 import { Button } from "../../../../components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export const ProductDetailsSection = () => {
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
   return (
     <header className="flex items-center justify-between w-full">
        <h1 className="font-h2-semiboald font-[number:var(--h2-semiboald-font-weight)] text-[#1a1713] text-[length:var(--h2-semiboald-font-size)] text-center tracking-[var(--h2-semiboald-letter-spacing)] leading-[var(--h2-semiboald-line-height)] whitespace-nowrap  [font-style:var(--h2-semiboald-font-style)]">
-        سجل الطلبات
+        {isArabic ? "سجل الطلبات السابقة" : "Previous Orders History"}
       </h1>
       {/* <Button
         variant="outline"

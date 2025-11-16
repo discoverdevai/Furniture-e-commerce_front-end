@@ -1,9 +1,4 @@
-import {
-  ArrowLeftIcon,
-  ClockIcon,
-  SearchIcon,
-  XIcon,
-} from "lucide-react";
+import { ArrowLeftIcon, ClockIcon, SearchIcon, XIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
@@ -13,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import api from "../../Api/Axios";
 
 export const MobileSearch = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const isArabic = i18n.language === "ar";
 
   const [searchQuery, setSearchQuery] = useState("");
   const [commonSearch, setCommonSearch] = useState([]);
@@ -33,7 +29,8 @@ export const MobileSearch = () => {
       try {
         const response = await api.get("/api/search/recommendations");
         if (response.data?.success && response.data?.data) {
-          const { searchTerms = [], popularCategories = [] } = response.data.data;
+          const { searchTerms = [], popularCategories = [] } =
+            response.data.data;
           const combined = [
             ...searchTerms.map((term, index) => ({
               id: `term-${index}`,
@@ -55,17 +52,18 @@ export const MobileSearch = () => {
 
   // ✅ Fetch live suggestions while typing
   useEffect(() => {
-         setLoadingSuggestions(true);
+    setLoadingSuggestions(true);
     const fetchSuggestions = async () => {
       if (searchQuery.trim().length === 0) {
         setSuggestions([]);
         return;
       }
 
- 
       try {
         const response = await api.get(
-          `/api/search/suggestions?q=${encodeURIComponent(searchQuery)}&limit=10`
+          `/api/search/suggestions?q=${encodeURIComponent(
+            searchQuery
+          )}&limit=10`
         );
         if (response.data?.success && Array.isArray(response.data?.data)) {
           const names = response.data.data.map((item) => item.name);
@@ -102,7 +100,7 @@ export const MobileSearch = () => {
 
   return (
     <div
-      className="bg-[#fefefe] w-full min-w-[375px] min-h-[812px] relative"
+      className="bg-[#fefefe] min-h-screen w-full"
       style={{
         backgroundImage: "url('/Rectangle 67.png')",
         backgroundSize: "cover",
@@ -112,29 +110,42 @@ export const MobileSearch = () => {
     >
       <AppNavbar />
 
-      <main className="flex flex-col w-[343px] items-start gap-4 absolute top-32 left-4">
+      <main className="mx-auto mt-12 w-full max-w-[750px] px-6 flex flex-col gap-4">
         {/* Top bar */}
-        <div className="flex w-[195px] items-center justify-between relative flex-[0_0_auto]">
+        <div className="relative w-full max-w-[750px] mx-auto flex items-center px-6 h-12">
           <Button
             variant="ghost"
             size="icon"
-            className="relative w-12 h-12 rotate-180 h-auto p-0"
+            className={`relative w-12 ${
+              isArabic ? "" : "rotate-180"
+            }  h-auto p-0`}
             onClick={() => window.history.back()}
           >
             <ArrowLeftIcon className="w-6 h-6 -rotate-180" />
           </Button>
-          <h1 className="w-fit text-[#1a1713] text-[length:var(--h4-medium-font-size)] text-center leading-[var(--h4-medium-line-height)] font-h4-medium">
-            البحث
+          <h1
+            className="
+      absolute
+      left-1/2
+      transform -translate-x-1/2
+      text-[#1a1713]
+      text-[length:var(--h4-medium-font-size)]
+      font-h4-medium
+    "
+          >
+            {isArabic ? "البحث" : "Search"}
           </h1>
         </div>
 
         {/* Search input */}
         <div className="flex items-center justify-between w-full gap-2">
-          <div className="flex w-[279px] h-12 items-center gap-2 px-4 border border-[#aaaaaa] rounded-[10px]">
+          <div className="flex w-full max-w-[750px] h-12 items-center gap-2 px-4 border border-[#aaaaaa] rounded-[10px]">
             <SearchIcon className="w-6 h-6" />
             <input
               type="text"
-              placeholder="ما الذي تبحث عنه ؟"
+              placeholder={
+                isArabic ? "ما الذي تبحث عنه ؟" : "What are you looking for?"
+              }
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -154,12 +165,16 @@ export const MobileSearch = () => {
 
         {/* Suggestions Section */}
         {showSuggestions && (
-          <section className="flex flex-col w-[304px] items-start gap-4">
+          <section className="flex flex-col w-full max-w-[750px] items-start gap-4">
             <div className="flex items-center justify-between w-full">
               <h2 className="text-[#1a1713] font-h-5">
                 {searchQuery.trim().length > 0
-                  ? "الكلمات المطابقة"
-                  : "اقتراحات شائعة"}
+                  ? isArabic
+                    ? "الكلمات المطابقة"
+                    : "Matching Words"
+                  : isArabic
+                  ? "اقتراحات شائعة"
+                  : "Common Suggestions"}
               </h2>
               <Button
                 variant="ghost"
@@ -175,7 +190,7 @@ export const MobileSearch = () => {
             {searchQuery.trim().length > 0 ? (
               loadingSuggestions ? (
                 <span className="text-[#888]">جاري التحميل...</span>
-              ) : suggestions.length > 0 && searchQuery.length >0 ? (
+              ) : suggestions.length > 0 && searchQuery.length > 0 ? (
                 <div className="flex flex-col gap-2 w-full">
                   {suggestions.map((name, index) => (
                     <Badge
@@ -192,7 +207,9 @@ export const MobileSearch = () => {
                   ))}
                 </div>
               ) : (
-                <span className="text-[#888]">لا توجد نتائج مطابقة</span>
+                <span className="text-[#888]">
+                  {isArabic ? "لا توجد نتائج مطابقة" : "No matching results"}
+                </span>
               )
             ) : (
               <div className="flex flex-row flex-wrap gap-2 w-fit">
@@ -211,7 +228,9 @@ export const MobileSearch = () => {
                     </Badge>
                   ))
                 ) : (
-                  <span className="text-[#888]">جاري التحميل...</span>
+                  <span className="text-[#888] font-[cairo]">
+                    {isArabic ? "جاري التحميل..." : "Loading..."}
+                  </span>
                 )}
               </div>
             )}
