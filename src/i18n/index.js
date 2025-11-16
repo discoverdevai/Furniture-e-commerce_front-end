@@ -370,7 +370,8 @@ const resources = {
           okButton: "موافق",
         },
       },
-      see_more:"انظر المزيد"
+      see_more:"انظر المزيد",
+      login:"تسجيل الدخول",
     },
   },
   en: {
@@ -400,7 +401,7 @@ const resources = {
         wishlist: "Wishlist",
         cart: "Shopping Cart",
       },
-      
+      login:"Login",
       welcome: "Welcome to (Website Name)",
       signIn: "Sign In",
       phoneNumberOrEmail: "Phone Number/Email",
